@@ -1,26 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+
+    --animate-glow-pulse: glow-pulse 4s infinite ease-in-out;
+    --animate-letter-reveal: letter-reveal 0.8s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+    --animate-fade-up: fade-up 1s forwards ease-out;
+    --animate-line-grow: line-grow 1s forwards ease-out;
+
+    @keyframes glow-pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 0.4;
+        }
+
+        50% {
+            transform: scale(1.1);
+            opacity: 0.7;
+        }
+    }
+
+    @keyframes letter-reveal {
+        0% {
+            transform: translateY(20px) rotateX(-90deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fade-up {
+        0% {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes line-grow {
+        0% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+}
+
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 91.2% 59.8%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --splash-bg-start: 169 28% 38%;
+    --splash-bg-end: 169 32% 30%;
 }
 
-body {
-    margin: 0;
-    display: flex;
-    min-width: 320px;
-    min-height: 100vh;
+@layer base {
+    body {
+        @apply bg-background text-foreground;
+        margin: 0;
+        min-height: 100vh;
+    }
 }
 
-#root {
-    width: 100%;
+.splash-gradient {
+    background: linear-gradient(135deg,
+            hsl(var(--splash-bg-start)) 0%,
+            hsl(var(--splash-bg-end)) 100%);
 }
 
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+.text-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
-.main-content {
-    flex: 1;
+@keyframes float-particle {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+}
+
+.float-particle {
+    animation: float-particle var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
 }

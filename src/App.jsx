@@ -1,43 +1,49 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+/* Layouts */
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
 import TeacherLayout from './layouts/TeacherLayout';
 
-// Traditional Page Imports (Placeholders for now)
-const Home = () => <div>Public Landing Page (Landing + Courses before login)</div>;
-const Login = () => <div>Login / Signup Page</div>;
+/* Initial & Public Pages */
+import SplashScreen from './pages/public/SplashScreen';
+import Choose from './pages/public/Choose';
+import Landing from './pages/public/Landing';
+import Login from './pages/public/Login';
 
-const StudentDashboard = () => <div>Student Dashboard (My Courses, Favs)</div>;
-const AdminDashboard = () => <div>Admin Dashboard (Management, Approvals)</div>;
-const TeacherDashboard = () => <div>Teacher Dashboard (Course Creator, Analytics)</div>;
+/* Dashboard Pages */
+import StudentDashboard from './pages/student/Dashboard';
+import TeacherDashboard from './pages/teacher/Dashboard';
+import AdminDashboard from './pages/admin/Dashboard';
+import NotFound from './pages/public/NotFound';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* PUBLIC ROUTES - Everyone */}
+        {/* 1. INITIAL SCREENS (No Layout) */}
+        <Route path="/" element={<SplashScreen />} />
+        <Route path="/choose" element={<Choose />} />
+
+        {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/student" element={<StudentDashboard />} />
         </Route>
 
-        {/* STUDENT ROUTES */}
-        <Route path="/student" element={<MainLayout />}>
-          <Route index element={<StudentDashboard />} />
-          {/* Add paths like /student/profile, /student/my-courses aqui */}
-        </Route>
-
-        {/* TEACHER ROUTES */}
+        {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
-          {/* Add paths like /teacher/create-course, /teacher/earnings aqui */}
         </Route>
 
-        {/* ADMIN ROUTES */}
+        {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          {/* Add paths like /admin/users, /admin/approvals aqui */}
         </Route>
+
+        {/* 5. 404 CATCH-ALL */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

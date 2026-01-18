@@ -3,10 +3,15 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
-        <nav style={{ padding: '1rem', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between' }}>
-            <Link to="/" style={{ fontWeight: 'bold', fontSize: '1.5rem', textDecoration: 'none', color: '#000' }}>EduNEXA</Link>
-            <div>
-                <Link to="/login" style={{ margin: '0 10px' }}>Login</Link>
+        <nav className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-background/50 backdrop-blur-md sticky top-0 z-50">
+            <Link to="/" className="text-2xl font-bold tracking-tighter hover:opacity-80 transition-opacity">
+                EduNEXA
+            </Link>
+            <div className="flex items-center gap-8 text-sm font-medium">
+                <Link to="/landing" className="hover:text-accent transition-colors">Explore</Link>
+                <Link to="/login" className="px-5 py-2.5 bg-accent rounded-full hover:bg-accent/90 transition-all">
+                    Sign In
+                </Link>
             </div>
         </nav>
     );
