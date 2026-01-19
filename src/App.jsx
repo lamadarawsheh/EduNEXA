@@ -16,6 +16,7 @@ import StudentDashboard from './pages/student/Dashboard';
 import TeacherDashboard from './pages/teacher/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import NotFound from './pages/public/NotFound';
+import Checkout from './pages/student/Checkout/Checkout';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/student" element={<StudentDashboard />} />
+          <Route path='/checkout' element={<Checkout/>}/>
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
