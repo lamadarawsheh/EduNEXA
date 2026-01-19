@@ -8,8 +8,16 @@ import TeacherLayout from "./layouts/TeacherLayout";
 /* Initial & Public Pages */
 import SplashScreen from "./pages/public/SplashScreen";
 import Choose from "./pages/public/Choose";
-import Landing from "./pages/public/Landing";
+import Landing from "./pages/public/Landing/Landing";
+import SignUp from "./pages/public/SignUp";
 import Login from "./pages/public/Login";
+
+/* Static Pages */
+import Contact from "./pages/public/Static/Contact";
+import FAQ from "./pages/public/Static/FAQ";
+import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
+import AboutUs from "./pages/public/Static/AboutUs";
+import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -25,19 +33,30 @@ import NotFound from "./pages/public/NotFound";
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
+        <Route path="/signup" element={<SignUp />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+
+          {/* Static Pages */}
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/support" element={<TechnicalSupport />} />
+
           <Route path="/student" element={<StudentLayout />}>
             <Route index element={<StudentDashboard />} />
             <Route path="profile" element={<StudentProfileLayout />}>
