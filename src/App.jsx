@@ -34,13 +34,9 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/student" element={<StudentDashboard />} />
-
-          {/* Profile Routes */}
-          <Route path="/profile" element={<PersonalInformation />} />
-          <Route path="/profile/personal" element={<PersonalInformation />} />
-          <Route path="/profile/settings" element={<Settings />} />
-          <Route path="/profile/language" element={<LanguageSelector />} />
+          <Route path="/student" element={<StudentLayout />}>
+            <Route index element={<StudentDashboard />} />
+          </Route>
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
