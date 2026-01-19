@@ -12,6 +12,7 @@ import Landing from './pages/public/Landing';
 import Login from './pages/public/Login';
 
 /* Dashboard Pages */
+import StudentLayout from './layouts/StudentLayout';
 import StudentDashboard from './pages/student/Dashboard';
 import TeacherDashboard from './pages/teacher/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
@@ -29,7 +30,9 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/student" element={<StudentLayout />}>
+            <Route index element={<StudentDashboard />} />
+          </Route>
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
