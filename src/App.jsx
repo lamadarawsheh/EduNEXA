@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 /* Layouts */
 import MainLayout from "./layouts/MainLayout";
@@ -12,15 +12,19 @@ import Landing from "./pages/public/Landing";
 import Login from "./pages/public/Login";
 
 /* Dashboard Pages */
+import StudentLayout from "./layouts/StudentLayout";
 import StudentDashboard from "./pages/student/Dashboard";
+import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
+import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
+import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
 
-/* Profile Components */
-import PersonalInformation from "./components/Profile/PersonalInformation";
-import Settings from "./components/Profile/Settings";
-import LanguageSelector from "./components/Profile/LanguageSelector";
+/* Student Profile Pages */
+import PersonalInformation from "./pages/student/profile/PersonalInformation";
+import Settings from "./pages/student/profile/Settings";
+import LanguageSelector from "./pages/student/profile/LanguageSelector";
 
 function App() {
   return (
@@ -34,35 +38,27 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/student" element={<StudentDashboard />} />
-
-          {/* Profile Routes */}
-          <Route path="/profile" element={<PersonalInformation />} />
-          <Route path="/profile/personal" element={<PersonalInformation />} />
-          <Route path="/profile/settings" element={<Settings />} />
-          <Route path="/profile/language" element={<LanguageSelector />} />
+          <Route path="/student" element={<StudentLayout />}>
+            <Route index element={<StudentDashboard />} />
+            <Route path="profile" element={<StudentProfileLayout />}>
+              <Route index element={<Navigate to="personal" replace />} />
+              <Route path="personal" element={<PersonalInformation />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="language" element={<LanguageSelector />} />
+              <Route path="payment" element={<StudentPaymentMethod />} />
+              <Route path="payment/info" element={<StudentPaymentInfo />} />
+            </Route>
+          </Route>
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
-
-          {/* Teacher Profile Routes */}
-          <Route path="profile" element={<PersonalInformation />} />
-          <Route path="profile/personal" element={<PersonalInformation />} />
-          <Route path="profile/settings" element={<Settings />} />
-          <Route path="profile/language" element={<LanguageSelector />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-
-          {/* Admin Profile Routes */}
-          <Route path="profile" element={<PersonalInformation />} />
-          <Route path="profile/personal" element={<PersonalInformation />} />
-          <Route path="profile/settings" element={<Settings />} />
-          <Route path="profile/language" element={<LanguageSelector />} />
         </Route>
 
         {/* 5. 404 CATCH-ALL */}
