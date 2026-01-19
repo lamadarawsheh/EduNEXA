@@ -21,6 +21,30 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* Profile Section */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-section-title {
+  color: #1f2937;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-section-subtitle {
+  color: #6b7280;
+  font-size: 13px;
+}
+
 /* Profile Header */
 .profile-header {
   text-align: center;
@@ -413,35 +437,21 @@ input:checked + .toggle-slider:before {
 }
 
 /* Icons Styling */
-.icon-user::before { content: '👤'; }
-.icon-email::before { content: '✉️'; }
-.icon-phone::before { content: '📱'; }
-.icon-calendar::before { content: '📅'; }
-.icon-lock::before { content: '🔒'; }
-.icon-globe::before { content: '🌐'; }
-.icon-bell::before { content: '🔔'; }
-.icon-logout::before { content: '🚪'; }
-.icon-arrow-right::before { content: '→'; }
-.icon-arrow-left::before { content: '←'; }
-.icon-check::before { content: '✓'; }
-.icon-search::before { content: '🔍'; }
-
-.icon-user::before,
-.icon-email::before,
-.icon-phone::before,
-.icon-calendar::before,
-.icon-lock::before,
-.icon-globe::before,
-.icon-bell::before,
-.icon-logout::before,
-.icon-arrow-right::before,
-.icon-arrow-left::before,
-.icon-check::before,
-.icon-search::before {
-  font-size: 18px;
-  margin-right: 5px;
+.profile-icon {
+  width: 18px;
+  height: 18px;
+  color: #666;
+  flex-shrink: 0;
 }
 
+.settings-item .profile-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.settings-item.logout .profile-icon {
+  color: #dc3545;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .profile-card,
@@ -554,3 +564,4 @@ button {
 input {
   font-family: inherit;
 }
+
