@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Check, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Check, Search, ArrowLeft } from 'lucide-react';
 import "./Profile.css";
 
 const LanguageSelector = () => {
@@ -93,6 +94,11 @@ const LanguageSelector = () => {
 
   return (
     <div className="profile-section">
+      <Link to="/student/profile/settings" className="mb-4 flex w-fit items-center gap-2 text-sm text-gray-500 hover:text-teal-600 transition-colors">
+        <ArrowLeft className="h-4 w-4" />
+        <span>Back to Settings</span>
+      </Link>
+
       <div className="profile-section-header">
         <h2 className="profile-section-title">Language</h2>
         <p className="profile-section-subtitle">Choose your preferred language for the app.</p>
@@ -114,11 +120,10 @@ const LanguageSelector = () => {
           filteredLanguages.map((lang) => (
             <div
               key={lang.code}
-              className={`flex items-center gap-4 rounded-xl border-2 p-4 transition-all ${
-                selectedLanguage === lang.code
-                  ? 'border-teal-600 bg-gradient-to-br from-teal-50 to-teal-100 shadow-lg'
-                  : 'border-transparent bg-gray-50 hover:bg-gray-100 hover:translate-x-1'
-              }`}
+              className={`flex items-center gap-4 rounded-xl border-2 p-4 transition-all ${selectedLanguage === lang.code
+                ? 'border-teal-600 bg-gradient-to-br from-teal-50 to-teal-100 shadow-lg'
+                : 'border-transparent bg-gray-50 hover:bg-gray-100 hover:translate-x-1'
+                }`}
               onClick={() => handleLanguageSelect(lang.code)}
               role="button"
               tabIndex={0}
@@ -156,11 +161,10 @@ const LanguageSelector = () => {
       </div>
 
       <button
-        className={`mt-5 w-full rounded-xl py-3 text-base font-semibold transition-all ${
-          !selectedLanguage
-            ? 'bg-gray-300 cursor-not-allowed opacity-60'
-            : 'bg-teal-600 text-white hover:bg-teal-700 hover:-translate-y-1 hover:shadow-2xl'
-        }`}
+        className={`mt-5 w-full rounded-xl py-3 text-base font-semibold transition-all ${!selectedLanguage
+          ? 'bg-gray-300 cursor-not-allowed opacity-60'
+          : 'bg-teal-600 text-white hover:bg-teal-700 hover:-translate-y-1 hover:shadow-2xl'
+          }`}
         onClick={handleChoose}
         disabled={!selectedLanguage}
       >
