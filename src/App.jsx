@@ -10,12 +10,12 @@ import SplashScreen from "./pages/public/SplashScreen";
 import Choose from "./pages/public/Choose";
 import Landing from "./pages/public/Landing/Landing";
 import SignUp from "./pages/public/SignUp";
-// import Login from "./pages/public/Login";
-// import Forgetpassword from "./pages/public/Forgetpassword";
-// import Info from "./pages/public/Info";
-// import Resetpassword from "./pages/public/Resetpassword";
-// import Success from "./pages/public/Success";
-// import VerifyCode from "./pages/public/VerifyCode";
+import Login from "./pages/public/Login";
+import Forgetpassword from "./pages/public/Forgetpassword";
+import Info from "./pages/public/Info";
+import Resetpassword from "./pages/public/Resetpassword";
+import Success from "./pages/public/Success";
+import VerifyCode from "./pages/public/VerifyCode";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
@@ -35,6 +35,7 @@ import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
+import AvailableCourses from "./pages/student/AvailableCourses";
 
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
@@ -57,11 +58,16 @@ function App() {
         <Route path="/choose" element={<Choose />} />
         <Route path="/teacher/create-new-course" element={<CourseForm />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<Forgetpassword />} />
+        <Route path="/reset-password" element={<Resetpassword />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/info" element={<Info />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
 
           {/* Static Pages */}
           <Route path="/contact" element={<Contact />} />
@@ -70,11 +76,12 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/teacher/create-new-course" element={<CourseForm />} />
-           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses" element={<Courses />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
+          <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
