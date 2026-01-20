@@ -20,6 +20,9 @@ import VerifyCode from "./pages/public/VerifyCode";
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
 import Courses from "./pages/public/Static/Courses";
+import Favourite from "./pages/public/Static/Favourite";
+
+
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
@@ -33,6 +36,7 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
+import AccountSettings from "./pages/teacher/AccountSettings";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
@@ -75,8 +79,8 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
-          <Route path="/teacher/create-new-course" element={<CourseForm />} />
           <Route path="/courses" element={<Courses />} />
+
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
@@ -90,12 +94,16 @@ function App() {
             <Route path="language" element={<LanguageSelector />} />
             <Route path="payment" element={<StudentPaymentMethod />} />
             <Route path="payment/info" element={<StudentPaymentInfo />} />
+            <Route path="favourite" element={<Favourite />} />
+
           </Route>
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
+          <Route path="create-new-course" element={<CourseForm />} />
+          <Route path="account-settings" element={<AccountSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
