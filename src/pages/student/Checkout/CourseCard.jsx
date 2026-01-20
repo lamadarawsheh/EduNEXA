@@ -1,70 +1,70 @@
-import { Star, Clock, Users, BookOpen } from "lucide-react";
 import courseImage from './images/Frame (3).png';
+import profileicon from './Icons/profile.svg'
+import clockicon from './Icons/clock.svg'
+import staricon from './Icons/star.svg'
 
 export default function CourseCard() {
   return (
-    <div className="bg-white w-full border border-borderGray rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group  mx-auto lg:mx-0">
+    <div className="bg-white w-[843px] h-[688px] border border-borderGray rounded-2xl overflow-hidden transition-all duration-300 group  mx-auto lg:mx-0">
       
       <div className="flex flex-col">
         
-        <div className="w-full h-full relative overflow-hidden px-4 py-4 ">
+        <div className="w-full h-[487px] relative overflow-hidden p-6 ">
           <img 
             src={courseImage} 
             alt="Course Thumbnail"
-            className=" w-full h-full object-cover "
+            className=" w-[795px] h-[457px] object-cover "
           />
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60" />
-
-          <div className="absolute top-4 left-4 bg-[#1a6b66] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1">
-            <Star className="w-3 h-3 fill-white" />
-            <span className="uppercase tracking-wider">Best Seller</span>
-          </div>
         </div>
 
-        {/* تفاصيل الكورس - الآن تظهر تحت الصورة تلقائياً */}
-        <div className="p-6">
-          <div className="mb-4">
-            <h2 className="text-[#093332] text-xl lg:text-2xl font-bold leading-tight">
-              UI/UX Design Masterclass: From Beginner to Pro
-            </h2>
-          </div>
-          
-          <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-            Master the art of creating stunning user interfaces and seamless experiences. Learn Figma, Adobe XD, and design principles.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-yellow-50 flex items-center justify-center shrink-0">
-                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              </div>
-              <span className="text-xs font-bold text-gray-700 leading-tight">4.8 (12,500 students)</span>
-            </div>
-
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                 <Clock className="w-4 h-4 text-blue-500" />
-              </div>
-              <span className="text-xs font-semibold text-gray-600">42 Hours content</span>
-            </div>
-
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center shrink-0">
-                 <Users className="w-4 h-4 text-green-600" />
-              </div>
-              <span className="text-xs font-semibold text-gray-600">Lifetime Access</span>
-            </div>
-
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
-                 <BookOpen className="w-4 h-4 text-purple-600" />
-              </div>
-              <span className="text-xs font-semibold text-gray-600">Certificate Included</span>
-            </div>
-          </div>
-        </div>
+        <div className=" w-[841px] h-[214px] p-2 ">
+    
+      <div className=" w-[793px] h-[88px] mb-4">
+        <h2 className="w-[793px] h-[32px] px-6 mb-2 text-[#093332] text-2xl lg:text-3xl leading-tight">
+          UI/UX Design Course
+        </h2>
+      <p className="text-[#71717A] text-sm md:text-base leading-relaxed max-w-[793px] h-[48px] px-9 ">
+        This comprehensive program will equip you with the knowledge and skills to create exceptional user interfaces (UI) and enhance user experiences (UX).
+      </p>
       </div>
+
+      <div className="w-[793px] h-[20px] px-7 flex flex-wrap items-center gap-x-6 gap-y-3 mb-4">
+        <div className="flex items-center gap-1.5">
+          <img src= {staricon} className="w-4 h-4 text-[#FACC15]" />
+          <span className="text-sm text-[#093332]">4.8</span>
+        </div>
+
+       <div className="flex items-center gap-1.5 text-gray-500">
+          <img src={profileicon} className="w-4 h-4" />
+         <span className="text-sm text-gray-500">12,543 students</span> 
+        </div>
+
+        <div className="flex items-center gap-1.5 text-gray-500">
+           <img src={clockicon} className="w-4 h-4" />
+          <span className="text-sm">42 hours</span>
+        </div>
+
+      </div>
+
+      <div className="w-[793px] h-[26px] flex flex-wrap items-center gap-4 px-6 ">
+     
+        <div className="bg-[#F4F4F5] text-[#093332] px-4 py-1.5 rounded-md text-sm ">
+          Beginner to Advanced
+        </div>
+
+        <div className="text-sm">
+          <span className="text-[#71717A]">Instructor: </span>
+          <span className="text-[#093332] cursor-pointer">
+            Sarah Johnson
+          </span>
+        </div>
+
+      </div>
+
     </div>
+
+      </div>
+      </div>
+    
   );
 }

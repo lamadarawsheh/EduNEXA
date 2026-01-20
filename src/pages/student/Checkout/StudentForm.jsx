@@ -1,60 +1,129 @@
-import { User, Mail, Phone, Globe } from "lucide-react";
+import { useState } from "react";
+import { User, Mail, Phone, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function StudentForm() {
-  const inputStyle = "w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1a6b66] focus:ring-1 focus:ring-[#1a6b66] text-sm transition-all bg-gray-50/50 focus:bg-white";
-  const labelStyle = "block text-[#093332] text-xs font-bold mb-2 uppercase tracking-wide";
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (!value.trim()) {
+      error = "This field is required";
+    } else {
+      if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
+        error = "Please enter a valid email address";
+      }
+      if (name === "phone" && !/^\+?[0-9]{10,14}$/.test(value.replace(/\s/g, ""))) {
+        error = "Please enter a valid phone number";
+      }
+      if (name === "fullName" && value.trim().length < 3) {
+        error = "Name must be at least 3 characters";
+      }
+    }
+    return error;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const inputBaseStyle = "w-[793px] h-[36px] pl-10 pr-10 py-1 border rounded-lg focus:outline-none text-sm transition-all";
+  const labelStyle = "w-[120px] h-[7px]  block text-[#093332] text-sm mb-4";
 
   return (
-    <div className="bg-white border border-borderGray rounded-2xl p-6 sm:p-8 shadow-sm">
-      <div className="mb-8">
-        <h3 className="text-[#093332] text-lg font-bold">Student Information</h3>
-        <p className="text-gray-400 text-xs mt-1">Please provide your details to complete the enrollment.</p>
+    <div className="w-[843px] h-[384px] bg-white border border-borderGray rounded-2xl p-6 sm:p-8 ">
+      <div className=" w-[841px] h-[90px]">
+        <h3 className="text-[#093332] text-xl  font-inter">Student Information</h3>
+        <p className="text-gray-400 text-sm mt-1">Please provide your details to complete the enrollment</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    
-        <div className="md:col-span-2">
+      <div className="w-[841px] h-[292px] flex flex-col gap-6">
+        
+        {/* Full Name */}
+        <div className="w-[793px] h-[48px]">
           <label className={labelStyle}>Full Name *</label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input type="text" placeholder="John Doe" className={inputStyle} />
+            <User className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.fullName ? 'text-red-400' : 'text-gray-400'}`} />
+            <input 
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`${inputBaseStyle} ${errors.fullName ? 'border-red-500 bg-red-50/30' : 'border-borderGray focus:border-prime'}`}
+         
+            />
+            {formData.fullName && !errors.fullName && (
+              <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-prime" />
+            )}
           </div>
+          {errors.fullName && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.fullName}</p>}
         </div>
 
-        <div>
+        {/* Email Address */}
+        <div className="w-[793px] h-[48px]">
           <label className={labelStyle}>Email Address *</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input type="email" placeholder="john@example.com" className={inputStyle} />
+            <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.email ? 'text-red-400' : 'text-gray-400'}`} />
+            <input 
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`${inputBaseStyle} ${errors.email ? 'border-red-500 bg-red-50/30' : 'border-borderGray focus:border-prime'}`}
+            
+            />
+            {formData.email && !errors.email && (
+              <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-prime" />
+            )}
           </div>
+          {errors.email && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.email}</p>}
         </div>
 
-        <div>
+        {/* Phone Number */}
+        <div className="w-[793px] h-[48px]">
           <label className={labelStyle}>Phone Number *</label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input type="tel" placeholder="+1 (555) 000-0000" className={inputStyle} />
+            <Phone className={`absolute  left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.phone ? 'text-red-400' : 'text-gray-400'}`} />
+            <input 
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`${inputBaseStyle} ${errors.phone ? 'border-red-500 bg-red-50/30' : 'border-borderGray focus:border-prime'}`}
+            
+            />
+            {formData.phone && !errors.phone && (
+              <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-prime " />
+            )}
           </div>
+          {errors.phone && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.phone}</p>}
         </div>
 
-        {/* الدولة */}
-        <div className="md:col-span-2">
-          <label className={labelStyle}>Country / Region</label>
-          <div className="relative">
-            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <select className={`${inputStyle} appearance-none`}>
-              <option>Egypt</option>
-              <option>Saudi Arabia</option>
-              <option>United Arab Emirates</option>
-              <option>United States</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      
-      <p className="text-[10px] text-gray-400 mt-6 flex items-center gap-1">
-        <span className="text-red-500">*</span> Required fields. Your information is secure and only used for course enrollment.
+     
+      <div className="w-[793px] h-[16px]">
+      <p className=" text-xs text-gray-400 mt-1">
+        * Required fields. Your information is secure and will only be used for course enrollment.
       </p>
+      </div>
+       </div>
     </div>
   );
 }
