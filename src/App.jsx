@@ -14,6 +14,7 @@ import Login from "./pages/public/Login";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
+import Courses from "./pages/public/Static/Courses";
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
@@ -60,6 +61,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/teacher/create-new-course" element={<CourseForm />} />
+           <Route path="/courses" element={<Courses />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
