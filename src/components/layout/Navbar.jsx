@@ -20,7 +20,7 @@ const Navbar = () => {
 
       {/* Desktop Links */}
       <div className="hidden md:flex items-center gap-8 text-sm text-[#45556C]">
-        <Link to="/landing" className="hover:text-black transition-colors">Courses</Link>
+        <Link to="/courses" className="hover:text-black transition-colors">Courses</Link>
         <Link to="/about" className="hover:text-black  transition-colors">About Us</Link>
         <Link to="/contact" className="hover:text-black  transition-colors">Contact Us</Link>
         <Link

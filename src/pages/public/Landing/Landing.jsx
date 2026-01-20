@@ -134,7 +134,7 @@ const Landing = () => {
       <section id="courses" className="py-16 bg-gray-50/50 opacity-0 translate-y-10 transition-all duration-1000 ease-out animate-on-scroll">
         <div className="text-center mb-12 px-4">
           <h2 className="text-4xl font-bold text-[#0F172B]">
-            Popular Courses
+            Popular Courses0
           </h2>
           <p className="text-lg text-gray-600 mt-2">
             Choose from hundreds of specialized courses in different fields
@@ -169,7 +169,8 @@ const Landing = () => {
           </p>
         </div>
 
-        <div className="flex justify-center flex-wrap gap-6 px-4">
+      {/* ===== Grid for courses: 4 per row ===== */}
+     <div className="flex justify-center flex-wrap gap-6 px-4">
           {[1, 2, 3].map((_, idx) => (
             <div key={idx} className="bg-white flex flex-col border border-transparent shadow-lg gap-2 rounded-lg p-6 w-full max-w-[280px]">
               <div className="flex mb-2 space-x-1 justify-center">
