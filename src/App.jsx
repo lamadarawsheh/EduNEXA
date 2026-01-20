@@ -36,6 +36,10 @@ import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminTeachers from './pages/admin/AdminTeachers';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminSettings from './pages/admin/AdminSettings';
 import ScrollToTop from "./components/common/ScrollToTop";
 
 function App() {
