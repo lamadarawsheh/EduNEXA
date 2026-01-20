@@ -10,7 +10,12 @@ import SplashScreen from "./pages/public/SplashScreen";
 import Choose from "./pages/public/Choose";
 import Landing from "./pages/public/Landing/Landing";
 import SignUp from "./pages/public/SignUp";
-import Login from "./pages/public/Login";
+// import Login from "./pages/public/Login";
+// import Forgetpassword from "./pages/public/Forgetpassword";
+// import Info from "./pages/public/Info";
+// import Resetpassword from "./pages/public/Resetpassword";
+// import Success from "./pages/public/Success";
+// import VerifyCode from "./pages/public/VerifyCode";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
