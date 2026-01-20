@@ -2,7 +2,7 @@ import { Tag } from "lucide-react";
 
 export default function OrderSummary() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-borderGray sticky top-10 w-[405px] h-[404px] flex flex-col justify-between font-sans">
+    <div className="bg-white rounded-xl p-6  border border-borderGray sticky top-10 w-[405px] h-[404px] flex flex-col justify-between font-sans">
      
       <h3 className="text-[#093332] w-[405px] h-[64px]  text-xl mb-6">Order Summary</h3>
 
