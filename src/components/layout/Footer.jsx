@@ -1,63 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
-  return (
-    <footer>
-      <section className="py-12 bg-[#0F4C4A] text-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
-
-            <div className="flex flex-col">
-              <span className="text-xl font-bold pb-3 italic">EduNEXA</span>
-              <span className="text-sm text-white/70 leading-relaxed">
-                Empowering the next generation<br />
-                through accessible and<br />
-                quality education.
-              </span>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-lg font-bold pb-3">Quick Links</span>
-              <Link to="/landing" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">Courses</Link>
-              <Link to="/about" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">About Us</Link>
-              <Link to="/contact" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">Contact</Link>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-lg font-bold pb-3">Support</span>
-              <Link to="/faq" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">FAQ</Link>
-              <Link to="/support" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">Technical Support</Link>
-              <Link to="/privacy" className="text-sm text-white/70 hover:text-white cursor-pointer transition mb-2">Privacy Policy</Link>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-lg font-bold pb-3">Follow Us</span>
-              <div className="flex gap-4">
-                <Facebook className="w-5 h-5 text-white/70 hover:text-white cursor-pointer transition" />
-                <Twitter className="w-5 h-5 text-white/70 hover:text-white cursor-pointer transition" />
-                <Instagram className="w-5 h-5 text-white/70 hover:text-white cursor-pointer transition" />
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* line  */}
-        <div className="flex justify-center mt-10">
-          <div className="w-3/4 border-t border-white/20"></div>
-        </div>
-
-        {/* all rights */}
-        <p className="text-center text-sm text-white/50 mt-4">
-          © 2026 EduNEXA Academy. All rights reserved.
-        </p>
-
-      </section>
-    </footer>
-
-  );
+    return (
+        <footer className="px-8 py-12 border-t border-white/5 bg-background mt-auto text-center">
+            <p className="text-white/40 text-sm">
+                &copy; {new Date().getFullYear()} EduNEXA Professional Learning Platform. All rights reserved.
+            </p>
+        </footer>
+    );
 };
 
 export default Footer;
