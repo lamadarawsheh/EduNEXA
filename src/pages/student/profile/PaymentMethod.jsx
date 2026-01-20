@@ -26,9 +26,8 @@ export default function StudentPaymentMethod() {
                             key={method.id}
                             type="button"
                             onClick={() => setSelected(method.id)}
-                            className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition ${
-                                selected === method.id ? "border-teal-500 bg-teal-50" : "border-gray-200 bg-white"
-                            }`}
+                            className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition ${selected === method.id ? "border-teal-500 bg-teal-50" : "border-gray-200 bg-white"
+                                }`}
                         >
                             <span className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold text-white ${method.badgeClass}`}>
                                 {method.badge}

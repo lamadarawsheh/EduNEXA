@@ -5,26 +5,24 @@ const Choose = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Welcome to EduNEXA</h1>
-            <p className="text-xl text-white/60 mb-12 max-w-md italic">
+        <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-gradient-to-r from-[#FCFFFE] via-[#F9FEFD] to-[#F5FDFC] text-black">
+            <img src="/image2.png" alt="EduNEXA Illustration" className="w-80 h-80 md:w-[28rem] md:h-[23rem] mb-4 object-contain mix-blend-multiply transition-transform duration-700 hover:scale-105" />
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-[#0F172B]">Welcome to EduNEXA</h1>
+            <p className="text-xl text-gray-600 mb-12 max-w-md italic">
                 Shape your future or empower others. Please select your role to continue.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+            <div className="flex flex-col md:flex-row gap-6 w-full max-w-5xl justify-center">
                 <RoleCard
                     title="Student"
-                    desc="Join courses and grow your skills"
                     onClick={() => navigate('/landing')}
                 />
                 <RoleCard
-                    title="Teacher"
-                    desc="Share knowledge and earn balance"
+                    title="Instructor"
                     onClick={() => navigate('/teacher')}
                 />
                 <RoleCard
                     title="Admin"
-                    desc="Manage users and system platforms"
                     onClick={() => navigate('/admin')}
                 />
             </div>
@@ -32,13 +30,12 @@ const Choose = () => {
     );
 };
 
-const RoleCard = ({ title, desc, onClick }) => (
+const RoleCard = ({ title, onClick }) => (
     <button
         onClick={onClick}
-        className="group p-8 text-left bg-white/5 border border-white/10 rounded-2xl hover:bg-accent hover:border-accent transition-all duration-300"
+        className="group py-2 px-14 text-center bg-[#0F4C4A] border border-transparent rounded-lg hover:bg-[#0D3B36] hover:scale-105 transition-all duration-300 shadow-md min-w-[160px]"
     >
-        <h3 className="text-2xl font-semibold mb-2 group-hover:text-white">{title}</h3>
-        <p className="text-white/50 group-hover:text-white/80">{desc}</p>
+        <h3 className="text-base font-bold text-white">{title}</h3>
     </button>
 );
 
