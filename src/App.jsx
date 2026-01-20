@@ -21,6 +21,10 @@ import NotFound from "./pages/public/NotFound";
 import PersonalInformation from "./components/Profile/PersonalInformation";
 import Settings from "./components/Profile/Settings";
 import LanguageSelector from "./components/Profile/LanguageSelector";
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminTeachers from './pages/admin/AdminTeachers';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminSettings from './pages/admin/AdminSettings';
 
 function App() {
   return (
@@ -57,12 +61,6 @@ function App() {
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-
-          {/* Admin Profile Routes */}
-          <Route path="profile" element={<PersonalInformation />} />
-          <Route path="profile/personal" element={<PersonalInformation />} />
-          <Route path="profile/settings" element={<Settings />} />
-          <Route path="profile/language" element={<LanguageSelector />} />
         </Route>
 
         {/* 5. 404 CATCH-ALL */}

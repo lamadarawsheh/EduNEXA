@@ -4,19 +4,17 @@ export default function Avatar({
   src,
   name = "",
   size = 40,
-}) {
+  }) {
   const initials = name
     .split(" ")
     .map(n => n[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
-
-  return (
+return (
     <div
       className="flex items-center justify-center rounded-full overflow-hidden bg-gray-200 text-gray-700 font-bold"
-      style={{ width: size, height: size }}
-    >
+      style={{ width: size, height: size }}>
       {src ? (
         <img
           src={src}
