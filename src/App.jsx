@@ -36,7 +36,7 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
-import AccountSettings from "./pages/teacher/setting/AccountSettings";
+import AccountSettings from "./pages/teacher/setting/teacherSetting";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
@@ -102,7 +102,7 @@ function App() {
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
-          <Route path="account-settings" element={<AccountSettings />} />
+          <Route path="teacher-settings" element={<AccountSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}

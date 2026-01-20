@@ -25,7 +25,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
         { name: 'My Courses', path: '/teacher/my-courses' },
         { name: 'Create New Course', path: '/teacher/create-new-course' },
         { name: 'Earnings', path: '/teacher/earnings' },
-        { name: 'Settings', path: '/teacher/account-settings' },
+        { name: 'Settings', path: '/teacher/teacher-settings' },
     ];
 
     const links = role === 'teacher' ? teacherLinks : studentLinks;
@@ -90,7 +90,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
                                 <Link to={`/${role}/profile`} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                     <User size={16} /> My Profile
                                 </Link>
-                                <Link to={role === 'teacher' ? '/teacher/account-settings' : '/student/profile/settings'} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                <Link to={role === 'teacher' ? '/teacher/teacher-settings' : '/student/profile/settings'} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                     Settings
                                 </Link>
                                 <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-50 mt-1">
