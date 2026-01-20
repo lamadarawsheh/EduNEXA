@@ -12,11 +12,11 @@ import Landing from "./pages/public/Landing/Landing";
 import SignUp from "./pages/public/SignUp";
 import Login from "./pages/public/Login";
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
-// import Forgetpassword from "./pages/public/Forgetpassword";
-// import Info from "./pages/public/Info";
-// import Resetpassword from "./pages/public/Resetpassword";
-// import Success from "./pages/public/Success";
-// import VerifyCode from "./pages/public/VerifyCode";
+import Forgetpassword from "./pages/public/Forgetpassword";
+import Info from "./pages/public/Info";
+import Resetpassword from "./pages/public/Resetpassword";
+import Success from "./pages/public/Success";
+import VerifyCode from "./pages/public/VerifyCode";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
@@ -38,6 +38,7 @@ import AdminTeachers from "./pages/admin/AdminTeachers";
 import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
+import AvailableCourses from "./pages/student/AvailableCourses";
 
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
@@ -55,12 +56,17 @@ function App() {
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<Forgetpassword />} />
+        <Route path="/reset-password" element={<Resetpassword />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/info" element={<Info />} />
         <Route path="/teacher/create-new-course" element={<CourseForm />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
 
           {/* Static Pages */}
           <Route path="/contact" element={<Contact />} />
@@ -73,6 +79,7 @@ function App() {
 
         <Route path="/student" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
+          <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
