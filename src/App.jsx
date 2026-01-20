@@ -10,7 +10,7 @@ import SplashScreen from './pages/public/SplashScreen';
 import Choose from './pages/public/Choose';
 import Landing from './pages/public/Landing';
 import Login from './pages/public/Login';
-
+import CourseForm from './pages/teacher/create-newcourse/cousreForm';
 /* Dashboard Pages */
 import StudentDashboard from './pages/student/Dashboard';
 import TeacherDashboard from './pages/teacher/Dashboard';
@@ -24,6 +24,7 @@ function App() {
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
+        <Route path="/teacher/create-new-course" element={<CourseForm />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
