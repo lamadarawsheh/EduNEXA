@@ -19,6 +19,7 @@ import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
+import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -49,6 +50,7 @@ function App() {
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
+        <Route path="/teacher/create-new-course" element={<CourseForm />} />
         <Route path="/signup" element={<SignUp />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
@@ -62,6 +64,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
+          <Route path="/teacher/create-new-course" element={<CourseForm />} />
            <Route path="/courses" element={<Courses />} />
         </Route>
 
