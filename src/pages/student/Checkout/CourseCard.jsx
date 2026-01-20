@@ -22,6 +22,7 @@ export default function CourseCard() {
           </div>
         </div>
 
+        {/* تفاصيل الكورس - الآن تظهر تحت الصورة تلقائياً */}
         <div className="p-6">
           <div className="mb-4">
             <h2 className="text-[#093332] text-xl lg:text-2xl font-bold leading-tight">
