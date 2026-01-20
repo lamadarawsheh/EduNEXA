@@ -89,6 +89,10 @@ function App() {
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+      <Route path="students" element={<AdminStudents />} />
+      <Route path="teachers" element={<AdminTeachers />} />
+      <Route path="courses" element={<AdminCourses />} />
+      <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* 5. 404 CATCH-ALL */}
