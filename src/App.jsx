@@ -11,6 +11,7 @@ import Choose from "./pages/public/Choose";
 import Landing from "./pages/public/Landing/Landing";
 import SignUp from "./pages/public/SignUp";
 import Login from "./pages/public/Login";
+import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
@@ -19,7 +20,6 @@ import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
-
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
 import StudentDashboard from "./pages/student/Dashboard";
@@ -50,6 +50,7 @@ function App() {
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/teacher/create-new-course" element={<CourseForm />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
@@ -62,7 +63,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
-           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses" element={<Courses />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
