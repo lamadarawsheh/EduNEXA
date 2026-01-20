@@ -33,7 +33,6 @@ export default function StudentTable({ students }) {
                             <tr>
                                 <th className="text-left text-sm md:text-xl font-semibold p-2 md:p-4">
                                     <div className="flex items-center gap-3">
-
                                         <span>Student Name</span>
                                     </div>
                                 </th>
@@ -50,7 +49,6 @@ export default function StudentTable({ students }) {
                                     key={student.id}
                                     student={student}
                                 />))}
-
                         </tbody>
                     </table>
                 </div>

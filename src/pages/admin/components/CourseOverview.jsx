@@ -37,8 +37,8 @@ export default function CourseOverview() {
   const shownCourses = showAllCourses ? courses : courses.slice(0, 2);
 
 return (
-    <div className="flex justify-between gap-2 mt-8">
-    <div className="rounded-xl border border-gray-200 bg-white p-4 w-[50%]">
+    <div className="flex flex-wrap justify-between gap-2 lg:gap-0 mt-8">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 w-[100%] lg:w-[49%]">
       <div className='flex justify-between items-center mb-6'>
         <h2 className="text-md font-medium">Course Overview</h2>
         {!showAllCourses && ( 
@@ -103,7 +103,7 @@ return (
       )} 
     </div>     
 
-    <div className="rounded-xl border border-gray-200 bg-white p-4 w-[50%]">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 w-[100%] lg:w-[49%]">
       <div className="flex items-center justify-between">
         <h2 className="text-md font-medium">Recent Activities</h2>   
       </div>
