@@ -35,7 +35,7 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
-import AccountSettings from "./pages/teacher/setting/AccountSettings";
+import AccountSettings from "./pages/teacher/setting/teacherSetting";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminTeachers from "./pages/admin/AdminTeachers";
@@ -66,7 +66,6 @@ function App() {
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/success" element={<Success />} />
         <Route path="/info" element={<Info />} />
-        <Route path="/teacher/create-new-course" element={<CourseForm />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
@@ -100,7 +99,8 @@ function App() {
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
-          <Route path="settings" element={<AccountSettings />} />
+          <Route path="create-new-course" element={<CourseForm />} />
+          <Route path="teacher-settings" element={<AccountSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
