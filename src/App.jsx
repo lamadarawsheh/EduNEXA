@@ -16,6 +16,10 @@ import StudentDashboard from './pages/student/Dashboard';
 import TeacherDashboard from './pages/teacher/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import NotFound from './pages/public/NotFound';
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminTeachers from './pages/admin/AdminTeachers';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminSettings from './pages/admin/AdminSettings';
 
 function App() {
   return (
@@ -40,6 +44,10 @@ function App() {
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+            <Route path="students" element={<AdminStudents />} />
+            <Route path="teachers" element={<AdminTeachers />} />
+            <Route path="courses" element={<AdminCourses />} />
+            <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* 5. 404 CATCH-ALL */}

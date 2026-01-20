@@ -21,10 +21,9 @@ const user = {
   avatar: "https://i.pravatar.cc/150?img=12",
 };
 export default function Header() {
-        const [value, setValue] = useState("");
+  const [value, setValue] = useState("");
     
-  return (
-
+return (
         <div className="p-6 bg-white rounded-2xl shadow-md border-1 min-h-[200px] flex-col items-between bg-[url('/adminDashboardbgjpeg.jpeg')] bg-cover bg-center bg-no-repeat mb-8">
         <div className="flex justify-end w-full mb-8 ">
         <div className="relative w-[50%] mx-auto">
@@ -34,56 +33,48 @@ export default function Header() {
         <span className="text-sm">Search Courses,Teachers,Students...</span>
         </div>
         )}
-
         <input
         type="search"
         dir="rtl"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="w-full rounded-3xl border border-gray-300 bg-white py-3 pr-10 pl-4 text-sm
-                focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        />
+                  focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"/>
         </div>
         <div className="flex justify-end mt-4"></div>
         <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-                <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />   
+        <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />   
         </button>
         <Avatar
         src={user?.avatar}  
         name={user?.name}  
         size={45}/>
-        </div>
-
-        
+        </div>    
         <div className="mt-8 flex gap-2 justify-between">
         {items.map((item, index) => {
-    const Icon = item.icon;
-
-    return (
-      <div
+        const Icon = item.icon;
+        return (
+        <div
         key={index}
         className="w-[25%] rounded-2xl p-4 flex flex-col justify-between min-h-[150px]"
-        style={{ backgroundColor: item.bgColor }}
-      >
+        style={{ backgroundColor: item.bgColor }}>
         <div className="flex justify-between items-center mb-6">
-          <h4 className="flex gap-2 items-center">
-            <Icon />
-            <span className="font-bold">{item.title}</span>
-          </h4>
-          <BsThreeDotsVertical className="text-gray-600" />
+        <h4 className="flex gap-2 items-center">
+        <Icon />
+        <span className="font-bold">{item.title}</span>
+        </h4>
+        <BsThreeDotsVertical className="text-gray-600" />
         </div>
-
         <div className="flex justify-between items-center">
-          <p className="text-3xl font-bold">{item.value.toLocaleString()}</p>
-          <p className="text-green-500 bg-[#F2F2F2] p-4 rounded-full">
-            <MdArrowOutward />
-          </p>
+        <p className="text-3xl font-bold">{item.value.toLocaleString()}</p>
+        <p className="text-green-500 bg-[#F2F2F2] p-4 rounded-full">
+        <MdArrowOutward />
+        </p>
         </div>
-      </div>
-    );
-  })}
         </div>
-
+        );
+        })}
+        </div>
         </div>
     );
 }
