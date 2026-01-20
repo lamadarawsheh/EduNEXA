@@ -28,6 +28,7 @@ import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
+import TeacherSettings from "./pages/teacher/setting/teacherSetting";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -36,7 +37,6 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
-import AccountSettings from "./pages/teacher/setting/teacherSetting";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
@@ -60,7 +60,6 @@ function App() {
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
-        <Route path="/teacher/create-new-course" element={<CourseForm />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<Forgetpassword />} />
@@ -102,7 +101,7 @@ function App() {
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
-          <Route path="teacher-settings" element={<AccountSettings />} />
+          <Route path="teacher-settings" element={<TeacherSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
