@@ -21,6 +21,9 @@ import VerifyCode from "./pages/public/VerifyCode";
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
 import Courses from "./pages/public/Static/Courses";
+import Favourite from "./pages/public/Static/Favourite";
+
+
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
@@ -75,6 +78,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/favourite" element={<Favourite />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
