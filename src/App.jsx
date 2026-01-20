@@ -32,6 +32,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path='/checkout' element={<Checkout/>}/>
+      
         </Route>
 
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
