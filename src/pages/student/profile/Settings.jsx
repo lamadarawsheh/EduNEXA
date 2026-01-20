@@ -1,38 +1,35 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bell, ChevronRight, Globe, Lock, LogOut } from "lucide-react";
 import "./Profile.css";
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const handleToggleNotifications = () => {
     setNotificationsEnabled(!notificationsEnabled);
   };
 
-  const handleChangePassword = () => {
-    // Logic for changing password
-    console.log("Change password clicked");
-  };
-
   const handleLogout = () => {
-    // Logic for logout
-    console.log("Logout clicked");
+    // Clear auth tokens here
+    // localStorage.removeItem('token');
+    navigate("/login");
   };
 
   return (
-    <div className="profile-section">
+    <div className="profile-section relative">
       <div className="profile-section-header">
         <h2 className="profile-section-title">Settings</h2>
         <p className="profile-section-subtitle">Control security, language, and notifications.</p>
       </div>
 
       <div className="settings-list">
-        <div className="settings-item" onClick={handleChangePassword}>
+        <Link className="settings-item" to="/student/profile/password">
           <Lock className="profile-icon" aria-hidden="true" />
           <span>Change Password</span>
           <ChevronRight className="profile-icon" aria-hidden="true" />
-        </div>
+        </Link>
 
         <Link className="settings-item" to="/student/profile/language">
           <Globe className="profile-icon" aria-hidden="true" />
@@ -43,7 +40,7 @@ const Settings = () => {
         <div className="settings-item">
           <Bell className="profile-icon" aria-hidden="true" />
           <span>Notices</span>
-          <label className="toggle-switch">
+          <label className="toggle-switch" onClick={(e) => e.stopPropagation()}>
             <input
               type="checkbox"
               checked={notificationsEnabled}

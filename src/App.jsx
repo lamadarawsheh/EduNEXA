@@ -32,6 +32,7 @@ import NotFound from "./pages/public/NotFound";
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
+import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
 
@@ -56,17 +57,18 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
+        </Route>
 
-          <Route path="/student" element={<StudentLayout />}>
-            <Route index element={<StudentDashboard />} />
-            <Route path="profile" element={<StudentProfileLayout />}>
-              <Route index element={<Navigate to="personal" replace />} />
-              <Route path="personal" element={<PersonalInformation />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="language" element={<LanguageSelector />} />
-              <Route path="payment" element={<StudentPaymentMethod />} />
-              <Route path="payment/info" element={<StudentPaymentInfo />} />
-            </Route>
+        <Route path="/student" element={<StudentLayout />}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="profile" element={<StudentProfileLayout />}>
+            <Route index element={<Navigate to="personal" replace />} />
+            <Route path="personal" element={<PersonalInformation />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="password" element={<ChangePassword />} />
+            <Route path="language" element={<LanguageSelector />} />
+            <Route path="payment" element={<StudentPaymentMethod />} />
+            <Route path="payment/info" element={<StudentPaymentInfo />} />
           </Route>
         </Route>
 

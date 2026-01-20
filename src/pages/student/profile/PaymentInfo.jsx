@@ -13,6 +13,11 @@ export default function StudentPaymentInfo() {
 
     return (
         <div className="profile-section">
+            <Link to="/student/profile/payment" className="mb-4 flex w-fit items-center gap-2 text-sm text-gray-500 hover:text-teal-600 transition-colors">
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Payment Methods</span>
+            </Link>
+
             <div className="profile-section-header">
                 <h2 className="profile-section-title">Payment details</h2>
                 <p className="profile-section-subtitle">Add or update your card information.</p>
@@ -25,9 +30,8 @@ export default function StudentPaymentInfo() {
                             key={card.id}
                             type="button"
                             onClick={() => setBrand(card.id)}
-                            className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition ${
-                                brand === card.id ? "border-teal-500 shadow-sm" : "border-gray-200"
-                            } ${card.style}`}
+                            className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition ${brand === card.id ? "border-teal-500 shadow-sm" : "border-gray-200"
+                                } ${card.style}`}
                         >
                             {card.label}
                         </button>
