@@ -20,6 +20,7 @@ import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
+import TeacherSettings from "./pages/teacher/setting/teacherSetting";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -66,6 +67,7 @@ function App() {
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/teacher/create-new-course" element={<CourseForm />} />
            <Route path="/courses" element={<Courses />} />
+          <Route path="/teacher/settings" element={<TeacherSettings />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
