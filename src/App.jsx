@@ -21,7 +21,7 @@ import VerifyCode from "./pages/public/VerifyCode";
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
 import Courses from "./pages/public/Static/Courses";
-import Favourite from "./pages/public/Static/Favourite";
+import Favourite from "./pages/student/Favourite";
 
 
 import FAQ from "./pages/public/Static/FAQ";
@@ -35,6 +35,7 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
+import AccountSettings from "./pages/teacher/setting/AccountSettings";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminTeachers from "./pages/admin/AdminTeachers";
@@ -84,6 +85,7 @@ function App() {
         <Route path="/student" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
+          <Route path="favourite" element={<Favourite />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
@@ -98,6 +100,7 @@ function App() {
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
+          <Route path="settings" element={<AccountSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
