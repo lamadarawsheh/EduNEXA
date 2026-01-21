@@ -11,15 +11,24 @@ import Choose from "./pages/public/Choose";
 import Landing from "./pages/public/Landing/Landing";
 import SignUp from "./pages/public/SignUp";
 import Login from "./pages/public/Login";
+import Forgetpassword from "./pages/public/Forgetpassword";
+import Info from "./pages/public/Info";
+import Resetpassword from "./pages/public/Resetpassword";
+import Success from "./pages/public/Success";
+import VerifyCode from "./pages/public/VerifyCode";
 
 /* Static Pages */
 import Contact from "./pages/public/Static/Contact";
 import Courses from "./pages/public/Static/Courses";
+import Favourite from "./pages/student/Favourite";
+
+
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
+import TeacherSettings from "./pages/teacher/setting/teacherSetting";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -30,6 +39,7 @@ import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/public/NotFound";
+import AvailableCourses from "./pages/student/AvailableCourses";
 
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
@@ -50,13 +60,17 @@ function App() {
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
         <Route path="/choose" element={<Choose />} />
-        <Route path="/teacher/create-new-course" element={<CourseForm />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<Forgetpassword />} />
+        <Route path="/reset-password" element={<Resetpassword />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/info" element={<Info />} />
 
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
 
           {/* Static Pages */}
           <Route path="/contact" element={<Contact />} />
@@ -64,12 +78,14 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
-          <Route path="/teacher/create-new-course" element={<CourseForm />} />
-           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses" element={<Courses />} />
+
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
+          <Route path="available-courses" element={<AvailableCourses />} />
+          <Route path="favourite" element={<Favourite />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
@@ -84,6 +100,8 @@ function App() {
         {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
+          <Route path="create-new-course" element={<CourseForm />} />
+          <Route path="teacher-settings" element={<TeacherSettings />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
