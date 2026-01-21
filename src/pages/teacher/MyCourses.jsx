@@ -1,4 +1,3 @@
-import React from "react";
 import code from "../../assets/code.svg";
 import { GoPerson } from "react-icons/go";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";

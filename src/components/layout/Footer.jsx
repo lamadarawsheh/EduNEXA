@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Footer = () => {
-<<<<<<< HEAD
   return (
     <footer>
       <section className="py-12 bg-[#0F4C4A] text-white">
@@ -63,15 +62,6 @@ const Footer = () => {
     </footer>
 
   );
-=======
-    return (
-        <footer className="px-8 py-12 border-t border-white/5 bg-background mt-auto text-center">
-            <p className="text-white/40 text-sm">
-                &copy; {new Date().getFullYear()} EduNEXA Professional Learning Platform. All rights reserved.
-            </p>
-        </footer>
-    );
->>>>>>> a1f79364e804aded903ad912a46c6712e386e51e
 };
 
 export default Footer;
