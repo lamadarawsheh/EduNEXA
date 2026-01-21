@@ -1,6 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
+     --color-primetext:#093332;
+    --color-smallText:#71717A;
+    --color-prime:#176D69;
+    --color-borderGray: #D9D2D2;
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
     --color-primary: hsl(var(--primary));
