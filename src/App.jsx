@@ -52,6 +52,8 @@ import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
+import MyCourses from "./pages/teacher/my-courses/MyCourses";
+import Profile from "./pages/teacher/Profile/Profile";
 
 function App() {
   return (
@@ -104,6 +106,8 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
+          <Route path="my-courses" element={<MyCourses />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
