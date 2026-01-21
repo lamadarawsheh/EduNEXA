@@ -8,7 +8,7 @@ export default function OrderSummary() {
         h-auto lg:h-[404px] flex flex-col justify-between font-sans "
     >
      
-      <h3 className="text-[#093332] text-xl mb-6 w-full lg:w-[405px] h-auto lg:h-[64px]">
+      <h3 className="text-primetext text-xl mb-6 w-full lg:w-[405px] h-auto lg:h-[64px]">
         Order Summary
       </h3>
 
@@ -20,7 +20,7 @@ export default function OrderSummary() {
           className=" flex justify-between items-center w-full lg:w-[356px] h-[42px]"
         >
           <span className="text-[#71717A] text-sm">Course Price</span>
-          <span className="text-[#093332] text-sm">$79.99</span>
+          <span className="text-primetext text-sm">$79.99</span>
         </div>
 
         <div
@@ -45,7 +45,7 @@ export default function OrderSummary() {
             placeholder="Apply Coupon"
           />
         </div>
-        <button className="px-5 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-[#093332] hover:bg-gray-50 transition-colors">
+        <button className="px-5 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-primetext hover:bg-gray-50 transition-colors">
           Apply
         </button>
       </div>
@@ -59,9 +59,9 @@ export default function OrderSummary() {
           w-full lg:w-[356px] h-auto lg:h-[48px]
         "
       >
-        <span className="text-[#093332] text-lg">Total</span>
+        <span className="text-primetext text-lg">Total</span>
         <div className="text-right">
-          <div className="text-[#093332] text-2xl">$ 79.99</div>
+          <div className="text-primetext text-2xl">$ 79.99</div>
           <div className="text-[#16A34A] text-xs mt-1">
             You save $120.00
           </div>
