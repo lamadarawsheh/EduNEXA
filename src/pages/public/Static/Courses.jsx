@@ -183,6 +183,8 @@ const Courses = () => {
   );
 
   return (
+
+    
     <div className="px-4">
 
       {/* Header */}
