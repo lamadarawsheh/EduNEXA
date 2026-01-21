@@ -16,6 +16,8 @@ import StudentDashboard from './pages/student/Dashboard';
 import TeacherDashboard from './pages/teacher/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import NotFound from './pages/public/NotFound';
+import MyCourses from './pages/teacher/MyCourses';
+import Profile from './pages/teacher/Profile/Profile';
 
 function App() {
   return (
@@ -32,9 +34,10 @@ function App() {
           <Route path="/student" element={<StudentDashboard />} />
         </Route>
 
-        {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
+          <Route path="mycourses" element={<MyCourses />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
