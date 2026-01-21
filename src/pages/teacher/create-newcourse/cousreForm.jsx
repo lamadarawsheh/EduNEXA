@@ -41,22 +41,22 @@ export default function CourseForm() {
   };
 
   return (
-    <div className="p-10 bg-[#FFFFFF]">
+    <div className="p-4 sm:p-6 lg:p-10 bg-[#FFFFFF]">
       <div>
-        <h4 className="text-[#1E8A85] font-medium ">Good Morning Ali </h4>
-        <h3 className="text-[#093332] font-semibold">Create a new course</h3>
+        <h4 className="text-[#1E8A85] font-medium text-sm sm:text-base">Good Morning Ali </h4>
+        <h3 className="text-[#093332] font-semibold text-lg sm:text-xl">Create a new course</h3>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="bg-[#FFFFFF] p-8">
         <StepNavbar step={step} setStep={setStep} />
 
-        {/* 🔹 STEP HEADER (DYNAMIC) */}
-        <div className="flex items-center justify-between mb-6 border-b-[#E9EAF0] w-full">
-          <h2 className="text-2xl font-semibold text-[#093332]">
+        {/* 🔹 STEP HEADER */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 border-b-[#E9EAF0] w-full pb-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#093332]">
             {STEPS[step]}
           </h2>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button
               type="button"
               className=" bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer"
