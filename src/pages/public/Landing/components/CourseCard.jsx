@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CourseCard = ({ title, students, level }) => (
-    <div className="flex flex-col bg-white border border-transparent shadow-lg rounded-xl p-5 w-full max-w-[260px] group transition-all hover:shadow-2xl">
+    <div className="flex flex-col bg-white border border-transparent shadow-lg rounded-xl p-5 w-full group transition-all hover:shadow-2xl">
         <div className="relative overflow-hidden rounded-lg mb-4 h-40">
             <img src="/image/Gradient2.png" alt="Card" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
             <span className="absolute top-3 right-3 bg-white/90 px-2 py-px rounded-md text-[10px] font-bold text-[#0F4C4A]">{level}</span>

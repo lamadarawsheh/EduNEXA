@@ -1,0 +1,85 @@
+import { useFormContext } from "react-hook-form";
+import image from "./images/Rectangle.svg";
+
+
+
+export default function AccountSettings() {
+   const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext();
+
+
+  const onSubmit = (data) => {
+    console.log("Account Settings:", data);
+  };
+   return(
+    <>
+          <h2 className="text-[#093332] font-semibold mb-8">Account Settings</h2>
+    
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Name */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="col-span-8">
+                <label className="text-[#093332] font-medium "> Full Name</label>
+                <div className="row flex gap-4 w-full mt-4 mb-4">
+                  <input
+                    {...register("firstName")}
+                    placeholder="First name"
+                    className=" text-[#176D69] w-full p-2 border border-[#176D69]"
+                  />
+                  <input
+                    {...register("lastName")}
+                    placeholder="Last name"
+                    className=" text-[#176D69] w-full p-2 border border-[#176D69]"
+                  />
+                </div>
+    
+                {/* Username */}
+                <label className="text-[#093332] font-medium "> User Name</label>
+                <input
+                  {...register("username", { required: "Username is required" })}
+                  placeholder="Enter your username"
+                  className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+                />
+                {errors.username && (
+                  <p className="error">{errors.username.message}</p>
+                )}
+              </div>
+              <div className="border border-8-[#F5F7FA] col-span-4">
+                <img src={image} alt="Profile Picture" className="object-cover" />
+              </div>
+            </div>
+            {/* Phone */}
+            <label className="text-[#093332] font-medium "> Phone Number</label>
+            <input
+              {...register("phone")}
+              placeholder="+880 Your phone number"
+              className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+            />
+    
+            {/* Title */}
+            <div className="field">
+              <label className="text-[#093332] font-medium "> Title</label>
+              <input
+                {...register("title", { maxLength: 50 })}
+                placeholder="Your title, profession or small biography"
+                className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+              />
+              {/* <small>{titleValue.length}/50</small> */}
+            </div>
+    
+            {/* Bio */}
+            <label className="text-[#093332] font-medium "> Biography</label>
+            <textarea
+              {...register("bio")}
+              placeholder="Your title, profession or small biography"
+              className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+            />
+    
+            <button type="submit">Save Changes</button>
+          </form>
+    </>
+   )
+}

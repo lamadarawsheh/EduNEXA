@@ -24,7 +24,7 @@ const CourseCard = ({ image, title, description, level, students, buttonText, on
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col cursor-pointer transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl">
+    <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col cursor-pointer transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl h-full">
       {/* img */}
       <img
         src={image}
@@ -37,7 +37,7 @@ const CourseCard = ({ image, title, description, level, students, buttonText, on
         <h3 className="text-lg text-[#0F172B] font-bold text-left">{title}</h3>
 
         <button
-          onClick={toggleFavorite}
+          onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
           className="focus:outline-none w-8 h-8 flex items-center justify-center"
         >
           <svg
@@ -59,7 +59,7 @@ const CourseCard = ({ image, title, description, level, students, buttonText, on
       </p>
 
       {/* level + students */}
-      <div className="flex justify-between mb-4 w-full">
+      <div className="flex justify-between mb-4 w-full mt-auto">
         <span className="text-[#176D69] text-xs">{level}</span>
         <span className="text-[#176D69] text-xs">{students} Students</span>
       </div>
@@ -67,7 +67,7 @@ const CourseCard = ({ image, title, description, level, students, buttonText, on
       {/* button */}
       <button
         onClick={onDetailsClick}
-        className="bg-[#0F4C4A] text-white px-4 py-2 rounded hover:bg-white hover:text-[#0F4C4A] hover:border transition"
+        className="bg-[#0F4C4A] text-white px-4 py-2 rounded hover:bg-white hover:text-[#0F4C4A] hover:border transition font-bold"
       >
         {buttonText}
       </button>
@@ -81,7 +81,7 @@ const PackageCard = ({ title, price, features, isMiddle }) => {
 
   return (
     <div
-      className={`w-[300px] h-[28rem] rounded-3xl p-6 flex flex-col cursor-pointer transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl
+      className={`w-[300px] min-h-[30rem] h-auto rounded-3xl p-8 flex flex-col cursor-pointer transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl
         ${isMiddle ? "bg-[#0F4C4A] text-white" : "bg-white border border-[#176D69] text-[#0F4C4A]"} 
       `}
     >
@@ -90,7 +90,7 @@ const PackageCard = ({ title, price, features, isMiddle }) => {
         <p className="text-4xl font-bold mt-2">{price}</p>
       </div>
 
-      <div className="flex flex-col gap-3 mb-6">
+      <div className="flex flex-col gap-5 mb-6">
         {features.map((feature, idx) => (
           <div key={idx} className="flex items-center gap-2">
             <div className={`w-4 h-4 rounded-full flex items-center justify-center ${isMiddle ? "bg-white" : "bg-[#0F4C4A]"}`}>
@@ -102,14 +102,14 @@ const PackageCard = ({ title, price, features, isMiddle }) => {
       </div>
 
       <button
-        onClick={() => navigate("/contact")}
+        onClick={() => navigate("/login")}
         className={`mt-auto px-10 py-2 rounded-3xl font-bold transition
           ${isMiddle
             ? "bg-[#4FB6B2] text-white hover:bg-white hover:text-[#56A39A]"
             : "bg-white text-[#0F4C4A] hover:bg-[#0F4C4A] hover:text-white border border-[#56A39A]"
           }`}
       >
-        Contact Us
+        Start Now
       </button>
     </div>
   );
@@ -188,53 +188,53 @@ const Courses = () => {
     <div className="px-4">
 
       {/* Header */}
-     <div className="text-left mb-4 pt-5 pb-5">
-  <h2 className="text-4xl font-bold mb-4 text-[#0F4C4A] ps-3 pb-5">Courses</h2>
-  <div className="flex flex-wrap gap-4 justify-start ps-8">
-    {coursesData.map((course, index) => (
-      <button
-        key={index}
-        onClick={() => document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' })}
-        className="bg-white text-[#231D17] px-6 py-1 rounded-lg hover:bg-[#0F4C4A] hover:text-white transition border border-[#56A39A] shadow-sm"
-      >
-        {course.title}  {/* هنا الاسم لكل كورس */}
-      </button>
-    ))}
-  </div>
-</div>
+      <div className="text-center mb-4 pt-5 pb-5">
+        <h2 className="text-4xl font-bold mb-4 text-[#0F4C4A] pb-5">Courses</h2>
+        <div className="flex flex-wrap gap-4 justify-center">
+          {coursesData.map((course, index) => (
+            <button
+              key={index}
+              onClick={() => document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-white text-[#231D17] px-6 py-1 rounded-lg hover:bg-[#0F4C4A] hover:text-white transition border border-[#56A39A] shadow-sm"
+            >
+              {course.title}
+            </button>
+          ))}
+        </div>
+      </div>
 
 
       {/* Search Bar */}
-<div className="flex justify-center mb-6 relative w-full max-w-md mx-auto">
-  <input
-    type="text"
-    placeholder="Search courses..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    className="border border-[#56A39A] rounded-lg px-4 py-2 w-full focus:outline-none text-[#0F4C4A]"
-  />
-  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#0F4C4A] cursor-pointer">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-      />
-    </svg>
-  </div>
-</div>
+      <div className="flex justify-center mb-6 relative w-full max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search courses..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-[#56A39A] rounded-lg px-4 py-2 w-full focus:outline-none text-[#0F4C4A]"
+        />
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#0F4C4A] cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+            />
+          </svg>
+        </div>
+      </div>
 
 
       {/* Courses */}
-      <section className="py-16 bg-gray-50/50">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="py-16 bg-gray-50/50 rounded-3xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-2">
           {filteredCourses.length > 0 ? (
             filteredCourses.map((course, index) => (
               <CourseCard
@@ -244,8 +244,29 @@ const Courses = () => {
               />
             ))
           ) : (
-            <p className="text-center text-[#0F4C4A] col-span-full">No courses found.</p>
+            <div className="text-center text-[#0F4C4A] col-span-full py-20">
+              <p className="text-xl font-semibold">No courses found matching your search.</p>
+              <button
+                onClick={() => setSearchTerm('')}
+                className="mt-4 text-[#4AA59B] hover:underline transition-all"
+              >
+                Clear all filters
+              </button>
+            </div>
           )}
+        </div>
+
+        {/* Simplified View All Link */}
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => navigate('/login')}
+            className="inline-flex items-center gap-3 text-[#0F4C4A] font-extrabold hover:text-[#4AA59B] transition-all group"
+          >
+            <span className="text-lg">Access all premium student courses</span>
+            <div className="w-10 h-10 rounded-full bg-[#F0F9F8] flex items-center justify-center group-hover:bg-[#0F4C4A] group-hover:text-white transition-all transform group-hover:scale-110 shadow-sm group-hover:shadow-md">
+              <span className="text-xl">→</span>
+            </div>
+          </button>
         </div>
       </section>
 
@@ -260,15 +281,15 @@ const Courses = () => {
           </span>
         </div>
 
-       <div className="flex flex-wrap justify-center gap-8">
-  {packagesData.map((pkg, index) => (
-    <PackageCard
-      key={index}
-      {...pkg}
-      isMiddle={index === 1} // الكارت الأوسط
-    />
-  ))}
-</div>
+        <div className="flex flex-wrap justify-center gap-8">
+          {packagesData.map((pkg, index) => (
+            <PackageCard
+              key={index}
+              {...pkg}
+              isMiddle={index === 1} // الكارت الأوسط
+            />
+          ))}
+        </div>
 
       </section>
 
@@ -291,10 +312,10 @@ const Courses = () => {
           </button>
 
           <button
-            onClick={() => navigate("/contact")}
+            onClick={() => navigate("/login")}
             className="bg-white text-[#231D17] px-8 py-3 rounded-lg hover:bg-[#0F4C4A] hover:text-white transition border border-[#56A39A] font-bold"
           >
-            Contact Us
+            Start Now
           </button>
         </div>
       </section>

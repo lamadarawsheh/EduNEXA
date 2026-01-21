@@ -134,17 +134,30 @@ const Landing = () => {
       <section id="courses" className="py-16 bg-gray-50/50 opacity-0 translate-y-10 transition-all duration-1000 ease-out animate-on-scroll">
         <div className="text-center mb-12 px-4">
           <h2 className="text-4xl font-bold text-[#0F172B]">
-            Popular Courses0
+            Popular Courses
           </h2>
           <p className="text-lg text-gray-600 mt-2">
             Choose from hundreds of specialized courses in different fields
           </p>
         </div>
 
-        <div className="flex justify-center flex-wrap gap-6 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
           <CourseCard title="Expert Instructors" students="2.5K" level="Beginner" />
           <CourseCard title="Full-Stack Web Dev" students="1.2K" level="Intermediate" />
           <CourseCard title="Advanced UI/UX" students="800" level="Advanced" />
+        </div>
+
+        {/* Simplified View All Link */}
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => navigate('/login')}
+            className="inline-flex items-center gap-3 text-[#0F4C4A] font-extrabold hover:text-[#4AA59B] transition-all group"
+          >
+            <span className="text-lg">Browse all available courses</span>
+            <div className="w-10 h-10 rounded-full bg-[#F0F9F8] flex items-center justify-center group-hover:bg-[#0F4C4A] group-hover:text-white transition-all transform group-hover:scale-110 shadow-sm group-hover:shadow-md">
+              <span className="text-xl">→</span>
+            </div>
+          </button>
         </div>
       </section>
 
@@ -169,8 +182,8 @@ const Landing = () => {
           </p>
         </div>
 
-      {/* ===== Grid for courses: 4 per row ===== */}
-     <div className="flex justify-center flex-wrap gap-6 px-4">
+        {/* ===== Grid for courses: 4 per row ===== */}
+        <div className="flex justify-center flex-wrap gap-6 px-4">
           {[1, 2, 3].map((_, idx) => (
             <div key={idx} className="bg-white flex flex-col border border-transparent shadow-lg gap-2 rounded-lg p-6 w-full max-w-[280px]">
               <div className="flex mb-2 space-x-1 justify-center">
@@ -208,10 +221,10 @@ const Landing = () => {
               Start Free Now
             </button>
             <button
-              onClick={() => navigate('/contact')}
+              onClick={() => navigate('/login')}
               className="bg-white text-[#231D17] px-8 py-3 rounded-lg hover:bg-[#0F4C4A] hover:text-white transition border border-[#56A39A] font-bold"
             >
-              Contact Us
+              Start Now
             </button>
           </div>
         </div>
