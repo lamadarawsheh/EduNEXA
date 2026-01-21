@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import {  CreditCard, Wallet, Smartphone, Banknote, CheckCircle2, Upload, Building2,Lock,User,Mail, ShieldCheck,Zap, Globe, RefreshCcw, ExternalLink  
 } from "lucide-react";
 
-const PaymentMethods = () => {
+export default function PaymentMethods() {
   const [selectedMethod, setSelectedMethod] = useState("bank");
-  const [paypalTab, setPaypalTab] = useState("account"); // 2. أضفنا هذه الحالة هنا
+  const [paypalTab, setPaypalTab] = useState("account");
 
   const methods = [
     {
@@ -287,5 +287,3 @@ const PaymentMethods = () => {
     </div>   
   );
 };
-
-export default PaymentMethods;

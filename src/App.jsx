@@ -17,6 +17,7 @@ import TeacherDashboard from './pages/teacher/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import NotFound from './pages/public/NotFound';
 import Checkout from './pages/student/Checkout/Checkout';
+import Earning from './pages/student/Checkout/Earning/Earning';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path='/checkout' element={<Checkout/>}/>
+          <Route path='/Earning' element={<Earning/>}/>
       
         </Route>
 
