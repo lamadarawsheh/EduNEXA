@@ -21,14 +21,13 @@ import VerifyCode from "./pages/public/VerifyCode";
 import Contact from "./pages/public/Static/Contact";
 import Courses from "./pages/public/Static/Courses";
 import Favourite from "./pages/student/Favourite";
-
-
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
+
+/* Teacher Course Form */
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
-import TeacherSettings from "./pages/teacher/setting/teacherSetting";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -37,21 +36,22 @@ import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
 import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
+import TeacherSettings from "./pages/teacher/setting/teacherSetting";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminTeachers from "./pages/admin/AdminTeachers";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
+import Checkout from "./pages/student/Checkout/Checkout";
 
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
-import AdminStudents from './pages/admin/AdminStudents';
-import AdminTeachers from './pages/admin/AdminTeachers';
-import AdminCourses from './pages/admin/AdminCourses';
-import AdminSettings from './pages/admin/AdminSettings';
 import ScrollToTop from "./components/common/ScrollToTop";
-import Checkout from "./pages/student/Checkout/Checkout";
 
 function App() {
   return (
@@ -79,14 +79,14 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/courses" element={<Courses />} />
-
+          <Route path="/favourite" element={<Favourite />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
-          <Route path="checkout" element ={<Checkout/>}/>
+          <Route path="checkout" element={<Checkout />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
@@ -107,6 +107,10 @@ function App() {
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="students" element={<AdminStudents />} />
+          <Route path="teachers" element={<AdminTeachers />} />
+          <Route path="courses" element={<AdminCourses />} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* 5. 404 CATCH-ALL */}

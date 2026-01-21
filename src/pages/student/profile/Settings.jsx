@@ -1,11 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, ChevronRight, Globe, Lock, LogOut } from "lucide-react";
+import { getStudentSettings } from "../../../services/settingService";
 import "./Profile.css";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const studentId = localStorage.getItem("studentId");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  useEffect(() => {
+    if (!studentId) {
+      return;
+    }
+
+    let isActive = true;
+
+    const loadSettings = async () => {
+      try {
+        const response = await getStudentSettings(studentId);
+        if (!isActive) {
+          return;
+        }
+
+        const data = response?.data;
+        if (typeof data?.notificationsEnabled === "boolean") {
+          setNotificationsEnabled(data.notificationsEnabled);
+        }
+      } catch (error) {
+        if (isActive) {
+          console.error("Failed to load student settings:", error);
+        }
+      }
+    };
+
+    loadSettings();
+
+    return () => {
+      isActive = false;
+    };
+  }, [studentId]);
 
   const handleToggleNotifications = () => {
     setNotificationsEnabled(!notificationsEnabled);

@@ -11,8 +11,8 @@ const navItems = [
     ];
 const AdminLayout = () => {
     return (
-        <div className="flex min-h-screen bg-white text-black">
-        <aside className="w-64 md:flex md:flex-col justify-between items-between border-r border-white/5 bg-white p-6 py-8 hidden">
+        <div className="flex flex-col lg:flex-row min-h-screen text-black">
+        <aside className="w-64 xl:flex lg:flex-col justify-between items-between border-r border-white/5 bg-white p-6 py-8 hidden">
             <div>
             <img src="/Heading1.png" alt="Admin NEXA" className="mb-8 mt-8 w-32" />                
             <nav className="space-y-4 mt-8 pt-8">
@@ -27,7 +27,18 @@ const AdminLayout = () => {
             </button>
             </div>
         </aside>
-        <main className="flex-1 overflow-y-auto bg-[#F2F2F2]">
+
+        <aside className="order-2 bg-transparent w-full lg:hidden p-4 my-6 bg-[#F2F2F2] ">
+            <button className="flex items-center gap-2 lg:hidden font-semibold text-lg text-red-600 hover:text-[#8A8A8A] my-4">
+            <PiSignOutBold /> <span>sign out</span>
+            </button>
+            <nav className="flex justify-evenly border-r border-white/5 bg-white rounded-2xl shadow-md py-3">
+            {navItems.map((item) => (
+            <NavItem key={item.to} label={item.label} to={item.to} />
+            ))}
+            </nav>
+        </aside>
+        <main className="order-1 lg:order-2 flex-1 overflow-y-auto bg-[#F2F2F2]">
             <div className="max-w-6xl mx-auto">
             <Outlet />
             </div>

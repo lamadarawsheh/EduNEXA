@@ -93,7 +93,7 @@ function ChatWidget({ onPreviewClick }) {
                     )}
                 </div>
             )}
-            <style jsx>{`
+            <style>{`
                 @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
                 @keyframes slide-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
                 @keyframes slide-in-left { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
