@@ -22,7 +22,7 @@ export default function AdvanceInfo({ register, control }) {
   return (
     <div className="space-y-10 bg-[#FFFFFF] ">
       {/* Upload Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 align-middle">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 align-middle">
         {/* Thumbnail */}
         <div>
           <h4 className="font-medium mb-2 text-[#093332] text-left">
@@ -52,7 +52,7 @@ export default function AdvanceInfo({ register, control }) {
               />
               <label
                 htmlFor="thumbnail"
-                className="btn-light px-6 py-2 cursor-pointer font-semibold bg-[#A6E5E35C] text-[#176D69]"
+                className="inline-block w-full btn-light px-6 py-2 cursor-pointer font-semibold bg-[#A6E5E35C] text-[#176D69] sm:w-auto"
               >
                 Upload Image
               </label>
@@ -63,14 +63,14 @@ export default function AdvanceInfo({ register, control }) {
         {/* Trailer */}
         <div>
           <h4 className="font-medium mb-2  text-[#093332] ">Course Trailer</h4>
-          <div className="flex flex-row justify-center items-center flex-sm-col">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
             <img
               src={image2}
               alt="Thumbnail"
-              className="w-57 h-40 object-cover mb-2"
+              className="w-full sm:w-56 h-40 object-cover mb-2"
             />
-            <div className="border border-dashed rounded p-4 text-center">
-              <p className="text-[#176D69] mb-3 font-light">
+            <div className="border border-dashed rounded p-4 sm:p-6 text-center">
+              <p className="text-[#176D69] mb-3 font-light  text-sm sm:text-base leading-relaxed">
                 Students who watch a well-made promo video are 5X more likely to
                 enroll in your course. We've seen that statistic go up to 10X
                 for exceptionally awesome videos.
@@ -83,7 +83,7 @@ export default function AdvanceInfo({ register, control }) {
               />
               <label
                 htmlFor="trailer"
-                className="btn-light cursor-pointer px-6 py-2 font-semibold bg-[#A6E5E35C] text-[#176D69]"
+                className="inline-block w-full sm:w-auto text-center btn-light cursor-pointer px-6 py-2 font-semibold bg-[#A6E5E35C] text-[#176D69]"
               >
                 Upload Video
               </label>
