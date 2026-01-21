@@ -46,6 +46,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
 import Checkout from "./pages/student/Checkout/Checkout";
+import MyCourses from "./pages/teacher/MyCourses";
 
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
@@ -108,12 +109,13 @@ function App() {
           </Route>
         </Route>
 
-        {/* 3. TEACHER DASHBOARD (Sidebar Layout) */}
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
+          <Route path="mycourses" element={<MyCourses />} />
         </Route>
+
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
         <Route path="/admin" element={<AdminLayout />}>
