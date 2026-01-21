@@ -51,6 +51,7 @@ import AdminTeachers from './pages/admin/AdminTeachers';
 import AdminCourses from './pages/admin/AdminCourses';
 import AdminSettings from './pages/admin/AdminSettings';
 import ScrollToTop from "./components/common/ScrollToTop";
+import Checkout from "./pages/student/Checkout/Checkout";
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
+          <Route path="checkout" element ={<Checkout/>}/>
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
