@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import TeacherLayout from "./layouts/TeacherLayout";
+import TeacherPublicLayout from "./layouts/TeacherPublicLayout";
 
 /* Initial & Public Pages */
 import SplashScreen from "./pages/public/SplashScreen";
@@ -25,7 +26,7 @@ import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
-
+import TeacherLanding from "./pages/public/Landing/TeacherLanding";
 /* Teacher Course Form */
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
 
@@ -72,7 +73,6 @@ function App() {
         {/* 2. PUBLIC & STUDENT ROUTES (Navbar/Footer Layout) */}
         <Route element={<MainLayout />}>
           <Route path="/landing" element={<Landing />} />
-
           {/* Static Pages */}
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
@@ -81,6 +81,15 @@ function App() {
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/favourite" element={<Favourite />} />
+        </Route>
+
+        {/* 2.5 TEACHER PUBLIC ROUTES (TeacherNavbar/Footer Layout - BEFORE LOGIN) */}
+        <Route element={<TeacherPublicLayout />}>
+          <Route path="/teacher-landing" element={<TeacherLanding />} />
+          {/* Shared Static Pages */}
+          <Route path="/teach/faq" element={<FAQ />} />
+          <Route path="/teach/about" element={<AboutUs />} />
+          <Route path="/teach/contact" element={<Contact />} />
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
