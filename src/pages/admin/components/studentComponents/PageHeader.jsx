@@ -8,7 +8,7 @@ const user = {
   name: "Ahmed Hassan",
   avatar: "https://i.pravatar.cc/150?img=12",
 };
-export default function Header() {
+export default function PageHeader({pageName}) {
   const [value, setValue] = useState("");
     
 return (
@@ -26,7 +26,7 @@ return (
         </div>
         <div className= "px-2 py-4 md:px-4 rounded-2xl shadow-md  min-h-[40px] flex-col items-between bg-[#176D69]">
         <div className="flex justify-between items-center w-full">
-            <h2 className='font-bold text-white text-lg md:text-2xl'> Students Records </h2>
+            <h2 className='font-bold text-white text-lg md:text-2xl'> {pageName} </h2>
         <div className="relative w-[60%] md:w-[50%] mx-auto">
         {!value && (
         <div className="pointer-events-none absolute w-full left-3 top-1/2 flex -translate-y-1/2 items-center gap-2 text-gray-400">

@@ -1,8 +1,8 @@
 import React from 'react'
-import StudentRecord from './StudentRecord'
+import Record from './Record'
 import { FiEdit, FiFilter, FiPrinter, FiTrash, FiArrowUp } from 'react-icons/fi'
 
-export default function StudentTable({ students }) {
+export default function Table({ records, columns, noOfCourses,pageName }) {
     return (
         <>
             <div className="my-6 flex justify-between">
@@ -33,22 +33,21 @@ export default function StudentTable({ students }) {
                             <tr>
                                 <th className="text-left text-sm md:text-xl font-semibold p-2 md:p-4">
                                     <div className="flex items-center gap-3">
-                                        <span>Student Name</span>
+
+                                        <span>{columns[0]}</span>
                                     </div>
                                 </th>
-                                <th className="text-left font-semibold p-2 md:p-4">Email</th>
-                                <th className="text-left font-semibold p-2 md:p-4">Phone</th>
-                                <th className="text-right font-semibold p-2 md:p-4">
-                                    Date of birth
+                                <th className="text-left font-semibold p-2 md:p-4">{columns[1]}</th>
+                                <th className="text-left font-semibold pe-2 md:p-4">{columns[2]}</th>
+                                <th className="text-left font-semibold p-2 md:p-4">
+                                    {columns[3]}
                                 </th>
+                                <th className="text-left font-semibold p-2 md:p-4"> {noOfCourses}  </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {students.map((student) => (
-                                <StudentRecord
-                                    key={student.id}
-                                    student={student}
-                                />))}
+                            {records.map((record) => (
+                                <Record key={record.id} record={record} pageName={pageName} />))}
                         </tbody>
                     </table>
                 </div>
