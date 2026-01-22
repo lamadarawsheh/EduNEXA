@@ -18,14 +18,9 @@ const Choose = () => {
                     onClick={() => navigate('/landing')}
                 />
                 <RoleCard
-<<<<<<< HEAD
-                    title="Instructor"
-                    onClick={() => navigate('/teacher-landing')}
-=======
                     title="Teacher"
                     desc="Share knowledge and earn balance"
                     onClick={() => navigate('/teacher')}
->>>>>>> d575142bd59b2ac8c9f0b6e4cd36045aa4477619
                 />
                 <RoleCard
                     title="Admin"
