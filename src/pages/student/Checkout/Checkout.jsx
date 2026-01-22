@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function Checkout() {
   return (
-    <div className="min-h-screen bg-white text-black px-4 sm:px-6 py-6 lg:py-10 font-sans overflow-hidden">
+    <div className="min-h-screen bg-white text-black px-4 sm:px-6 py-2 lg:py-2 font-sans overflow-hidden">
       <div className="max-w-[1280px] mx-auto flex flex-col gap-8 lg:gap-12 overflow-hidden">
 
         {/* Header */}
