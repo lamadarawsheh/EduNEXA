@@ -21,7 +21,7 @@ export default function AccountSettings() {
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="col-span-8">
+              <div className="col-span-8 md:order-1 order-2">
                 <label className="text-[#093332] font-medium "> Full Name</label>
                 <div className="row flex gap-4 w-full mt-4 mb-4">
                   <input
@@ -47,7 +47,7 @@ export default function AccountSettings() {
                   <p className="error">{errors.username.message}</p>
                 )}
               </div>
-              <div className="border border-8-[#F5F7FA] col-span-4">
+              <div className="border border-8-[#F5F7FA] col-span-4 md:order-2 order-1">
                 <img src={image} alt="Profile Picture" className="object-cover" />
               </div>
             </div>
