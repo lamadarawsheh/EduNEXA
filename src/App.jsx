@@ -52,6 +52,7 @@ import AdminCourses from './pages/admin/AdminCourses';
 import AdminSettings from './pages/admin/AdminSettings';
 import ScrollToTop from "./components/common/ScrollToTop";
 import Checkout from "./pages/student/Checkout/Checkout";
+import Earning from "./pages/teacher/Earning/Earning";
 
 function App() {
   return (
@@ -104,6 +105,7 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
+          <Route path="earnings" element = {<Earning/>}/>
         </Route>
 
         {/* 4. ADMIN PANEL (Sidebar Layout) */}
