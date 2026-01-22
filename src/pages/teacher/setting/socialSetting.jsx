@@ -29,7 +29,7 @@ export default function SocialSettings() {
           className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
         />
        </div>
-        <div className="row flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full">
             <div className="w-full">
           <label className="text-[#093332] font-medium "> Facebook</label>
          <div className="relative w-full flex items-center"> 
@@ -66,7 +66,7 @@ export default function SocialSettings() {
       </div>
 
 
-        <div className="row flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full">
           <div className="w-full">
           <label className="text-[#093332] font-medium "> Twitter</label>
           <div className="relative w-full flex items-center">

@@ -43,7 +43,7 @@ export default function CourseForm() {
   return (
     <div className="p-4 sm:p-6 lg:p-10 bg-[#FFFFFF]">
       <div>
-        <h4 className="text-[#1E8A85] font-medium text-sm sm:text-base">Good Morning Ali </h4>
+        <h4 className="text-[#1E8A85] font-medium text-sm sm:text-base mb-8">Good Morning Ali </h4>
         <h3 className="text-[#093332] font-semibold text-lg sm:text-xl">Create a new course</h3>
       </div>
 
@@ -65,7 +65,7 @@ export default function CourseForm() {
             </button>
             <button
               type="button"
-              className="btn-light text-[#093332] font-semibold ml-2 cursor-pointer"
+              className="btn-light text-[#093332] font-semibold  cursor-pointer "
             >
               Save & Preview
             </button>
@@ -87,7 +87,7 @@ export default function CourseForm() {
         )}
 
         {/* 🔹 FOOTER BUTTONS */}
-        <div className="flex justify-between mt-10">
+        <div className="flex flex-col gap-2 mt-10 md:flex-row md:justify-between">
           {step > 0 && (
             <button
               type="button"
@@ -103,7 +103,12 @@ export default function CourseForm() {
             <button
               type="button"
               onClick={() => setStep(step + 1)}
-              className="btn-primary text-[#FFFFFF] bg-[#176D69] font-semibold px-6 py-2 cursor-pointer"
+              className="btn-primary text-[#FFFFFF] bg-[#176D69] font-semibold  px-4 py-1.5
+      sm:px-6 sm:py-2
+      w-full sm:w-auto
+      cursor-pointer
+      sm:ml-2
+      transition"
             >
               Save & Next
             </button>
