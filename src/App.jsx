@@ -80,7 +80,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
-          <Route path="/courses" element={<Courses />} />
+          <Route path="/courses" element={<Courses/>} />
           <Route path="/favourite" element={<Favourite />} />
         </Route>
 
