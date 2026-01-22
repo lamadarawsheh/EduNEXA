@@ -29,6 +29,7 @@ import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import TeacherLanding from "./pages/public/Landing/TeacherLanding";
 /* Teacher Course Form */
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
+import Profile from "./pages/teacher/Profile/Profile";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -114,6 +115,7 @@ function App() {
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
 
