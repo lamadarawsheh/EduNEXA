@@ -135,7 +135,7 @@ const Favourite = () => {
             </div>
 
             {/* Custom Styles */}
-            <style jsx>{`
+            <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
                     width: 4px;
                 }

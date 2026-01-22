@@ -22,7 +22,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
 
     const teacherLinks = [
         { name: 'Home', path: '/teacher' },
-        { name: 'My Courses', path: '/teacher/my-courses' },
+        { name: 'My Courses', path: '/teacher/mycourses' },
         { name: 'Create New Course', path: '/teacher/create-new-course' },
         { name: 'Earnings', path: '/teacher/earnings' },
         { name: 'Settings', path: '/teacher/teacher-settings' },
@@ -73,9 +73,16 @@ const DashboardNavbar = ({ role = 'student' }) => {
                             className="flex items-center gap-2 group focus:outline-none"
                         >
                             <div className="w-9 h-9 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center">
-                                <User size={20} className="text-[#45556C]" />
+                                <img
+                                    src={role === 'teacher'
+                                        ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=60"
+                                        : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60"
+                                    }
+                                    alt="Profile"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
-                            <ChevronDown size={14} className={`text-[#45556C] transition-transform ${showProfile ? 'rotate-180' : ''}`} />
+                            <ChevronDown size={14} className={`text-[#45556C] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
                         </button>
                         {showProfile && (
                             <>
@@ -84,10 +91,10 @@ const DashboardNavbar = ({ role = 'student' }) => {
                                     onClick={() => setShowProfile(false)}
                                 ></div>
                                 <div className="absolute top-full right-0 w-48 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                                    <Link to={`/${role}/profile`} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <Link to={`/${role}/profile`} onClick={() => setShowProfile(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                         <User size={16} /> My Profile
                                     </Link>
-                                    <Link to={role === 'teacher' ? '/teacher/teacher-settings' : '/student/profile/settings'} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <Link to={role === 'teacher' ? '/teacher/teacher-settings' : '/student/profile/settings'} onClick={() => setShowProfile(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                         Settings
                                     </Link>
                                     <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-50 mt-1">
