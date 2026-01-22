@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /* Layouts */
 import MainLayout from "./layouts/MainLayout";
@@ -59,7 +59,6 @@ import ScrollToTop from "./components/common/ScrollToTop";
 function App() {
   return (
     <Router>
-      <ScrollToTop />
       <Routes>
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
@@ -115,6 +114,7 @@ function App() {
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="my-courses" element={<MyCourses />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

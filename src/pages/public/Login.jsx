@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Facebook, Loader2 } from 'lucide-react';
-import Popup from '../../components/common/Popup';
+import Popup from '../../components/common/popup';
 
 const Login = () => {
     const navigate = useNavigate();
