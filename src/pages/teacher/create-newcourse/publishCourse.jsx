@@ -103,20 +103,7 @@ export default function PublishCourse({ register, control }) {
         </div>
       </div>
 
-      {/* ===== Actions ===== */}
-      {/* <div className="flex justify-between pt-6">
-        <button
-          type="button"
-          onClick={() => setStep((prev) => prev - 1)}
-          className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer"
-        >
-          Prev Step
-        </button>
 
-        <button type="submit" className="btn-primary  bg-[#176D69] text-[#FFFFFF] font-semibold px-4 py-2 cursor-pointer">
-          Submit For Review
-        </button>
-      </div> */}
     </div>
   );
 }
