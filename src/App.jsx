@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /* Layouts */
 import MainLayout from "./layouts/MainLayout";
@@ -29,6 +29,7 @@ import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import TeacherLanding from "./pages/public/Landing/TeacherLanding";
 /* Teacher Course Form */
 import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
+import Profile from "./pages/teacher/Profile/Profile";
 
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
@@ -58,7 +59,6 @@ import ScrollToTop from "./components/common/ScrollToTop";
 function App() {
   return (
     <Router>
-      <ScrollToTop />
       <Routes>
         {/* 1. INITIAL SCREENS (No Layout) */}
         <Route path="/" element={<SplashScreen />} />
@@ -114,6 +114,8 @@ function App() {
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="my-courses" element={<MyCourses />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
 
