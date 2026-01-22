@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Bell,
     ChevronDown,
@@ -7,11 +7,18 @@ import {
     User,
     LogOut
 } from 'lucide-react';
+import { logout } from '../../services/authService';
 
 const DashboardNavbar = ({ role = 'student' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
     const studentLinks = [
         { name: 'Home', path: '/student' },
@@ -97,7 +104,10 @@ const DashboardNavbar = ({ role = 'student' }) => {
                                     <Link to={role === 'teacher' ? '/teacher/teacher-settings' : '/student/profile/settings'} onClick={() => setShowProfile(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                         Settings
                                     </Link>
-                                    <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-50 mt-1">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-50 mt-1"
+                                    >
                                         <LogOut size={16} /> Sign Out
                                     </button>
                                 </div>
@@ -124,7 +134,12 @@ const DashboardNavbar = ({ role = 'student' }) => {
                     ))}
                     <div className="w-4/5 border-t border-gray-100 pt-6 flex flex-col items-center space-y-4">
                         <Link to={`/${role}/profile`} onClick={() => setIsOpen(false)} className="text-gray-700 font-bold">My Profile</Link>
-                        <button className="bg-[#0F4C4A] text-white w-full py-3 rounded-xl font-bold shadow-lg">Sign Out</button>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-[#0F4C4A] text-white w-full py-3 rounded-xl font-bold shadow-lg"
+                        >
+                            Sign Out
+                        </button>
                     </div>
                 </div>
             )}
