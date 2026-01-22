@@ -31,7 +31,7 @@ export default function CurriculumStep({ control, register }) {
               className="input w-full border border-[#176D69] text-[#176D69] p-2 mt-1 text-sm sm:text-base"
             />
 
-            <div className="flex gap-3 mt-6 justify-between">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light  bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "
@@ -87,7 +87,7 @@ export default function CurriculumStep({ control, register }) {
               Note: All files should be at least 720p and less than 4.0 GB.
             </p>
 
-            <div className="flex gap-3 mt-4 justify-between">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "
@@ -120,7 +120,7 @@ export default function CurriculumStep({ control, register }) {
               className="input w-full border border-[#176D69] text-[#176D69] p-10 text-sm sm:text-base"
               placeholder="Attach File here..."
             />
-            <div className="flex gap-3 mt-4 justify-between">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "
@@ -156,7 +156,7 @@ export default function CurriculumStep({ control, register }) {
               placeholder="Write your lecture caption here..."
               className="input w-full border border-[#176D69] text-[#176D69] p-2 mt-1 text-sm sm:text-base"
             />
-            <div className="flex gap-3 mt-4 justify-between">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "
@@ -189,7 +189,7 @@ export default function CurriculumStep({ control, register }) {
               rows={4}
                 placeholder="Write your lecture description here..."
             />
-               <div className="flex gap-3 mt-4 justify-between">
+               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "
@@ -223,7 +223,7 @@ export default function CurriculumStep({ control, register }) {
               className="textarea w-full border border-[#176D69] text-[#176D69] text-sm sm:text-base"
               rows={4}
             />
-              <div className="flex gap-3 mt-4 justify-between">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="button"
                 className="btn-light bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer sm:w-auto "

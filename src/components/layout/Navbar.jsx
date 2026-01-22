@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -20,9 +20,11 @@ const Navbar = () => {
 
       {/* Desktop Links */}
       <div className="hidden md:flex items-center gap-8 text-sm text-[#45556C]">
+        <Link to="/landing" className="hover:text-black transition-colors font-semibold">Home</Link>
         <Link to="/courses" className="hover:text-black transition-colors">Courses</Link>
         <Link to="/about" className="hover:text-black  transition-colors">About Us</Link>
         <Link to="/contact" className="hover:text-black  transition-colors">Contact Us</Link>
+
         <Link
           to="/signup"
           className="text-white px-3 py-2 bg-[#0F4C4A] rounded-md hover:bg-[#0F3B36] transition-all"
@@ -57,12 +59,14 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-md text-black flex flex-col items-center md:hidden py-4 space-y-4">
-          <Link to="/landing" className="hover:text-black transition-colors">Courses</Link>
-          <Link to="/about" className="hover:text-black transition-colors">About Us</Link>
-          <Link to="/contact" className="hover:text-black transition-colors">Contact Us</Link>
+          <Link to="/landing" className="hover:text-black transition-colors font-semibold" onClick={() => setIsOpen(false)}>Home</Link>
+          <Link to="/courses" className="hover:text-black transition-colors" onClick={() => setIsOpen(false)}>Courses</Link>
+          <Link to="/about" className="hover:text-black transition-colors" onClick={() => setIsOpen(false)}>About Us</Link>
+          <Link to="/contact" className="hover:text-black transition-colors" onClick={() => setIsOpen(false)}>Contact Us</Link>
           <Link
-            to="/login"
+            to="/signup"
             className="text-white px-4 py-2 bg-[#0F4C4A] rounded-md hover:bg-[#0F3B36] transition-all"
+            onClick={() => setIsOpen(false)}
           >
             Sign Up
           </Link>
