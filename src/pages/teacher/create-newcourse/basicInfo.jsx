@@ -6,12 +6,12 @@ export default function BasicInfo({ register, watch, errors }) {
     <>
       {/* Title */}
       <div className="mb-5 w-full">
-        <label className="label text-[#093332] font-normal">Title</label>
+        <label className="label text-[#093332] font-normal text-sm sm:text-base">Title</label>
         <div className="relative">
           <input
             {...register("title", { required: true, maxLength: 80 })}
             placeholder="Your course title"
-            className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+            className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 pr-14"
           />
           <span className="char-count">{title.length}/80</span>
         </div>
@@ -24,21 +24,21 @@ export default function BasicInfo({ register, watch, errors }) {
           <input
             {...register("subtitle", { maxLength: 120 })}
             placeholder="Your course subtitle"
-            className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+            className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base pr-14 p-2"
           />
           <span className="char-count">{subtitle.length}/120</span>
         </div>
       </div>
 
       {/* Category */}
-      <div className="grid grid-cols-2 gap-6 mb-5 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-5 w-full">
         <div>
           <label className="label text-[#093332] font-normal">
             Course Category
           </label>
           <select
             {...register("category")}
-            className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+            className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-2"
           >
             <option>Select...</option>
             <option>Development</option>
@@ -61,7 +61,7 @@ export default function BasicInfo({ register, watch, errors }) {
 
       {/* Topic */}
       <div className="mb-5">
-        <label className="label text-[#093332] font-normal">Course Topic</label>
+        <label className="label text-[#093332] font-normal  text-sm sm:text-base">Course Topic</label>
         <input
           {...register("topic")}
           placeholder="What is primarily taught in your course?"
@@ -70,7 +70,7 @@ export default function BasicInfo({ register, watch, errors }) {
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <select
           {...register("language")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
@@ -80,21 +80,21 @@ export default function BasicInfo({ register, watch, errors }) {
 
         <select
           {...register("price")}
-          className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+          className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
           <option>Course Price</option>
         </select>
 
         <select
           {...register("level")}
-          className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+          className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
           <option>Course Level</option>
         </select>
 
         <select
           {...register("duration")}
-          className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
+          className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
           <option>Course Duration</option>
         </select>

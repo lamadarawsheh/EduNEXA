@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Search, ArrowLeft } from 'lucide-react';
+import { updateLanguage } from '../../../services/settingService';
 import "./Profile.css";
 
 const LanguageSelector = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const studentId = localStorage.getItem('studentId');
 
   const languages = [
     { code: 'ar', name: 'Arabic', flagCode: 'sa', nativeName: 'العربية' },
@@ -82,13 +85,27 @@ const LanguageSelector = () => {
     setSelectedLanguage(langCode);
   };
 
-  const handleChoose = () => {
-    if (selectedLanguage) {
-      const selected = languages.find(lang => lang.code === selectedLanguage);
+  const handleChoose = async () => {
+    if (!selectedLanguage) {
+      alert('Please select a language first');
+      return;
+    }
+    if (!studentId) {
+      alert('Missing student id. Please sign in again.');
+      return;
+    }
+
+    const selected = languages.find(lang => lang.code === selectedLanguage);
+    try {
+      setIsSaving(true);
+      await updateLanguage(studentId, selectedLanguage);
       console.log('Selected language:', selected);
       alert(`Language changed to: ${selected.name} (${selected.nativeName})`);
-    } else {
-      alert('Please select a language first');
+    } catch (error) {
+      console.error('Failed to update language:', error);
+      alert('Failed to update language. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -166,9 +183,9 @@ const LanguageSelector = () => {
           : 'bg-teal-600 text-white hover:bg-teal-700 hover:-translate-y-1 hover:shadow-2xl'
           }`}
         onClick={handleChoose}
-        disabled={!selectedLanguage}
+        disabled={!selectedLanguage || isSaving}
       >
-        Choose
+        {isSaving ? 'Saving...' : 'Choose'}
       </button>
 
       <style>{`

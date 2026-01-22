@@ -25,8 +25,8 @@ const bestPerformance = [
 ]
 export default function Performance() {
   return (
-    <div className="flex justify-between">
-    <div className="rounded-xl border border-gray-200 bg-white p-4 w-[78%]">
+    <div className="flex flex-wrap gap-3 justify-between">
+    <div className="rounded-xl border border-gray-200 bg-white  p-4 w-[100%] lg:w-[78%]">
       <div className="mb-3">
         <p className="text-sm font-semibold text-gray-800">Performance Overview</p>
         <p className="text-xs text-gray-500">Average rate of courses over time</p>
@@ -59,7 +59,7 @@ export default function Performance() {
       </div>
     </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-4 w-[20%]">
+      <div className="rounded-xl border border-gray-200 bg-white p-4 w-[100%] lg:w-[20%]">
         <div className="mb-3 ">
         <p className="text-sm font-semibold text-gray-800">Top Performerce</p>
         {bestPerformance.map((user, index) => (
