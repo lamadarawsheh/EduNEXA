@@ -45,7 +45,7 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
-import Checkout from "./pages/student/Checkout/Checkout";
+// import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 
 /* Student Profile Pages */
@@ -54,6 +54,8 @@ import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
+import Checkout from "./pages/student/Checkout/Checkout";
+import Earning from "./pages/teacher/Earning/Earning";
 
 function App() {
   return (
@@ -113,6 +115,7 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
+          <Route path="earnings" element = {<Earning/>}/>
           <Route path="mycourses" element={<MyCourses />} />
         </Route>
 
