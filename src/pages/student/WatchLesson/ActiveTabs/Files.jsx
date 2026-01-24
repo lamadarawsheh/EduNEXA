@@ -12,7 +12,7 @@ export default function Files() {
         
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <div className="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center shrink-0">
-            <FileText className="text-emerald-600" size={24} />
+            <FileText className="text-[#176D69]" size={24} />
           </div>
           <div className="overflow-hidden">
             <p className="font-semibold text-[#08332e] text-sm md:text-base truncate max-w-[200px] md:max-w-none">

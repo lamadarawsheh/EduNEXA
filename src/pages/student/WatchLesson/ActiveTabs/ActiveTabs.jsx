@@ -14,20 +14,20 @@ export default function ActiveTab() {
 
   return (
     <div className="max-w-4xl mx-auto p-4"> 
-        <div className="flex border-b border-emerald-600 mb-6 overflow-x-auto">
+        <div className="flex border-b border-[#176D69] mb-6 overflow-x-auto">
             {tabs.map((tab) => (
             <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-3 px-6 text-sm font-medium transition-colors relative whitespace-nowrap ${
                 activeTab === tab.id 
-                    ? 'text-emerald-600' 
-                    : 'text-emerald-600'
+                    ? 'text-[#176D69]' 
+                    : 'text-[#176D69]'
                 }`}
             >
                 {tab.label}
                 {tab.count && (
-                <span className="ml-2 bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[10px]">
+                <span className="ml-2 bg-emerald-100 text-[#176D69] px-1.5 py-0.5 rounded text-[10px]">
                     {tab.count}
                 </span>
                 )}

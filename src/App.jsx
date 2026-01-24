@@ -52,8 +52,6 @@ import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 import Earning from "./pages/teacher/Earning/Earning";
 
-
-import MyCourses from "./pages/teacher/MyCourses";
 import MyLessons from "./pages/student/MyLessons/MyLessons";
 import WatchLesson from "./pages/student/WatchLesson/WatchLesson";
 /* Student Profile Pages */
