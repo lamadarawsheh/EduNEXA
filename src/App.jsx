@@ -51,6 +51,7 @@ import AvailableCourses from "./pages/student/AvailableCourses";
 import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 import Earning from "./pages/teacher/Earning/Earning";
+import TeacherProfile from "./pages/teacher/Profile/Profile";
 
 
 /* Student Profile Pages */
@@ -120,6 +121,7 @@ function App() {
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="earnings" element={<Earning />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="profile" element={<TeacherProfile />} />
         </Route>
 
 
