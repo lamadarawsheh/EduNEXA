@@ -45,9 +45,8 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
-// import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
-
+import MyLessons from "./pages/student/MyLessons/MyLessons";
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
@@ -100,6 +99,7 @@ function App() {
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="MyLessons" element={<MyLessons />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
