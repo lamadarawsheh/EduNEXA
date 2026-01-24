@@ -45,8 +45,9 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
-// import Checkout from "./pages/student/Checkout/Checkout";
+import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
+import Earning from "./pages/teacher/Earning/Earning";
 
 
 /* Student Profile Pages */

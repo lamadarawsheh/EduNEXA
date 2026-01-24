@@ -6,7 +6,6 @@ import { TbClockHour4 } from 'react-icons/tb';
 import { MdOutlineDateRange } from 'react-icons/md';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
 
 export default function Course() {
@@ -94,7 +93,7 @@ export default function Course() {
                   <div className="flex flex-col justify-center items-between h-full">
             <p className='flex justify-between items-center bg-[#FEF9C3] rounded-md p-1 text-[12px]'><CiClock1 className='text-sm me-1' /> {course.status} </p>
             <p
-            onClick={() => navigate("/admin/courses/reviewcourse", { state: { course }, key: uuidv4() })}
+            onClick={() => navigate("/admin/courses/reviewcourse", { state: { course } })}
             className="flex items-center justify-end rounded-md p-1 text-[12px] cursor-pointer hover:bg-gray-200 mt-6"
             >
                 Review <FaArrowRightLong className="text-sm ms-1" />
