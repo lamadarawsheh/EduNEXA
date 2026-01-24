@@ -29,22 +29,20 @@ const ForgetPassword = () => {
 
         try {
 
-            await forgotPassword(email);
+            const response = await forgotPassword(email);
 
             localStorage.setItem("resetEmail", email);
-
 
             setPopup({
                 show: true,
                 title: 'Check Your Email',
-                message: 'We have sent a password reset code to your email.',
+                message: response.message || 'We have sent a password reset code to your email.',
                 type: 'success'
             });
 
-
             setTimeout(() => {
                 navigate('/verify-code');
-            }, 1200);
+            }, 2000);
 
         } catch (err) {
             const errorMessage = err.response?.data?.message || "Something went wrong. Please try again.";
