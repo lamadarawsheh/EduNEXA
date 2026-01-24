@@ -54,6 +54,7 @@ import Earning from "./pages/teacher/Earning/Earning";
 import TeacherProfile from "./pages/teacher/Profile/Profile";
 
 import MyLessons from "./pages/student/MyLessons/MyLessons";
+import MyCoursesList from "./pages/student/MyLessons/MyCoursesList";
 import WatchLesson from "./pages/student/WatchLesson/WatchLesson";
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
@@ -105,7 +106,8 @@ function App() {
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="my-courses" element={<MyLessons />} />
+          <Route path="my-courses" element={<MyCoursesList />} />
+          <Route path="course-lessons" element={<MyLessons />} />
           <Route path="watchlesson" element={<WatchLesson />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
