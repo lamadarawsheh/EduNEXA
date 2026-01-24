@@ -63,6 +63,7 @@ import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
 import ReviewCourse from "./pages/admin/components/courses/ReviewCourse";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
   return (
@@ -101,7 +102,15 @@ function App() {
           <Route path="/teach/contact" element={<Contact />} />
         </Route>
 
-        <Route path="/student" element={<StudentLayout />}>
+        {/* Protected Student Routes */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <StudentLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
@@ -120,7 +129,15 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="/teacher" element={<TeacherLayout />}>
+        {/* Protected Teacher Routes */}
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedRoute allowedRoles={['Instructor', 'Teacher']}>
+              <TeacherLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
@@ -129,9 +146,15 @@ function App() {
           <Route path="profile" element={<TeacherProfile />} />
         </Route>
 
-
-        {/* 4. ADMIN PANEL (Sidebar Layout) */}
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="students" element={<AdminStudents />} />
           <Route path="teachers" element={<AdminTeachers />} />
@@ -141,10 +164,13 @@ function App() {
         </Route>
 
         {/* 5. 404 CATCH-ALL */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<LogPathToNotFound />} />
       </Routes>
     </Router>
   );
 }
+
+// Helper component for Catch-all to avoid build errors if NotFound isn't ready
+const LogPathToNotFound = () => <NotFound />;
 
 export default App;

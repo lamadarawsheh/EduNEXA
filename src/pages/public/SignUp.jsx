@@ -107,9 +107,9 @@ const SignUp = () => {
 
                 console.log("Registration Success:", data);
 
-                // Store Authentication Data (Done in service, but specifically for compatibility)
-                localStorage.setItem('username', data.username);
-                localStorage.setItem('roles', JSON.stringify(data.roles));
+                // Store Authentication Data consistently for ProtectedRoute
+                localStorage.setItem('user', JSON.stringify(data.user || data));
+                if (data.token) localStorage.setItem('token', data.token);
 
                 // Show animation instead of popup
                 setShowWelcome(true);
