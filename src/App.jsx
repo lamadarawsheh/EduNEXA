@@ -100,8 +100,8 @@ function App() {
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="MyLessons" element={<MyLessons />} />
-          <Route path="WatchLesson" element={<WatchLesson />} />
+          <Route path="my-courses" element={<MyLessons />} />
+          <Route path="watchlesson" element={<WatchLesson />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />

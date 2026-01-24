@@ -1,12 +1,12 @@
 import VideoPage from "./VideoPage.jsx";
-import LessonCard from "./Weerks.jsx";
+import LessonCard from "./LessonCard.jsx";
 export default function MyLessons() {
     return (
-         <div className="w-[1440] ml-20  ">
-            <div className="py-6">
+         <div className="mx-w-[1440] overflow-hidden">
+            <div className="overflow-hidden">
                 <VideoPage />
             </div>
-            <div className="">
+            <div className="overflow-hidden">
                 <LessonCard />
             </div>
         </div>

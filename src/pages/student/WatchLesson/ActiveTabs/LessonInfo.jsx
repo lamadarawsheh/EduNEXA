@@ -1,5 +1,5 @@
-export default function LessonInfo() {
-   const imgs = [
+export default function LessonInfo({ title }) {
+  const imgs = [
     { img: '../../../../image/A1.PNG' },
     { img: '../../../../image/A2.PNG' },
     { img: '../../../../image/A3.PNG' },
@@ -8,30 +8,42 @@ export default function LessonInfo() {
   ];
 
   return (
-        <div className="mb-6">
-            <h1 className="text-2xl font-bold text-slate-800 mb-4">
-            2. Importance of User-Centered Design
-            </h1>
-            <div className="flex flex-wrap items-center justify-between text-sm text-gray-500 pb-4">
-            <div className="flex items-center gap-4">
-                <div className="flex -space-x-2">
-                {imgs.map((item, index) => (
-                    <div key={index} className="w-6 h-6 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center overflow-hidden">
-                    <img src={item.img} alt="User" className="w-full h-full object-cover" />
-                    </div>
-                ))}
-                </div>
-                <span><strong className="text-slate-700">512</strong> Students watching</span>
-            </div>
+    <div className="w-full max-w-[1012px] mb-6">
+      <h1 className="text-xl md:text-2xl font-bold text-[#08332e] mb-4 leading-tight">
+        {title}
+      </h1>
 
-            <div className="flex gap-4">
-                <span>Last updated: <span className="text-slate-700 font-medium">Oct 26, 2020</span></span>
-                <span>Comments: <span className="text-slate-700 font-medium">154</span></span>
-            </div>
-            </div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-sm text-gray-500 border-b border-gray-100 pb-6">
+        
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-2 shrink-0">
+            {imgs.map((item, index) => (
+              <div 
+                key={index} 
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden shadow-sm"
+              >
+                <img src={item.img} alt="User" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+          <span className="text-[13px] md:text-sm">
+            <strong className="text-slate-800">512</strong> Students watching
+          </span>
         </div>
-  
-  );
-};
 
- 
+        <div className="flex flex-wrap items-center gap-4 md:gap-8">
+          <div className="flex items-center gap-1">
+            <span className="shrink-0">Last updated:</span>
+            <span className="text-slate-800 font-semibold whitespace-nowrap">Oct 26, 2020</span>
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <span>Comments:</span>
+            <span className="text-slate-800 font-semibold">154</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
