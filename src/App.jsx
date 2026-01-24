@@ -25,6 +25,9 @@ import Favourite from "./pages/student/Favourite";
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
+
+
+
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import TeacherLanding from "./pages/public/Landing/TeacherLanding";
 /* Teacher Course Form */
@@ -45,7 +48,10 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
+import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
+import Earning from "./pages/teacher/Earning/Earning";
+
 import MyLessons from "./pages/student/MyLessons/MyLessons";
 import WatchLesson from "./pages/student/WatchLesson/WatchLesson";
 /* Student Profile Pages */
@@ -54,8 +60,7 @@ import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
-import Checkout from "./pages/student/Checkout/Checkout";
-import Earning from "./pages/teacher/Earning/Earning";
+import ReviewCourse from "./pages/admin/components/courses/ReviewCourse";
 
 function App() {
   return (
@@ -83,7 +88,6 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/courses" element={<Courses />} />
-          <Route path="/favourite" element={<Favourite />} />
         </Route>
 
         {/* 2.5 TEACHER PUBLIC ROUTES (TeacherNavbar/Footer Layout - BEFORE LOGIN) */}
@@ -100,8 +104,8 @@ function App() {
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="MyLessons" element={<MyLessons />} />
-          <Route path="WatchLesson" element={<WatchLesson />} />
+          <Route path="my-courses" element={<MyLessons />} />
+          <Route path="watchlesson" element={<WatchLesson />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
             <Route path="personal" element={<PersonalInformation />} />
@@ -117,7 +121,7 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
-          <Route path="earnings" element = {<Earning/>}/>
+          <Route path="earnings" element={<Earning />} />
           <Route path="mycourses" element={<MyCourses />} />
         </Route>
 
@@ -128,6 +132,7 @@ function App() {
           <Route path="students" element={<AdminStudents />} />
           <Route path="teachers" element={<AdminTeachers />} />
           <Route path="courses" element={<AdminCourses />} />
+          <Route path="/admin/courses/reviewcourse" element={<ReviewCourse />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 

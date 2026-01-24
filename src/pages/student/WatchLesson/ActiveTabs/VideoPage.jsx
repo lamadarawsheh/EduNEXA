@@ -1,5 +1,14 @@
 export default function VideoPage() {
-    return (
-        <video width="1002" height="673" controls poster="../../../../image/Video Player.png"></video>
-    );
+  return (
+    <div className="w-full h-full bg-black flex items-center justify-center">
+      <video 
+        className="w-full aspect-video object-cover" 
+        controls 
+        poster="../../../../image/Video Player.png"
+      >
+        <source src="your-video-link.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
 }

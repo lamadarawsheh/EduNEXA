@@ -25,6 +25,7 @@ const Navbar = () => {
         <Link to="/about" className="hover:text-black  transition-colors">About Us</Link>
         <Link to="/contact" className="hover:text-black  transition-colors">Contact Us</Link>
 
+
         <Link
           to="/signup"
           className="text-white px-3 py-2 bg-[#0F4C4A] rounded-md hover:bg-[#0F3B36] transition-all"
