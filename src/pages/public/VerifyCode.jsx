@@ -2,18 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 import Popup from '../../components/common/Popup';
+import { verifyCode } from "../../services/authService";
 
 const VerifyCode = () => {
     const navigate = useNavigate();
     const [code, setCode] = useState(['', '', '', '']);
     const inputs = useRef([]);
-    const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
+    const [timeLeft, setTimeLeft] = useState(180);
     const [isLoading, setIsLoading] = useState(false);
     const [popup, setPopup] = useState({ show: false, title: '', message: '', type: 'success' });
 
+    // ❗ مهم: لازم نجيب الإيميل من صفحة ForgetPassword
+    const email = localStorage.getItem("resetEmail");
+
     useEffect(() => {
         const timer = setInterval(() => {
-            setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+            setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -31,7 +35,6 @@ const VerifyCode = () => {
         newCode[index] = value;
         setCode(newCode);
 
-        // Auto move to next input
         if (value && index < 3) {
             inputs.current[index + 1].focus();
         }
@@ -46,15 +49,23 @@ const VerifyCode = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const verificationCode = code.join('');
+
         if (verificationCode.length !== 4) return;
 
         setIsLoading(true);
+
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            // Navigate to Reset Password or directly login depending on flow
+            await verifyCode(email, verificationCode);
+
             navigate('/reset-password');
+
         } catch (error) {
-            setPopup({ show: true, title: 'Error', message: 'Invalid code. Please try again.', type: 'error' });
+            setPopup({
+                show: true,
+                title: 'Error',
+                message: 'Invalid code. Please try again.',
+                type: 'error'
+            });
         } finally {
             setIsLoading(false);
         }
@@ -62,13 +73,6 @@ const VerifyCode = () => {
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-[#4AA59B] to-[#0F4C4A] relative overflow-hidden">
-
-            {/* Background Decoration */}
-            <div className="absolute top-0 right-0 p-12 opacity-10 text-white transform rotate-45 pointer-events-none">
-                <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
-                </svg>
-            </div>
 
             <Popup
                 isOpen={popup.show}
@@ -113,7 +117,7 @@ const VerifyCode = () => {
                                 type="submit"
                                 disabled={isLoading || code.some(d => !d)}
                                 className={`w-full bg-[#4E9F96] hover:bg-[#3d9b90] text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform transition-all active:scale-[0.98] duration-200 text-sm flex items-center justify-center mb-4
-                                    ${(isLoading || code.some(d => !d)) ? 'opacity-70 cursor-not-allowed hover:bg-[#4E9F96] hover:shadow-lg hover:translate-y-0' : ''}
+                                    ${(isLoading || code.some(d => !d)) ? 'opacity-70 cursor-not-allowed' : ''}
                                 `}
                             >
                                 {isLoading ? (
