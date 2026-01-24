@@ -45,7 +45,7 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/public/NotFound";
 import AvailableCourses from "./pages/student/AvailableCourses";
-import Checkout from "./pages/student/Checkout/Checkout";
+// import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 
 
@@ -115,6 +115,7 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
+          <Route path="earnings" element = {<Earning/>}/>
           <Route path="mycourses" element={<MyCourses />} />
         </Route>
 

@@ -22,21 +22,21 @@ export default function AdvanceInfo({ register, control }) {
   return (
     <div className="space-y-10 bg-[#FFFFFF] ">
       {/* Upload Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 align-middle">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 ">
         {/* Thumbnail */}
-        <div>
+        <div className="flex flex-col items-center sm:items-start gap-4 sm:gap-6 w-full lg:mt-4">
           <h4 className="font-medium mb-2 text-[#093332] text-left">
             Course Thumbnail
           </h4>
-          <div className="flex flex-row justify-center items-center flex-sm-col">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             <img
               src={image1}
               alt="Thumbnail"
-              className="w-57 h-40 object-cover mb-2"
+              className="w-full sm:w-56 h-40 object-cover lg:mt-8"
             />
 
-            <div className="border border-dashed rounded p-4 text-center">
-              <p className="text-[#176D69] font-light mb-3 ">
+            <div className="border border-dashed rounded p-3 sm:p-4 text-center">
+              <p className="text-[#176D69] font-light mb-3  text-sm sm:text-base">
                 Upload your course thumbnail here{" "}
                 <strong className="text-[#093332]">
                   important guidelines:
@@ -61,13 +61,13 @@ export default function AdvanceInfo({ register, control }) {
         </div>
 
         {/* Trailer */}
-        <div>
-          <h4 className="font-medium mb-2  text-[#093332] ">Course Trailer</h4>
+        <div className="flex flex-col items-center sm:items-start gap-4 sm:gap-6 w-full lg:mt-4">
+          <h4 className="font-medium   text-[#093332] ">Course Trailer</h4>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
             <img
               src={image2}
               alt="Thumbnail"
-              className="w-full sm:w-56 h-40 object-cover mb-2"
+              className="w-full sm:w-56 h-40 object-cover lg:mb-4 "
             />
             <div className="border border-dashed rounded p-4 sm:p-6 text-center">
               <p className="text-[#176D69] mb-3 font-light  text-sm sm:text-base leading-relaxed">
