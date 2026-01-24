@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Mail, Phone, User } from "lucide-react";
-import { updateStudentProfile } from "../../../services/personalInformationService";
+import { getStudentProfile, updateStudentProfile } from "../../../services/personalInformationService";
 import "./Profile.css";
 
 const PersonalInformation = () => {
@@ -15,6 +15,73 @@ const PersonalInformation = () => {
     birthDate: "",
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!studentId) {
+      setIsLoading(false);
+      return;
+    }
+
+    let isActive = true;
+
+    const normalizeDate = (value) => {
+      if (!value) {
+        return "";
+      }
+
+      if (value instanceof Date) {
+        return value.toISOString().split("T")[0];
+      }
+
+      if (typeof value === "string") {
+        return value.split("T")[0];
+      }
+
+      return "";
+    };
+
+    const loadProfile = async () => {
+      try {
+        const response = await getStudentProfile(studentId);
+        if (!isActive) {
+          return;
+        }
+
+        const data = response?.data;
+        if (!data || typeof data !== "object") {
+          return;
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          firstName: data.firstName ?? data.first_name ?? data.firstname ?? prev.firstName,
+          lastName: data.lastName ?? data.last_name ?? data.lastname ?? prev.lastName,
+          imageUrl: data.imageUrl ?? data.imageURL ?? data.avatarUrl ?? data.profileImage ?? prev.imageUrl,
+          userName: data.userName ?? data.user_name ?? data.username ?? prev.userName,
+          email: data.email ?? prev.email,
+          phoneNumber: data.phoneNumber ?? data.phone ?? data.phoneNo ?? prev.phoneNumber,
+          birthDate: normalizeDate(
+            data.birthDate ?? data.dateOfBirth ?? data.dob ?? prev.birthDate
+          ),
+        }));
+      } catch (error) {
+        if (isActive) {
+          console.error("Failed to load student profile:", error);
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      isActive = false;
+    };
+  }, [studentId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -150,9 +217,9 @@ const PersonalInformation = () => {
         <button
           type="submit"
           className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-70"
-          disabled={isSaving}
+          disabled={isSaving || isLoading}
         >
-          {isSaving ? "Saving..." : "Save Changes"}
+          {isLoading ? "Loading..." : isSaving ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>

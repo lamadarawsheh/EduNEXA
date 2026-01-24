@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import StudentHeader from './components/studentComponents/StudentHeader';
-import StudentRecord from './components/studentComponents/StudentRecord';
-import StudentTable from './components/studentComponents/StudentTable';
+import PageHeader from './components/studentComponents/PageHeader';
+import Table from './components/studentComponents/Table';
 
 export default function AdminStudents() {
-  const [students, setStudents] = useState([
+  const [records, setRecords] = useState([
     {
       id: "S-1001",
       name: "Ahmed Ali",
@@ -22,7 +21,7 @@ export default function AdminStudents() {
       dob: "2002-11-02",
       password: "mona@2025",
       avatar: "",
-    },{
+    }, {
       id: "S-1003",
       name: "Youssef Samy",
       email: "youssef@example.com",
@@ -42,8 +41,8 @@ export default function AdminStudents() {
   ]);
   return (
     <div className="p-2 md:p-8 flex-col">
-      <StudentHeader />
-      <StudentTable students={students} />
+      <PageHeader pageName="Students Records" />
+      <Table records={records} columns={["Student Name", "Email", "Phone", "Date of Birth"]} pageName="Students Records" />
     </div>
   )
 }

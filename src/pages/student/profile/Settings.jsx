@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, ChevronRight, Globe, Lock, LogOut } from "lucide-react";
-import { getStudentSettings } from "../../../services/settingService";
+import { getStudentSettings, updateNotifications } from "../../../services/settingService";
 import "./Profile.css";
 
 const Settings = () => {
   const navigate = useNavigate();
   const studentId = localStorage.getItem("studentId");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false);
 
   useEffect(() => {
     if (!studentId) {
@@ -41,8 +42,27 @@ const Settings = () => {
     };
   }, [studentId]);
 
-  const handleToggleNotifications = () => {
-    setNotificationsEnabled(!notificationsEnabled);
+  const handleToggleNotifications = async () => {
+    if (isUpdatingNotifications) {
+      return;
+    }
+
+    const nextValue = !notificationsEnabled;
+    setNotificationsEnabled(nextValue);
+
+    if (!studentId) {
+      return;
+    }
+
+    setIsUpdatingNotifications(true);
+    try {
+      await updateNotifications(studentId, nextValue);
+    } catch (error) {
+      console.error("Failed to update notifications:", error);
+      setNotificationsEnabled(!nextValue);
+    } finally {
+      setIsUpdatingNotifications(false);
+    }
   };
 
   const handleLogout = () => {
@@ -79,6 +99,7 @@ const Settings = () => {
               type="checkbox"
               checked={notificationsEnabled}
               onChange={handleToggleNotifications}
+              disabled={isUpdatingNotifications}
             />
             <span className="toggle-slider"></span>
           </label>
