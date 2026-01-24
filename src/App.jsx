@@ -48,14 +48,14 @@ import AvailableCourses from "./pages/student/AvailableCourses";
 // import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 
+
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
 import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
-import Checkout from "./pages/student/Checkout/Checkout";
-import Earning from "./pages/teacher/Earning/Earning";
+import ReviewCourse from "./pages/admin/components/courses/ReviewCourse";
 
 function App() {
   return (
@@ -126,6 +126,7 @@ function App() {
           <Route path="students" element={<AdminStudents />} />
           <Route path="teachers" element={<AdminTeachers />} />
           <Route path="courses" element={<AdminCourses />} />
+          <Route path="/admin/courses/reviewcourse" element={<ReviewCourse />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
