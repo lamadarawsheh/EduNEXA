@@ -25,6 +25,9 @@ import Favourite from "./pages/student/Favourite";
 import FAQ from "./pages/public/Static/FAQ";
 import PrivacyPolicy from "./pages/public/Static/PrivacyPolicy";
 import AboutUs from "./pages/public/Static/AboutUs";
+
+
+
 import TechnicalSupport from "./pages/public/Static/TechnicalSupport";
 import TeacherLanding from "./pages/public/Landing/TeacherLanding";
 /* Teacher Course Form */
@@ -84,7 +87,6 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<TechnicalSupport />} />
           <Route path="/courses" element={<Courses />} />
-          <Route path="/favourite" element={<Favourite />} />
         </Route>
 
         {/* 2.5 TEACHER PUBLIC ROUTES (TeacherNavbar/Footer Layout - BEFORE LOGIN) */}
@@ -116,7 +118,7 @@ function App() {
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
-          <Route path="earnings" element = {<Earning/>}/>
+          <Route path="earnings" element={<Earning />} />
           <Route path="mycourses" element={<MyCourses />} />
         </Route>
 
