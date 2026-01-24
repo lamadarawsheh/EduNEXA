@@ -23,6 +23,24 @@ export const login = async (credentials) => {
     }
 };
 
+// register
+export const register = async (userData) => {
+    try {
+        const response = await api.post('/auth/register', userData);
+        console.log("Registration Response Data:", response.data);
+
+        if (response.data && response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user || response.data));
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error("Registration Error:", error);
+        throw error;
+    }
+};
+
 // logout
 export const logout = () => {
     localStorage.removeItem('token');
@@ -33,14 +51,9 @@ export const logout = () => {
 // forgotPassword
 export const forgotPassword = async (email) => {
     try {
-        const response = await api.post(
-            "http://edunexa.runasp.net/api/auth/forgot",
-            { email }
-        );
-
+        const response = await api.post('/auth/forgot', { email });
         console.log("Forgot Password Response:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("Forgot Password Error:", error);
         throw error;
@@ -50,33 +63,26 @@ export const forgotPassword = async (email) => {
 // verifyCode
 export const verifyCode = async (email, code) => {
     try {
-        const response = await api.post(
-            "http://edunexa.runasp.net/api/password/verify-code",
-            { email, code }
-        );
-
+        const response = await api.post('/password/verify-code', { email, code });
         console.log("Verify Code Response:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("Verify Code Error:", error);
         throw error;
     }
 };
-// Reset password API call
-export const resetPassword = async (newPassword, confirmPassword) => {
-    try {
-        const response = await api.post(
-            "http://edunexa.runasp.net/api/password/reset",
-            {
-                NewPassword: newPassword,
-                ConfirmPassword: confirmPassword
-            }
-        );
 
+// Reset password API call
+export const resetPassword = async (email, token, newPassword, confirmPassword) => {
+    try {
+        const response = await api.post('/password/reset', {
+            Email: email,
+            Token: token,
+            NewPassword: newPassword,
+            ConfirmPassword: confirmPassword
+        });
         console.log("Reset Password Response:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("Reset Password Error:", error);
         throw error;

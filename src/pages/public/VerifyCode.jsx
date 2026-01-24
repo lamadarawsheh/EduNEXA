@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 import Popup from '../../components/common/Popup';
-import { verifyCode } from "../../services/authService";
+import { verifyCode, forgotPassword } from "../../services/authService";
 
 const VerifyCode = () => {
     const navigate = useNavigate();
@@ -56,14 +56,45 @@ const VerifyCode = () => {
 
         try {
             await verifyCode(email, verificationCode);
-
+            localStorage.setItem("resetToken", verificationCode);
             navigate('/reset-password');
 
         } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Invalid code. Please try again.';
             setPopup({
                 show: true,
                 title: 'Error',
-                message: 'Invalid code. Please try again.',
+                message: errorMessage,
+                type: 'error'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }; // Closing brace for handleSubmit
+
+    const handleResend = async () => {
+        if (timeLeft > 0) return;
+
+        setIsLoading(true);
+        try {
+            // Assuming forgotPassword is imported or defined elsewhere
+            // If not, this line will cause an error.
+            // For example, if it's from authService, you'd need to import it:
+            // import { verifyCode, forgotPassword } from "../../services/authService";
+            await forgotPassword(email);
+            setTimeLeft(180);
+            setPopup({
+                show: true,
+                title: 'Code Sent',
+                message: 'A new verification code has been sent to your email.',
+                type: 'success'
+            });
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "Failed to resend code.";
+            setPopup({
+                show: true,
+                title: 'Error',
+                message: errorMessage,
                 type: 'error'
             });
         } finally {
@@ -132,8 +163,9 @@ const VerifyCode = () => {
 
                             <button
                                 type="button"
-                                disabled={timeLeft > 0}
-                                className={`text-sm font-semibold transition-colors ${timeLeft > 0 ? 'text-gray-400 cursor-not-allowed' : 'text-[#4E9F96] hover:text-[#0F4C4A] hover:underline'}`}
+                                onClick={handleResend}
+                                disabled={timeLeft > 0 || isLoading}
+                                className={`text-sm font-semibold transition-colors ${timeLeft > 0 || isLoading ? 'text-gray-400 cursor-not-allowed' : 'text-[#4E9F96] hover:text-[#0F4C4A] hover:underline'}`}
                             >
                                 Resend Code
                             </button>

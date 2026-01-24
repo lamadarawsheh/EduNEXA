@@ -28,12 +28,12 @@ const ForgetPassword = () => {
         setIsLoading(true);
 
         try {
-          
+
             await forgotPassword(email);
 
             localStorage.setItem("resetEmail", email);
 
-   
+
             setPopup({
                 show: true,
                 title: 'Check Your Email',
@@ -41,13 +41,14 @@ const ForgetPassword = () => {
                 type: 'success'
             });
 
-            
+
             setTimeout(() => {
                 navigate('/verify-code');
             }, 1200);
 
         } catch (err) {
-            setError("Something went wrong. Please try again.");
+            const errorMessage = err.response?.data?.message || "Something went wrong. Please try again.";
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }

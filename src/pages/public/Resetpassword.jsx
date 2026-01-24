@@ -45,11 +45,29 @@ const ResetPassword = () => {
 
         if (!validate()) return;
 
+        const email = localStorage.getItem("resetEmail");
+        const token = localStorage.getItem("resetToken");
+
+        if (!email || !token) {
+            setPopup({
+                show: true,
+                title: 'Session Expired',
+                message: 'Your reset session has expired. Please start over.',
+                type: 'error'
+            });
+            setTimeout(() => navigate('/forgot-password'), 2000);
+            return;
+        }
+
         setIsLoading(true);
 
         try {
             // Call real API
-            await resetPassword(formData.password, formData.confirmPassword);
+            await resetPassword(email, token, formData.password, formData.confirmPassword);
+
+            // Clean up
+            localStorage.removeItem("resetEmail");
+            localStorage.removeItem("resetToken");
 
             // Show success popup
             setPopup({
@@ -63,10 +81,11 @@ const ResetPassword = () => {
             setTimeout(() => navigate('/login'), 2000);
 
         } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Failed to reset password. Please try again.';
             setPopup({
                 show: true,
                 title: 'Error',
-                message: 'Failed to reset password. Please try again.',
+                message: errorMessage,
                 type: 'error'
             });
         } finally {

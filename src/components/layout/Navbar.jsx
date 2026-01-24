@@ -24,7 +24,6 @@ const Navbar = () => {
         <Link to="/courses" className="hover:text-black transition-colors">Courses</Link>
         <Link to="/about" className="hover:text-black  transition-colors">About Us</Link>
         <Link to="/contact" className="hover:text-black  transition-colors">Contact Us</Link>
-          <Link to="/add" className="hover:text-black  transition-colors">Add</Link>
 
 
         <Link
