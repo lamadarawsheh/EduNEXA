@@ -56,6 +56,7 @@ import TeacherProfile from "./pages/teacher/Profile/Profile";
 import MyLessons from "./pages/student/MyLessons/MyLessons";
 import MyCoursesList from "./pages/student/MyLessons/MyCoursesList";
 import WatchLesson from "./pages/student/WatchLesson/WatchLesson";
+import CourseAnalytics from "./pages/teacher/CourseAnalytics";
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
@@ -143,6 +144,7 @@ function App() {
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="earnings" element={<Earning />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="course-analytics/:id" element={<CourseAnalytics />} />
           <Route path="profile" element={<TeacherProfile />} />
         </Route>
 
