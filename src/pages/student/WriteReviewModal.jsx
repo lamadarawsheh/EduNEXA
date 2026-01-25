@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
 
-export default function DynamicReviewSection({ onSubmitReview, onClose }) {
+export default function WriteReviewModal({ onSubmitReview, onClose }) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState("");
