@@ -51,7 +51,7 @@ export const logout = () => {
 // forgotPassword
 export const forgotPassword = async (email) => {
     try {
-        const response = await api.post('/auth/forgot', { email });
+        const response = await api.post('/password/forgot', { email });
         console.log("Forgot Password Response:", response.data);
         return response.data;
     } catch (error) {
@@ -77,9 +77,9 @@ export const resetPassword = async (email, token, newPassword, confirmPassword) 
     try {
         const response = await api.post('/password/reset', {
             Email: email,
-            Token: token,
-            NewPassword: newPassword,
-            ConfirmPassword: confirmPassword
+            token: token,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword
         });
         console.log("Reset Password Response:", response.data);
         return response.data;

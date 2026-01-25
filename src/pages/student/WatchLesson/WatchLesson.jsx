@@ -1,14 +1,72 @@
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import VideoPage from "./ActiveTabs/VideoPage.jsx";
 import LessonInfo from "./ActiveTabs/LessonInfo.jsx";
 import ActiveTab from "./ActiveTabs/ActiveTabs.jsx";
-import { useLocation } from "react-router-dom";
 import CourseContent from "./CourseContent.jsx";
+
+const initialComments = [
+  { id: 1, user: "Ronald Richards", time: "1 week ago", avatar: "/image/A1.PNG", text: "Maecenas risus tortor, tincidunt nec purus eu, gravida suscipit tortor.", replies: [] },
+  { id: 2, user: "Guy Hawkins", time: "2 weeks ago", avatar: "/image/A1.PNG", text: "Thank you for your helpful video.", replies: [] },
+];
 
 export default function WatchLesson() {
   const location = useLocation();
   const lessonTitle = location.state?.title || "Select a Lesson";
 
-    const courseData = [
+  const [comments, setComments] = useState(initialComments);
+  const [rating, setRating] = useState(4.8);
+  const [hasRated, setHasRated] = useState(false);
+
+  const handleAddComment = (text, userRating = null) => {
+    if (!text.trim()) return;
+
+    const newComment = {
+      id: Date.now() + Math.random(), 
+      user: "You",
+      time: "Just now",
+      avatar: "/image/A4.PNG", 
+      text: text, 
+      rating: userRating,
+      replies: []
+    };
+
+    setComments(prevComments => [newComment, ...prevComments]);
+
+    if (userRating !== null) {
+      setRating(prev => {
+        const totalRatingsCount = 155;
+        return parseFloat(((prev * (totalRatingsCount - 1) + userRating) / totalRatingsCount).toFixed(1));
+      });
+      setHasRated(true);
+    }
+  };
+
+  const handleAddReply = (commentId, replyText) => {
+    if (!replyText.trim()) return;
+    setComments(prevComments => 
+      prevComments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: [
+              ...(comment.replies || []),
+              {
+                id: Date.now() + Math.random(),
+                user: "You",
+                time: "Just now",
+                avatar: "/image/A4.PNG",
+                text: replyText
+              }
+            ]
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
+  const courseData = [
     {
       week: 1,
       title: "Introduction to UI/UX Design",
@@ -18,7 +76,7 @@ export default function WatchLesson() {
         { id: "03", title: "The Role of UI/UX Design in Product Development", duration: "45 Minutes" },
       ]
     },
-    {
+     {
       week: 2,
       title: "User Research and Analysis",
       lessons: [
@@ -54,37 +112,42 @@ export default function WatchLesson() {
         { id: "03", title: "Iterating and Improving UX Designs", duration: "45 Minutes" },
       ]
     }
-    ]
+  ];
 
   return (
     <div className="min-h-screen bg-[#fcfdfd] overflow-hidden">
       <div className="max-w-[1600px] mx-auto flex flex-col xl:flex-row items-start gap-0 lg:gap-8 lg:p-6 xl:p-10 overflow-hidden">
-        
         <div className="w-full xl:flex-1 order-1 flex flex-col bg-white overflow-hidden">
-          
           <div className="w-full bg-black lg:rounded-2xl overflow-hidden shadow-2xl aspect-video">
             <VideoPage />
           </div>
-          
           <div className="p-4 sm:p-6 lg:p-8 overflow-hidden">
             <div className="max-w-[1012px] overflow-hidden">
-              <LessonInfo title={lessonTitle} />
-              
+              <LessonInfo 
+                title={lessonTitle} 
+                commentCount={comments.length} 
+                rating={rating} 
+                onNewReview={handleAddComment}
+                hasRated={hasRated}
+              />
               <div className="mt-8 border-t border-gray-100 pt-8 overflow-hidden">
-                <ActiveTab />
+                <ActiveTab 
+                  comments={comments} 
+                  onAddComment={handleAddComment} 
+                  onAddReply={handleAddReply} 
+                />
               </div>
             </div>
           </div>
         </div>
         <div className="w-full xl:w-[420px] order-2 xl:sticky xl:top-10 overflow-hidden">
           <div className="bg-white lg:rounded-xl shadow-sm border border-gray-100 lg:border-none overflow-hidden">
-             <CourseContent
-                courseData={courseData} 
-                currentLessonTitle={lessonTitle}
-              />
+            <CourseContent
+              courseData={courseData} 
+              currentLessonTitle={lessonTitle}
+            />
           </div>
         </div>
-
       </div>
     </div>
   );

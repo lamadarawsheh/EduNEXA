@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { X, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
-export default function DynamicReviewSection() {
-  // حالات الحالة الديناميكية (Dynamic States)
-  const [rating, setRating] = useState(0); // التقييم المختار
-  const [hover, setHover] = useState(0);   // التقييم عند مرور الماوس
-  const [feedback, setFeedback] = useState(""); // نص التعليق
+export default function WriteReviewModal({ onSubmitReview, onClose }) {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [feedback, setFeedback] = useState("");
 
-  // دالة لتحديد وصف التقييم بناءً على النجوم
+  const handleSubmit = () => {
+    onSubmitReview(feedback, rating);
+    onClose();
+  };
+
   const getRatingText = (val) => {
     if (val === 0) return "(Rate this course)";
     if (val <= 2) return "(Poor/Fair)";
@@ -15,37 +18,24 @@ export default function DynamicReviewSection() {
     return "(Good/Amazing)";
   };
 
-  const handleSubmit = () => {
-    // هنا يتم ربط الـ API مستقبلاً
-    console.log("Submitting:", { rating, feedback });
-    alert(`Thank you! You rated this ${rating} stars.`);
-  };
-
   return (
-    <div className="w-full max-w-2xl bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden mx-auto">
-      
-      {/* Header */}
-      <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-        <h2 className="text-[#093332] text-lg font-semibold tracking-tight">Write a Review</h2>
-        <button onClick={() => {setRating(0); setFeedback("");}} className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
-          <X size={20} />
-        </button>
+    <div className="w-full max-w-lg mx-auto overflow-hidden">
+      <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100 bg-white">
+        <h2 className="text-[#093332] text-md font-bold">Write a Review</h2>
       </div>
 
-      <div className="p-8 flex flex-col items-center">
-        
-        {/* Dynamic Rating Score */}
+      <div className="p-6 md:p-10 flex flex-col items-center bg-white/95 backdrop-blur-sm rounded-b-lg shadow-lg">
+
         <div className="mb-4 flex items-center gap-2">
-          <span className="text-3xl font-bold text-[#093332]">
-            {hover || rating || 0}.0
+          <span className="text-2xl font-bold text-[#093332]">
+            {(hover || rating || 0).toFixed(1)}
           </span>
-          <span className="text-gray-500 font-medium text-lg">
+          <span className="text-gray-500 font-medium text-sm">
             {getRatingText(hover || rating)}
           </span>
         </div>
 
-        {/* Dynamic Stars Selection */}
-        <div className="flex gap-2 mb-10">
+        <div className="flex gap-2 mb-8">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -55,13 +45,12 @@ export default function DynamicReviewSection() {
               className="cursor-pointer transition-transform hover:scale-110 outline-none"
             >
               <svg 
-                width="40" 
-                height="40" 
+                width="36" 
+                height="36" 
                 viewBox="0 0 24 24" 
                 fill={star <= (hover || rating) ? "#FF782D" : "none"} 
-                stroke={star <= (hover || rating) ? "#FF782D" : "#E5E7EB"}
-                strokeWidth="2"
-                className="transition-colors duration-200"
+                stroke={star <= (hover || rating) ? "#FF782D" : "#D1D5DB"}
+                strokeWidth="1.5"
               >
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
               </svg>
@@ -69,24 +58,22 @@ export default function DynamicReviewSection() {
           ))}
         </div>
 
-        {/* Feedback Input Field */}
-        <div className="w-full space-y-3 text-left">
-          <label className="text-sm font-semibold text-gray-700 block ml-1">
+        <div className="w-full space-y-2 text-left">
+          <label className="text-sm font-bold text-[#093332] block ml-0.5">
             Feedback
           </label>
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Write down your feedback here..."
-            className="w-full h-40 p-5 bg-[#F4F7F7] border-none rounded-sm outline-none text-gray-600 placeholder:text-[#638483] resize-none text-base focus:ring-1 focus:ring-[#FF782D]/30 transition-all"
+            className="w-full h-32 p-4 bg-[#F4F7F7] border-none rounded-md outline-none text-[#093332] placeholder:text-[#638483] resize-none text-sm focus:ring-1 focus:ring-orange-200 transition-all"
           />
         </div>
 
-        {/* Footer Actions */}
-        <div className="w-full mt-8 flex items-center justify-between">
+        <div className="w-full mt-10 flex items-center justify-between">
           <button 
-            onClick={() => setFeedback("")}
-            className="text-[#093332] font-bold text-base hover:opacity-70 transition-opacity cursor-pointer"
+            onClick={onClose}
+            className="text-[#093332] font-bold text-sm hover:opacity-70 transition-opacity cursor-pointer"
           >
             Cancel
           </button>
@@ -94,12 +81,11 @@ export default function DynamicReviewSection() {
           <button 
             onClick={handleSubmit}
             disabled={rating === 0}
-            className={`flex items-center gap-3 px-10 py-4 rounded-sm font-bold shadow-md transition-all cursor-pointer active:scale-95
-              ${rating === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-[#FF6A35] text-white hover:bg-[#e85a2a]"}
-            `}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-sm text-white font-bold text-sm transition-all active:scale-95
+              ${rating === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-[#FF6A35] hover:bg-[#ef5d2a] shadow-md shadow-orange-100"}`}
           >
             Submit Review
-            <Send size={20} className="rotate-[-45deg] fill-white" />
+            <Send size={18} fill="white" className="ml-1" />
           </button>
         </div>
       </div>

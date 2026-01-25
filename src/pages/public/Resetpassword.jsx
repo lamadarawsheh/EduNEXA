@@ -63,7 +63,7 @@ const ResetPassword = () => {
 
         try {
             // Call real API
-            await resetPassword(email, token, formData.password, formData.confirmPassword);
+            const response = await resetPassword(email, token, formData.password, formData.confirmPassword);
 
             // Clean up
             localStorage.removeItem("resetEmail");
@@ -73,7 +73,7 @@ const ResetPassword = () => {
             setPopup({
                 show: true,
                 title: 'Success!',
-                message: 'Your password has been reset successfully.',
+                message: response.message || 'Your password has been reset successfully.',
                 type: 'success'
             });
 
