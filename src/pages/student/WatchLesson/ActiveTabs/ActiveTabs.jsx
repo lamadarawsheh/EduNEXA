@@ -36,9 +36,7 @@ export default function ActiveTab({ comments, onAddComment, onAddReply  }) {
                 {activeTab === 'notes' && (
                     <Notes />
                 )}
-                {activeTab === 'files' && (
-                    <Files />
-                )}
+              
             </button>
             ))}
         </div>
