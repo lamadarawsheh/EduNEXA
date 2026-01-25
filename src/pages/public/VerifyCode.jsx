@@ -8,7 +8,7 @@ const VerifyCode = () => {
     const navigate = useNavigate();
     const [code, setCode] = useState(['', '', '', '']);
     const inputs = useRef([]);
-    const [timeLeft, setTimeLeft] = useState(180);
+    const [timeLeft, setTimeLeft] = useState(600);
     const [isLoading, setIsLoading] = useState(false);
     const [popup, setPopup] = useState({ show: false, title: '', message: '', type: 'success' });
 
@@ -55,9 +55,22 @@ const VerifyCode = () => {
         setIsLoading(true);
 
         try {
-            await verifyCode(email, verificationCode);
-            localStorage.setItem("resetToken", verificationCode);
-            navigate('/reset-password');
+            const response = await verifyCode(email, verificationCode);
+
+            if (response.token) {
+                localStorage.setItem("resetToken", response.token);
+                setPopup({
+                    show: true,
+                    title: 'Success',
+                    message: 'Code verified successfully!',
+                    type: 'success'
+                });
+                setTimeout(() => {
+                    navigate('/reset-password');
+                }, 1500);
+            } else {
+                throw new Error("No token received. Please try again.");
+            }
 
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Invalid code. Please try again.';
@@ -82,7 +95,7 @@ const VerifyCode = () => {
             // For example, if it's from authService, you'd need to import it:
             // import { verifyCode, forgotPassword } from "../../services/authService";
             await forgotPassword(email);
-            setTimeLeft(180);
+            setTimeLeft(600);
             setPopup({
                 show: true,
                 title: 'Code Sent',

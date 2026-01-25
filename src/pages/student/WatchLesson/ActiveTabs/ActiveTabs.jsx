@@ -32,9 +32,12 @@ export default function ActiveTab({ comments, onAddComment, onAddReply  }) {
                     {tab.count}
                 </span>
                 )}
-                
-                {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500 transition-all"></div>
+
+                {activeTab === 'notes' && (
+                    <Notes />
+                )}
+                {activeTab === 'files' && (
+                    <Files />
                 )}
             </button>
             ))}

@@ -51,9 +51,12 @@ import AvailableCourses from "./pages/student/AvailableCourses";
 import Checkout from "./pages/student/Checkout/Checkout";
 import MyCourses from "./pages/teacher/MyCourses";
 import Earning from "./pages/teacher/Earning/Earning";
+import TeacherProfile from "./pages/teacher/Profile/Profile";
 
 import MyLessons from "./pages/student/MyLessons/MyLessons";
+import MyCoursesList from "./pages/student/MyLessons/MyCoursesList";
 import WatchLesson from "./pages/student/WatchLesson/WatchLesson";
+import CourseAnalytics from "./pages/teacher/CourseAnalytics";
 /* Student Profile Pages */
 import PersonalInformation from "./pages/student/profile/PersonalInformation";
 import Settings from "./pages/student/profile/Settings";
@@ -61,6 +64,7 @@ import ChangePassword from "./pages/student/profile/ChangePassword";
 import LanguageSelector from "./pages/student/profile/LanguageSelector";
 import ScrollToTop from "./components/common/ScrollToTop";
 import ReviewCourse from "./pages/admin/components/courses/ReviewCourse";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
   return (
@@ -99,12 +103,21 @@ function App() {
           <Route path="/teach/contact" element={<Contact />} />
         </Route>
 
-        <Route path="/student" element={<StudentLayout />}>
+        {/* Protected Student Routes */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <StudentLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="my-courses" element={<MyLessons />} />
+          <Route path="my-courses" element={<MyCoursesList />} />
+          <Route path="course-lessons" element={<MyLessons />} />
           <Route path="watchlesson" element={<WatchLesson />} />
           <Route path="profile" element={<StudentProfileLayout />}>
             <Route index element={<Navigate to="personal" replace />} />
@@ -117,17 +130,33 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="/teacher" element={<TeacherLayout />}>
+        {/* Protected Teacher Routes */}
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedRoute allowedRoles={['Instructor', 'Teacher']}>
+              <TeacherLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<TeacherDashboard />} />
           <Route path="create-new-course" element={<CourseForm />} />
           <Route path="teacher-settings" element={<TeacherSettings />} />
           <Route path="earnings" element={<Earning />} />
           <Route path="mycourses" element={<MyCourses />} />
+          <Route path="course-analytics/:id" element={<CourseAnalytics />} />
+          <Route path="profile" element={<TeacherProfile />} />
         </Route>
 
-
-        {/* 4. ADMIN PANEL (Sidebar Layout) */}
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="students" element={<AdminStudents />} />
           <Route path="teachers" element={<AdminTeachers />} />
@@ -137,10 +166,13 @@ function App() {
         </Route>
 
         {/* 5. 404 CATCH-ALL */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<LogPathToNotFound />} />
       </Routes>
     </Router>
   );
 }
+
+// Helper component for Catch-all to avoid build errors if NotFound isn't ready
+const LogPathToNotFound = () => <NotFound />;
 
 export default App;
