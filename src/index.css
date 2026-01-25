@@ -15,10 +15,35 @@
     --color-muted: hsl(var(--muted));
     --color-muted-foreground: hsl(var(--muted-foreground));
 
+    --animate-fade-in: fade-in 0.4s ease-out forwards;
+    --animate-scale-in: scale-in 0.3s ease-out forwards;
     --animate-glow-pulse: glow-pulse 4s infinite ease-in-out;
     --animate-letter-reveal: letter-reveal 0.8s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
     --animate-fade-up: fade-up 1s forwards ease-out;
     --animate-line-grow: line-grow 1s forwards ease-out;
+
+
+
+    @keyframes fade-in {
+        0% { 
+            opacity: 0; 
+            transform: translateY(10px); 
+        }
+        100% { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
+    @keyframes scale-in {
+        0% { 
+            transform: scale(0.9); 
+            opacity: 0; 
+        }
+        100% { 
+            transform: scale(1); 
+            opacity: 1; 
+        }
+    }
 
     @keyframes glow-pulse {
 
