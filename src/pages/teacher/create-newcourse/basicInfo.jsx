@@ -1,5 +1,15 @@
-export default function BasicInfo({ register, watch, errors }) {
-  const title = watch("title", "");
+
+
+
+
+
+export default function BasicInfo({ register, watch,
+   errors ,categories=[],
+   subcategories=[],categoryLoading=false}) {
+ 
+ 
+ 
+    const title = watch("title", "");
   const subtitle = watch("subtitle", "");
 
   return (
@@ -9,7 +19,7 @@ export default function BasicInfo({ register, watch, errors }) {
         <label className="label text-[#093332] font-normal text-sm sm:text-base">Title</label>
         <div className="relative">
           <input
-            {...register("title", { required: true, maxLength: 80 })}
+            {...register("title", { required: true, maxLength: 80 , message: "Max 80 characters"})}
             placeholder="Your course title"
             className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 pr-14"
           />
@@ -22,7 +32,7 @@ export default function BasicInfo({ register, watch, errors }) {
         <label className="label text-[#093332] font-normal">Subtitle</label>
         <div className="relative">
           <input
-            {...register("subtitle", { maxLength: 120 })}
+            {...register("subtitle", { maxLength: 120,message: "Max 120 characters" })}
             placeholder="Your course subtitle"
             className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base pr-14 p-2"
           />
@@ -37,13 +47,25 @@ export default function BasicInfo({ register, watch, errors }) {
             Course Category
           </label>
           <select
-            {...register("category")}
+            {...register("category",{required: "Category is required"})}
+            
             className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-2"
           >
-            <option>Select...</option>
+            {/* <option>Select...</option>
             <option>Development</option>
-            <option>Design</option>
+            <option>Design</option> */}
+             <option value="">
+              {categoryLoading ? "Loading..." : "Select..."}
+            </option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
+          {errors.category && (
+            <p className="text-red-500 text-sm">{errors.category.message}</p>
+          )}
         </div>
 
         <div>
@@ -51,11 +73,24 @@ export default function BasicInfo({ register, watch, errors }) {
             Course Sub-category
           </label>
           <select
-            {...register("subCategory")}
+            {...register("subCategory",{required: "Sub-category is required"})}
             className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
           >
-            <option>Select...</option>
+            {/* <option>Select...</option> */}
+             <option value="">
+              {subcategories.length === 0 ? "Select category first..." : "Select..."}
+            </option>
+            {subcategories.map((subCat) => (
+              <option key={subCat.id} value={subCat.id}>
+                {subCat.name}
+              </option>
+            ))}
           </select>
+           {errors.subCategory && (
+            <p className="text-red-500 text-sm">
+              {errors.subCategory.message}
+            </p>
+           )}
         </div>
       </div>
 
@@ -63,10 +98,18 @@ export default function BasicInfo({ register, watch, errors }) {
       <div className="mb-5">
         <label className="label text-[#093332] font-normal  text-sm sm:text-base">Course Topic</label>
         <input
-          {...register("topic")}
+          {...register("topic",{ required: "Course topic is required",
+            minLength: {
+              value: 3,
+              message: "Topic is too short",
+            },})}
+         
           placeholder="What is primarily taught in your course?"
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
         />
+         {errors.topic && (
+          <p className="text-red-500 text-sm">{errors.topic.message}</p>
+        )}
       </div>
 
       {/* Bottom Row */}
@@ -75,29 +118,55 @@ export default function BasicInfo({ register, watch, errors }) {
           {...register("language")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
         >
-          <option>Course Language</option>
+            <option value="">Course Language</option>
+            <option value="english">English</option>
+            <option value="arabic">Arabic</option>
+            <option value="french">French</option>
+            <option value="spanish">Spanish</option>
+            <option value="german">German</option>
         </select>
 
         <select
           {...register("price")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
-          <option>Course Price</option>
+            <option value="">Course Price</option>
+            <option value="free">Free</option>
+            <option value="19.99">$19.99</option>
+            <option value="29.99">$29.99</option>
+            <option value="49.99">$49.99</option>
+            <option value="79.99">$79.99</option>
+            <option value="99.99">$99.99</option>
+            <option value="149.99">$149.99</option>
+            <option value="199.99">$199.99</option>
         </select>
 
         <select
           {...register("level")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
-          <option>Course Level</option>
-        </select>
+            <option value="">Course Level</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+            <option value="all-levels">All Levels</option>        </select>
 
         <select
           {...register("duration")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
-          <option>Course Duration</option>
+                     <option value="">Course Duration</option>
+            <option value="0-2">0-2 hours</option>
+            <option value="2-5">2-5 hours</option>
+            <option value="5-10">5-10 hours</option>
+            <option value="10-20">10-20 hours</option>
+            <option value="20+">20+ hours</option>
         </select>
+        {errors[name] && (
+              <p className="text-red-500 text-sm">
+                {errors[name].message}
+              </p>
+            )}
       </div>
     </>
   );
