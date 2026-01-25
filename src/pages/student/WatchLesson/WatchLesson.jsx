@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import VideoPage from "./ActiveTabs/VideoPage.jsx";
 import LessonInfo from "./ActiveTabs/LessonInfo.jsx";
 import ActiveTab from "./ActiveTabs/ActiveTabs.jsx";
 import CourseContent from "./CourseContent.jsx";
+import { ArrowLeft } from "lucide-react";
 
 const initialComments = [
   { id: 1, user: "Ronald Richards", time: "1 week ago", avatar: "/image/A1.PNG", text: "Maecenas risus tortor, tincidunt nec purus eu, gravida suscipit tortor.", replies: [] },
@@ -11,6 +12,7 @@ const initialComments = [
 ];
 
 export default function WatchLesson() {
+  const navigate = useNavigate();
   const location = useLocation();
   const lessonTitle = location.state?.title || "Select a Lesson";
 
@@ -118,6 +120,15 @@ export default function WatchLesson() {
     <div className="min-h-screen bg-[#fcfdfd] overflow-hidden">
       <div className="max-w-[1600px] mx-auto flex flex-col xl:flex-row items-start gap-0 lg:gap-8 lg:p-6 xl:p-10 overflow-hidden">
         <div className="w-full xl:flex-1 order-1 flex flex-col bg-white overflow-hidden">
+          <div className="px-4 py-3 lg:px-0 lg:pb-6 flex items-center">
+            <button 
+              onClick={() => navigate("/student/course-lessons")}
+              className="flex items-center gap-2 text-[#176D69] font-bold hover:opacity-70 transition-all cursor-pointer group"
+            >
+              <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm">Back to My Courses</span>
+            </button>
+          </div>
           <div className="w-full bg-black lg:rounded-2xl overflow-hidden shadow-2xl aspect-video">
             <VideoPage />
           </div>
