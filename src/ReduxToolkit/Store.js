@@ -7,6 +7,7 @@ import sectionReucer from './Slices/CreateNewCourses/SectionSlice'
 import lectureReducer from './Slices/CreateNewCourses/LectureSlice'
 
 
+const noopReducer = (state = {}) => state;
 
 export const Store = configureStore({
   reducer: {
@@ -16,5 +17,7 @@ export const Store = configureStore({
     category:categoryReducer,
     section:sectionReucer,
     lecture:lectureReducer,
-  },
-}); 
+        app: noopReducer,
+  }
+  })
+

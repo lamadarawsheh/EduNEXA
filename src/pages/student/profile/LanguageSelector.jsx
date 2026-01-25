@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Search, ArrowLeft } from 'lucide-react';
-import { updateLanguage } from '../../../services/settingService';
+import { getAvailableLanguages, updateLanguage } from '../../../services/settingService';
 import "./Profile.css";
 
 const LanguageSelector = () => {
@@ -10,7 +10,7 @@ const LanguageSelector = () => {
   const [isSaving, setIsSaving] = useState(false);
   const studentId = localStorage.getItem('studentId');
 
-  const languages = [
+  const fallbackLanguages = useMemo(() => ([
     { code: 'ar', name: 'Arabic', flagCode: 'sa', nativeName: 'العربية' },
     { code: 'en', name: 'English', flagCode: 'gb', nativeName: 'English' },
     { code: 'fr', name: 'French', flagCode: 'fr', nativeName: 'Français' },
@@ -74,12 +74,132 @@ const LanguageSelector = () => {
     { code: 'eu', name: 'Basque', flagCode: 'es', nativeName: 'Euskara' },
     { code: 'ca', name: 'Catalan', flagCode: 'es-ct', nativeName: 'Català' },
     { code: 'gl', name: 'Galician', flagCode: 'es-ga', nativeName: 'Galego' }
-  ];
+  ]), []);
 
-  const filteredLanguages = languages.filter(lang =>
-    lang.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lang.nativeName.toLowerCase().includes(searchTerm.toLowerCase())
+  const [languages, setLanguages] = useState(fallbackLanguages);
+
+  const languageByCode = useMemo(
+    () => fallbackLanguages.reduce((acc, lang) => {
+      if (lang?.code) {
+        acc[lang.code.toLowerCase()] = lang;
+      }
+      return acc;
+    }, {}),
+    [fallbackLanguages]
   );
+
+  const normalizeFlagCode = (value, fallbackCode) => {
+    const raw = typeof value === 'string' ? value.trim() : '';
+    if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      return raw;
+    }
+
+    const candidate = (raw || fallbackCode || '').toLowerCase();
+    if (!candidate) {
+      return '';
+    }
+
+    const withoutExt = candidate.replace(/(\.png)+$/i, '');
+    return withoutExt.split('/').pop();
+  };
+
+  const getFlagUrl = (value, fallbackCode) => {
+    const normalized = normalizeFlagCode(value, fallbackCode);
+    if (!normalized) {
+      return '';
+    }
+    if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
+      return normalized;
+    }
+    return `https://flagcdn.com/w80/${normalized}.png`;
+  };
+
+  useEffect(() => {
+    let isActive = true;
+
+    const normalizeLanguage = (item) => {
+      if (!item) {
+        return null;
+      }
+
+      if (typeof item === 'string') {
+        const code = item.toLowerCase();
+        const fallback = languageByCode[code];
+        if (fallback) {
+          return fallback;
+        }
+        return {
+          code,
+          name: code,
+          nativeName: code,
+          flagCode: normalizeFlagCode(code.split('-')[0], code.split('-')[0]),
+        };
+      }
+
+      if (typeof item !== 'object') {
+        return null;
+      }
+
+      const rawCode = item.code || item.languageCode || item.isoCode || item.id;
+      if (typeof rawCode !== 'string') {
+        return null;
+      }
+
+      const code = rawCode.toLowerCase();
+      const fallback = languageByCode[code];
+      const name = item.name || item.languageName || fallback?.name || code;
+      const nativeName = item.nativeName || item.native || fallback?.nativeName || name;
+      const fallbackFlagCode = fallback?.flagCode || code.split('-')[0];
+      const flagCode = normalizeFlagCode(item.flagCode || item.flag, fallbackFlagCode);
+
+      return { code, name, nativeName, flagCode };
+    };
+
+    const loadLanguages = async () => {
+      try {
+        const response = await getAvailableLanguages();
+        if (!isActive) {
+          return;
+        }
+
+        const data = response?.data;
+        const rawLanguages = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.languages)
+            ? data.languages
+            : Array.isArray(data?.data)
+              ? data.data
+              : null;
+
+        if (rawLanguages && rawLanguages.length) {
+          const normalized = rawLanguages
+            .map(normalizeLanguage)
+            .filter(Boolean);
+
+          if (normalized.length) {
+            setLanguages(normalized);
+          }
+        }
+      } catch (error) {
+        if (isActive) {
+          console.error('Failed to load available languages:', error);
+        }
+      }
+    };
+
+    loadLanguages();
+
+    return () => {
+      isActive = false;
+    };
+  }, [languageByCode]);
+
+  const filteredLanguages = languages.filter((lang) => {
+    const name = (lang.name || '').toLowerCase();
+    const nativeName = (lang.nativeName || '').toLowerCase();
+    const term = searchTerm.toLowerCase();
+    return name.includes(term) || nativeName.includes(term);
+  });
 
   const handleLanguageSelect = (langCode) => {
     setSelectedLanguage(langCode);
@@ -95,12 +215,15 @@ const LanguageSelector = () => {
       return;
     }
 
-    const selected = languages.find(lang => lang.code === selectedLanguage);
+    const selected = languages.find((lang) => lang.code === selectedLanguage)
+      || languageByCode[selectedLanguage.toLowerCase()];
+    const selectedName = selected?.name || selectedLanguage;
+    const selectedNativeName = selected?.nativeName || selectedName;
     try {
       setIsSaving(true);
       await updateLanguage(studentId, selectedLanguage);
       console.log('Selected language:', selected);
-      alert(`Language changed to: ${selected.name} (${selected.nativeName})`);
+      alert(`Language changed to: ${selectedName} (${selectedNativeName})`);
     } catch (error) {
       console.error('Failed to update language:', error);
       alert('Failed to update language. Please try again.');
@@ -152,12 +275,18 @@ const LanguageSelector = () => {
             >
               <div className="h-8 w-10 flex-shrink-0 overflow-hidden rounded shadow-md border border-gray-200">
                 <img
-                  src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                  src={getFlagUrl(lang.flagCode, lang.code)}
                   alt={`${lang.name} flag`}
                   className="h-full w-full object-cover"
                   onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = `https://flagcdn.com/w80/${lang.flagCode.split('-')[0]}.png`;
+                    const normalized = normalizeFlagCode(lang.flagCode, lang.code);
+                    const isUrl = normalized.startsWith('http://') || normalized.startsWith('https://');
+                    const baseCode = isUrl ? '' : normalized.split('-')[0];
+                    const fallbackSrc = getFlagUrl(baseCode || lang.code, lang.code);
+                    if (fallbackSrc && e.target.src !== fallbackSrc) {
+                      e.target.onerror = null;
+                      e.target.src = fallbackSrc;
+                    }
                   }}
                 />
               </div>

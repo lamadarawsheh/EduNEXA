@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Facebook, Phone, Loader2 } from 'lucide-react';
 import Popup from '../../components/common/Popup';
 import WelcomeAnimation from '../../components/common/WelcomeAnimation';
+import { register as registerService } from '../../services/authService';
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -102,33 +103,20 @@ const SignUp = () => {
             };
 
             try {
-                const response = await fetch('http://edunexa.runasp.net/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
+                const data = await registerService(payload);
 
-                const data = await response.json();
+                console.log("Registration Success:", data);
 
-                if (response.ok) {
-                    console.log("Registration Success:", data);
+                // Store Authentication Data consistently for ProtectedRoute
+                localStorage.setItem('user', JSON.stringify(data.user || data));
+                if (data.token) localStorage.setItem('token', data.token);
 
-                    // Store Authentication Data
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('username', data.username);
-                    localStorage.setItem('roles', JSON.stringify(data.roles));
-
-                    // Show animation instead of popup
-                    setShowWelcome(true);
-                } else {
-                    console.error("Registration Error:", data);
-                    showPopup("Registration Failed", data.message || "We couldn't create your account. Please try again.", 'error');
-                }
+                // Show animation instead of popup
+                setShowWelcome(true);
             } catch (error) {
-                console.error("Network Error:", error);
-                showPopup("Connection Error", "Please check your internet connection and try again.", 'error');
+                console.error("Registration Error:", error);
+                const errorMessage = error.response?.data?.message || "We couldn't create your account. Please try again.";
+                showPopup("Registration Failed", errorMessage, 'error');
             } finally {
                 setIsLoading(false);
             }
