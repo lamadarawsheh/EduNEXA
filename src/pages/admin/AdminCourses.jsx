@@ -1,5 +1,5 @@
 import React from 'react'
-import PageHeader from './components/studentComponents/PageHeader'
+import PageHeader from './components/dashboardComponents/PageHeader'
 import Course from './components/courses/Course'
 
 export default function AdminCourses() {

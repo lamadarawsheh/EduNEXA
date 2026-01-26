@@ -2,8 +2,14 @@ import { useFieldArray } from "react-hook-form";
 import DynamicList from "./dynamicList";
 import image1 from "../images/download 1.svg";
 import image2 from "../images/images 1.svg";
+import { useState } from "react";
 
-export default function AdvanceInfo({ register, control }) {
+export default function AdvanceInfo({ register, control ,watch}) {
+ 
+  const  [thumbnailPreview, setThumbnailPreview] = useState(null);
+  const [trailerPreview, setTrailerPreview] = useState(null);
+
+ 
   const learnList = useFieldArray({
     control,
     name: "learnItems",
@@ -18,6 +24,30 @@ export default function AdvanceInfo({ register, control }) {
     control,
     name: "requirements",
   });
+  
+  const thumbnailFile = watch("thumbnail");
+  const trailerFile = watch("trailer");
+
+//handel thumbnail preiview
+const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnailPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+//Handle trailer preview
+  const handleTrailerChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setTrailerPreview(url);
+    }
+  };
 
   return (
     <div className="space-y-10 bg-[#FFFFFF] ">
@@ -25,12 +55,13 @@ export default function AdvanceInfo({ register, control }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 ">
         {/* Thumbnail */}
         <div className="flex flex-col items-center sm:items-start gap-4 sm:gap-6 w-full lg:mt-4">
-          <h4 className="font-medium mb-2 text-[#093332] text-left">
+          <h4 className="font-medium mb-2 text-[#093332] text-left text-2xl">
             Course Thumbnail
           </h4>
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             <img
-              src={image1}
+              // src={image1}
+              src={thumbnailPreview || image1}
               alt="Thumbnail"
               className="w-full sm:w-56 h-40 object-cover lg:mt-8"
             />
@@ -45,6 +76,7 @@ export default function AdvanceInfo({ register, control }) {
                 <span className="text-[#093332]">jpg,jpeg or png</span>
               </p>
               <input
+              onChange={handleThumbnailChange}
                 type="file"
                 {...register("thumbnail")}
                 className="hidden"
@@ -54,18 +86,25 @@ export default function AdvanceInfo({ register, control }) {
                 htmlFor="thumbnail"
                 className="inline-block w-full btn-light px-6 py-2 cursor-pointer font-semibold bg-[#A6E5E35C] text-[#176D69] sm:w-auto"
               >
-                Upload Image
+                {thumbnailFile && thumbnailFile.length > 0
+                  ? "Change Image"
+                  : "Upload Image"}
               </label>
+               {thumbnailFile && thumbnailFile.length > 0 && (
+                <p className="text-xs text-green-600 mt-2">
+                  ✓ {thumbnailFile[0].name}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Trailer */}
         <div className="flex flex-col items-center sm:items-start gap-4 sm:gap-6 w-full lg:mt-4">
-          <h4 className="font-medium   text-[#093332] ">Course Trailer</h4>
+          <h4 className="font-medium   text-[#093332] text-2xl">Course Trailer</h4>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
             <img
-              src={image2}
+              src={trailerPreview ||image2}
               alt="Thumbnail"
               className="w-full sm:w-56 h-40 object-cover lg:mb-4 "
             />
@@ -76,6 +115,7 @@ export default function AdvanceInfo({ register, control }) {
                 for exceptionally awesome videos.
               </p>
               <input
+              onChange={handleTrailerChange}
                 type="file"
                 {...register("trailer")}
                 className="hidden"
@@ -85,8 +125,16 @@ export default function AdvanceInfo({ register, control }) {
                 htmlFor="trailer"
                 className="inline-block w-full sm:w-auto text-center btn-light cursor-pointer px-6 py-2 font-semibold bg-[#A6E5E35C] text-[#176D69]"
               >
-                Upload Video
+                 {trailerFile && trailerFile.length > 0
+                  ? "Change Video"
+                  : "Upload Video"}
               </label>
+                            {trailerFile && trailerFile.length > 0 && (
+                <p className="text-xs text-green-600 mt-2">
+                  ✓ {trailerFile[0].name}
+                </p>
+              )}
+
             </div>
           </div>
         </div>
