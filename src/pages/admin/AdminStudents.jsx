@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import PageHeader from './components/studentComponents/PageHeader';
-import Table from './components/studentComponents/Table';
+import PageHeader from './components/dashboardComponents/PageHeader';
+import Table from './components/dashboardComponents/Table';
 
 export default function AdminStudents() {
   const [records, setRecords] = useState([
