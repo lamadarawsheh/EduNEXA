@@ -1,13 +1,16 @@
 import { useFieldArray } from "react-hook-form";
 import { useState } from "react";
 
-export default function PublishCourse({ register, control }) {
+export default function PublishCourse({ register, control ,watch}) {
   const [search, setSearch] = useState("");
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "publish.instructors",
   });
+
+  const welcomeMessage = watch("publish.welcomeMessage", "");
+  const congratsMessage = watch("publish.congratsMessage", "");
 
   const addInstructor = () => {
     if (!search.trim()) return;
@@ -19,6 +22,12 @@ export default function PublishCourse({ register, control }) {
 
     setSearch("");
   };
+  const handleSearchKeyPress=(e)=>{
+    if(e.key === "Enter"){
+      e.preventDefault();
+      addInstructor();
+    }
+  }
 
   return (
     <div className="space-10">
@@ -60,6 +69,7 @@ export default function PublishCourse({ register, control }) {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
               placeholder="Search by username"
               className="input w-full border border-[#176D69] text-[#176D69] p-2 mt-1"
             />
@@ -81,7 +91,7 @@ export default function PublishCourse({ register, control }) {
               >
                 <div className=" bg-[#A6E5E35C] text-[#093332] font-semibold  ">
                   <p className="text-sm font-medium text-[#093332]  ">
-                    {/* {item.username} */}
+                    {item.username}
                     user Name
                   </p>
                   <p className="text-xs text-[#093332]">
