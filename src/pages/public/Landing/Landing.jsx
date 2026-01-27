@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { Zap, BookOpen, Users } from "lucide-react";
 
 import FeatureCard from "./components/FeatureCard";
@@ -8,6 +9,9 @@ import MetricItem from "./components/MetricItem";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [courses, setCourses] = useState([]);
+
+  
 
   // Simple intersection observer for fade-in animations -> reusing existing code logic for brevity in replace
   const observerCallback = (entries, observer) => {
@@ -24,6 +28,19 @@ const Landing = () => {
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+  fetch("https://YOUR_API_URL_HERE")
+    .then((response) => response.json())
+    .then((data) => {
+      setCourses(data);
+      console.log(data); // بس للتأكد
+    })
+    .catch((error) => {
+      console.error("Error fetching courses:", error);
+    });
+}, []);
+
 
   return (
     <div className="bg-gradient-to-r from-[#FCFFFE] via-[#F9FEFD] to-[#F5FDFC] text-black overflow-x-hidden">
@@ -142,9 +159,15 @@ const Landing = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-          <CourseCard title="Expert Instructors" students="2.5K" level="Beginner" />
-          <CourseCard title="Full-Stack Web Dev" students="1.2K" level="Intermediate" />
-          <CourseCard title="Advanced UI/UX" students="800" level="Advanced" />
+          {courses.map((course) => (
+  <CourseCard
+    key={course.id}
+    title={course.title}
+    students={course.students}
+    level={course.level}
+  />
+))}
+
         </div>
 
         {/* Simplified View All Link */}
