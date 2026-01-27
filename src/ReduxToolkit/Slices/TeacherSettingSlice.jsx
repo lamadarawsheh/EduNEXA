@@ -5,12 +5,10 @@ const BaseURL = "http://edunexa.runasp.net";
 
 const getAuthHeader = () => ({
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")
-    }`,
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
-
 });
-  // console.log(localStorage.getItem("token"));
+// console.log(localStorage.getItem("token"));
 
 //Update instructor profile
 export const UpdateInstructorProfile = createAsyncThunk(
@@ -21,7 +19,6 @@ export const UpdateInstructorProfile = createAsyncThunk(
         `${BaseURL}/api/Instructor`,
         formData,
         getAuthHeader(),
-        
       );
       return response.data;
     } catch (error) {
@@ -48,7 +45,7 @@ export const AddSocialMedia = createAsyncThunk(
 );
 
 // get instuctor profile
- export const fetchInstuctorProfile = createAsyncThunk(
+export const fetchInstuctorProfile = createAsyncThunk(
   "instructor/fetchInstuctorProfile ",
   async (_, { rejectWithValue }) => {
     try {
@@ -67,7 +64,7 @@ const teacherSettingSlice = createSlice({
   name: "teacherSetting",
   initialState: {
     firstName: "",
-    fullName:"",
+    fullName: "",
     lastName: "",
     userName: "",
     phone: "",
@@ -128,16 +125,16 @@ const teacherSettingSlice = createSlice({
     setGender: (state, action) => {
       state.gender = action.payload;
     },
-    setFullName:(state,action)=>{
-      state.fullName = action.payload
-    }
+    setFullName: (state, action) => {
+      state.fullName = action.payload;
+    },
   },
   extraReducers: (builder) =>
     builder
       .addCase(UpdateInstructorProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
-         state.message = null
+        state.message = null;
       })
       .addCase(UpdateInstructorProfile.fulfilled, (state, action) => {
         state.loading = false;
@@ -145,53 +142,58 @@ const teacherSettingSlice = createSlice({
           state.firstName = action.payload.fullName || state.firstName;
           state.lastName = action.payload.lastName || state.lastName;
           state.bio = action.payload.biography || state.bio;
-         state.message = action.payload.message || "Profile updated successfully";
+          state.message =
+            action.payload.message || "Profile updated successfully";
         }
       })
 
       .addCase(UpdateInstructorProfile.rejected, (state, action) => {
-        ((state.loading = false), 
-        (state.error = action.payload));
-         state.message = null;
+        ((state.loading = false), (state.error = action.payload));
+        state.message = null;
       })
       .addCase(AddSocialMedia.pending, (state) => {
         state.loading = true;
         state.error = null;
-           state.message = null;
+        state.message = null;
       })
       .addCase(AddSocialMedia.fulfilled, (state, action) => {
         state.loading = false;
-         state.message = action.payload.message || "Profile updated successfully";
-
+        state.message =
+          action.payload.message || "Profile updated successfully";
       })
       .addCase(AddSocialMedia.rejected, (state, action) => {
         ((state.loading = false), (state.error = action.payload));
-         state.message = null;
+        state.message = null;
       })
-        .addCase(fetchInstuctorProfile.pending, (state) => {
+      .addCase(fetchInstuctorProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchInstuctorProfile.fulfilled, (state, action) => {
         state.loading = false;
-         if (action.payload) {
+        if (action.payload) {
           state.firstName = action.payload.fullName || state.firstName;
           state.lastName = action.payload.lastName || state.lastName;
           state.userName = action.payload.userName || state.userName;
-          state.fullName = action.payload.fullName || state.fullName
+          state.fullName = action.payload.fullName || state.fullName;
           state.phone = action.payload.phone || state.phone;
           state.title = action.payload.title || state.title;
           state.bio = action.payload.biography || state.bio;
           state.website = action.payload.website || state.website;
-          state.profileImage = action.payload.profileImage || state.profileImage;
+          state.profileImage =
+            action.payload.profileImage || state.profileImage;
           state.gender = action.payload.gender || state.gender;
           // Update social media fields if they're in the response
           if (action.payload.socialMedia) {
-            state.facebook = action.payload.socialMedia.facebook || state.facebook;
-            state.instagram = action.payload.socialMedia.instagram || state.instagram;
-            state.linkedin = action.payload.socialMedia.linkedin || state.linkedin;
+            state.facebook =
+              action.payload.socialMedia.facebook || state.facebook;
+            state.instagram =
+              action.payload.socialMedia.instagram || state.instagram;
+            state.linkedin =
+              action.payload.socialMedia.linkedin || state.linkedin;
             state.twitter = action.payload.socialMedia.twitter || state.twitter;
-            state.whatsapp = action.payload.socialMedia.whatsapp || state.whatsapp;
+            state.whatsapp =
+              action.payload.socialMedia.whatsapp || state.whatsapp;
             state.youtube = action.payload.socialMedia.youtube || state.youtube;
           }
         }
