@@ -4,14 +4,10 @@ import Avatar from '../Avatar'
 import Toggle from './Toggle';
 import PasswordInput from './PasswordInput';
 
-export default function Settings() {
-  const admin = { name: "Admin User", email: "admin@example.com", phone: "01122334455", password: "HelloWorld!" }
+export default function Settings({admin}) {
   const [isActive, setIsActive] = useState(false);
-
-
   return (
     <>
-
       <div className="mt-4 flex flex-wrap gap-4 justify-between">
         <div className="flex flex-col">
           <h4 className="text-md lg:text-2xl font-semibold">Profile Information</h4>
@@ -28,7 +24,7 @@ export default function Settings() {
       <div className="flex w-[100%] lg:w-[40%] items-center justify-between my-4">
         <h4 className="text-md ">Profile Picture</h4>
         <div className='flex justify-start items-center gap-4'>
-          <Avatar name={admin.name} size={50} />
+          <Avatar name={admin?.fullName} src={admin?.imageUrl} size={50} />
           <div className="flex gap-2">
             <button className="text-[12px] lg:text-[14px] text-gray-500 cursor-pointer hover:text-red-800">Delete</button>
             <button className="text-[12px] lg:text-[14px] text-gray-500 cursor-pointer hover:text-[#176D69]">Update</button>
@@ -41,7 +37,7 @@ export default function Settings() {
           <div className='flex justify-start items-center gap-4 w-[60%]'>
             <input type='text' id='adminName' className='border-1 border-gray-200 rounded-md py-2 px-2 w-[100%] lg:w-[80%] text-sm text-gray-500 outline-none transition
                   focus:border-gray-900 focus:ring-2 focus:ring-gray-200
-                  disabled:cursor-not-allowed disabled:bg-gray-100' value={admin.name} />
+                  disabled:cursor-not-allowed disabled:bg-gray-100' value={admin.fullName} />
           </div>
         </div>
         <div className="flex w-[100%] lg:w-[60%] items-center justify-between my-4">
@@ -57,7 +53,7 @@ export default function Settings() {
           <div className='flex justify-start items-center gap-4 w-[60%]'>
             <input type='number' id='adminPhone' className='border-1 border-gray-200 rounded-md py-2 px-2 w-[100%] lg:w-[80%] text-sm text-gray-500 outline-none transition
                   focus:border-gray-900 focus:ring-2 focus:ring-gray-200
-                  disabled:cursor-not-allowed disabled:bg-gray-100' value={admin.phone} />
+                  disabled:cursor-not-allowed disabled:bg-gray-100' value={admin.phoneNumber} />
           </div>
         </div>
       </div>
