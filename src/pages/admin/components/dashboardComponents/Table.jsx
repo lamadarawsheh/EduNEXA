@@ -11,6 +11,7 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
             return { key: "userName", direction: prev.direction === "asc" ? "desc" : "asc" };
             });
             };
+        
     return (
         <>
             <div className="my-6 flex justify-between">
@@ -49,17 +50,17 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
                             <tr>
                                 <th className="text-left text-sm md:text-xl font-semibold p-2 md:p-4">
                                     <div className="flex items-center gap-3">
-                                    columns[0]
+                                    {columns[0]}
                                     </div>
                                 </th>
                                 <th className="text-left font-semibold p-2 md:p-4">                 
-                                    columns[1]
+                                    { columns[1]}
                                 </th>
                                 <th className="text-left font-semibold pe-2 md:p-4">             
-                                    columns[2]
+                                    {columns[2]}
                                 </th>
                                 <th className="text-left font-semibold p-2 md:p-4">
-                                    columns[3]
+                                    {columns[3]}
                                 </th>
                                 <th className="text-left font-semibold p-2 md:p-4"> {noOfCourses}  </th>
                             </tr>
