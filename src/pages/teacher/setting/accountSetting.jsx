@@ -1,37 +1,19 @@
 import { useFormContext } from "react-hook-form";
 import image from "./images/Rectangle.svg";
-import { useSelector, useDispatch } from "react-redux";
-import { UpdateInstructorProfile } from "../../../ReduxToolkit/Slices/TeacherSettingSlice";
 
 export default function AccountSettings() {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.teacherSetting);
+ 
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useFormContext();
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("firstName", data.firstName);
-    formData.append("lastName", data.lastName);
-    formData.append("username", data.username);
-    formData.append("phone", data.phone);
-    formData.append("title", data.title);
-    formData.append("bio", data.bio);
-
-    dispatch(UpdateInstructorProfile(formData));
-  };
+  
   return (
     <>
-      <h2 className="text-[#093332] font-semibold mb-8">Account Settings</h2>
-      {/* //error and loading addCase */}
-      {loading && <p className="text-blue-600">Saving changes...</p>}
-      {error && <p className="text-red-600">Error: {error}</p>}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="text-[#093332] font-semibold mb-8 text-2xl">Account Settings</h2>
+   
         {/* Name */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="col-span-8 md:order-1 order-2">
@@ -91,8 +73,6 @@ export default function AccountSettings() {
           className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
         />
 
-        <button type="submit"> {loading ? "Saving..." : "Save Changes"}</button>
-      </form>
     </>
   );
 }
