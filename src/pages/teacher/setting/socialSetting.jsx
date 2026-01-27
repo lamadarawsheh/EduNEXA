@@ -6,36 +6,14 @@ import twitter from "./images/Social (2).svg";
 import whats from "./images/Social (3).svg";
 import youtube from "./images/Social (4).svg";
 import insta from "./images/Social.svg";
-import { useSelector, useDispatch } from "react-redux";
-import { UpdateInstructorProfile } from "../../../ReduxToolkit/Slices/TeacherSettingSlice";
 
 export default function SocialSettings() {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.teacherSetting);
 
-  const { register, handleSubmit } = useFormContext();
-
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("website", data.website);
-    formData.append("facebook", data.facebook);
-    formData.append("instagram", data.instagram);
-    formData.append("linkedin", data.linkedin);
-    formData.append("twitter", data.twitter);
-    formData.append("whatsapp", data.whatsapp);
-    formData.append("youtube", data.youtube);
-    dispatch(UpdateInstructorProfile(formData));
-  };
+  const { register} = useFormContext();
 
   return (
     <>
       <h2 className="text-[#093332] font-bold mb-8 text-2xl">Social Profile</h2>
-
-      {/* //error and loading addCase */}
-      {loading && <p className="text-blue-600">Saving changes...</p>}
-      {error && <p className="text-red-600">Error: {error}</p>}
-
-      <form onSubmit={handleSubmit(onSubmit)} className="card">
         <label className="text-[#093332] font-medium "> Personal Website</label>
         <div className="relative w-full flex items-center">
           <img
@@ -145,13 +123,6 @@ export default function SocialSettings() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-[#093332] text-[white] px-4 py-4 mt-4"
-        >
-          {loading ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
     </>
   );
 }
