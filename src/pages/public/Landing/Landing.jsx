@@ -1,7 +1,7 @@
-import React, { useEffect, useRef,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Zap, BookOpen, Users } from "lucide-react";
+import { getApprovedCourses } from "../../../services/courseService";
 
 import FeatureCard from "./components/FeatureCard";
 import CourseCard from "./components/CourseCard";
@@ -11,7 +11,7 @@ const Landing = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
 
-  
+
 
   // Simple intersection observer for fade-in animations -> reusing existing code logic for brevity in replace
   const observerCallback = (entries, observer) => {
@@ -30,16 +30,15 @@ const Landing = () => {
   }, []);
 
   useEffect(() => {
-  fetch("https://YOUR_API_URL_HERE")
-    .then((response) => response.json())
-    .then((data) => {
-      setCourses(data);
-      console.log(data); // بس للتأكد
-    })
-    .catch((error) => {
-      console.error("Error fetching courses:", error);
-    });
-}, []);
+    getApprovedCourses()
+      .then((res) => {
+        // Just take the first 3 or 6 for the landing page if there are many
+        setCourses(res.data.slice(0, 6));
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, []);
 
 
   return (
@@ -160,13 +159,13 @@ const Landing = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
           {courses.map((course) => (
-  <CourseCard
-    key={course.id}
-    title={course.title}
-    students={course.students}
-    level={course.level}
-  />
-))}
+            <CourseCard
+              key={course.id}
+              title={course.title}
+              students={course.students}
+              level={course.level}
+            />
+          ))}
 
         </div>
 
