@@ -5,7 +5,9 @@ import subCategoryReducer from './Slices/CreateNewCourses/SubCategorySlice'
 import categoryReducer from './Slices/CreateNewCourses/CategorySlice'
 import sectionReucer from './Slices/CreateNewCourses/SectionSlice'
 import lectureReducer from './Slices/CreateNewCourses/LectureSlice'
-
+import adminDashboardSlice from "./slices/AdminDashboard"
+import adminStudentSlice from "./slices/AdminStudents"
+import adminProfileSlice from "./slices/AdminProfile";
 
 const noopReducer = (state = {}) => state;
 
@@ -18,6 +20,8 @@ export const Store = configureStore({
     section:sectionReucer,
     lecture:lectureReducer,
         app: noopReducer,
-  }
-  })
-
+    adminDashboard: adminDashboardSlice,
+    adminStudents: adminStudentSlice,
+    adminProfile: adminProfileSlice,
+  },
+});

@@ -9,19 +9,19 @@ export default function Record({ record, pageName }) {
           <input
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300" />
-          <Avatar src={record.avatar} name={record.name} className="
+          <Avatar src={record.imageUrl} name={record.fullName} className="
         w-8 h-8
         sm:w-10 sm:h-10
         md:w-11 md:h-11
         lg:w-12 lg:h-12"
             size={42} />
-          <span className="font-semibold text-[#093332]">{record.name}</span>
+          <span className="font-semibold text-[#093332]">{record.userName}</span>
         </div>
       </td>
 
       <td className="pe-2 md:p-4 text-left  text-gray-700">{record.email}</td>
-      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.phone : record.specialization}</td>
-      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.dob : record.rate}</td>
+      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.phoneNumber : record.specialization}</td>
+      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.birthDate : record.rate}</td>
       <td className=" md:p-4 text-left md:text-center text-gray-700">{record.noOfCourses}</td>
     </tr>
   );
