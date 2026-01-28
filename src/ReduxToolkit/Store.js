@@ -1,9 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-
-const noopReducer = (state = {}) => state;
+import walletReducer from './walletSlice'
 
 export const Store = configureStore({
   reducer: {
-    app: noopReducer,
+    wallet: walletReducer
   },
 });
