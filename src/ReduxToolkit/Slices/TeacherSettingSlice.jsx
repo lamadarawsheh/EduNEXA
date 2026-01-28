@@ -8,13 +8,14 @@ const getAuthHeader = () => ({
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
+// console.log(localStorage.getItem("token"));
 
 //Update instructor profile
 export const UpdateInstructorProfile = createAsyncThunk(
   "instructor/UpdateInstructorProfile",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `${BaseURL}/api/Instructor`,
         formData,
         getAuthHeader(),
@@ -43,10 +44,27 @@ export const AddSocialMedia = createAsyncThunk(
   },
 );
 
+// get instuctor profile
+export const fetchInstuctorProfile = createAsyncThunk(
+  "instructor/fetchInstuctorProfile ",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BaseURL}/api/Instructor`,
+        getAuthHeader(),
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
+);
+
 const teacherSettingSlice = createSlice({
   name: "teacherSetting",
   initialState: {
     firstName: "",
+    fullName: "",
     lastName: "",
     userName: "",
     phone: "",
@@ -87,7 +105,7 @@ const teacherSettingSlice = createSlice({
       state.website = action.payload;
     },
     setFacebook: (state, action) => {
-      state.website = action.payload;
+      state.facebook = action.payload;
     },
     setInstgram: (state, action) => {
       state.instagram = action.payload;
@@ -107,33 +125,78 @@ const teacherSettingSlice = createSlice({
     setGender: (state, action) => {
       state.gender = action.payload;
     },
+    setFullName: (state, action) => {
+      state.fullName = action.payload;
+    },
   },
   extraReducers: (builder) =>
     builder
       .addCase(UpdateInstructorProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(UpdateInstructorProfile.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          state.firstName = action.payload.firstName || state.firstName;
+          state.firstName = action.payload.fullName || state.firstName;
           state.lastName = action.payload.lastName || state.lastName;
           state.bio = action.payload.biography || state.bio;
+          state.message =
+            action.payload.message || "Profile updated successfully";
         }
       })
 
       .addCase(UpdateInstructorProfile.rejected, (state, action) => {
         ((state.loading = false), (state.error = action.payload));
+        state.message = null;
       })
       .addCase(AddSocialMedia.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(AddSocialMedia.fulfilled, (state, action) => {
         state.loading = false;
+        state.message =
+          action.payload.message || "Profile updated successfully";
       })
       .addCase(AddSocialMedia.rejected, (state, action) => {
+        ((state.loading = false), (state.error = action.payload));
+        state.message = null;
+      })
+      .addCase(fetchInstuctorProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchInstuctorProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload) {
+          const appUser =
+            action.payload.socialMedias?.[0]?.instructor?.applicationUser || {};
+          state.firstName = appUser.firstName || state.firstName;
+          state.lastName = appUser.lastName || state.lastName;
+          state.userName = appUser.userName || state.userName;
+          state.fullName = appUser.fullName || state.fullName;
+          state.phone = appUser.phoneNumber || state.phone;
+          state.title = action.payload.specialization || state.title;
+          state.bio = action.payload.biography || state.bio;
+          state.profileImage = action.payload.imageUrl || state.profileImage;
+          state.gender = action.payload.gender || state.gender;
+          // Update social media fields if they're in the response
+          if (action.payload.socialMedias) {
+            const socialMedia = action.payload.socialMedias?.[0];
+            state.facebook = socialMedia.facebookUrl || state.facebook;
+            state.instagram = socialMedia.instagramUrl || state.instagram;
+            state.linkedin = socialMedia.linkedInUrl || state.linkedin;
+            state.twitter = socialMedia.twitterUrl || state.twitter;
+            state.whatsapp = socialMedia.whatsAppUrl || state.whatsapp;
+            state.youtube = socialMedia.youTubeUrl || state.youtube;
+            state.website = socialMedia.personalWebsiteUrl || state.website;
+          }
+        }
+      })
+      .addCase(fetchInstuctorProfile.rejected, (state, action) => {
         ((state.loading = false), (state.error = action.payload));
       }),
 });
@@ -152,6 +215,7 @@ export const {
   setPhone,
   setTitle,
   setWebsite,
+  setFullName,
 } = teacherSettingSlice.actions;
 
 export default teacherSettingSlice.reducer;
