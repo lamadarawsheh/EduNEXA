@@ -172,29 +172,27 @@ const teacherSettingSlice = createSlice({
       .addCase(fetchInstuctorProfile.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          state.firstName = action.payload.fullName || state.firstName;
-          state.lastName = action.payload.lastName || state.lastName;
-          state.userName = action.payload.userName || state.userName;
-          state.fullName = action.payload.fullName || state.fullName;
-          state.phone = action.payload.phone || state.phone;
-          state.title = action.payload.title || state.title;
+          const appUser =
+            action.payload.socialMedias?.[0]?.instructor?.applicationUser || {};
+          state.firstName = appUser.firstName || state.firstName;
+          state.lastName = appUser.lastName || state.lastName;
+          state.userName = appUser.userName || state.userName;
+          state.fullName = appUser.fullName || state.fullName;
+          state.phone = appUser.phoneNumber || state.phone;
+          state.title = action.payload.specialization || state.title;
           state.bio = action.payload.biography || state.bio;
-          state.website = action.payload.website || state.website;
-          state.profileImage =
-            action.payload.profileImage || state.profileImage;
+          state.profileImage = action.payload.imageUrl || state.profileImage;
           state.gender = action.payload.gender || state.gender;
           // Update social media fields if they're in the response
-          if (action.payload.socialMedia) {
-            state.facebook =
-              action.payload.socialMedia.facebook || state.facebook;
-            state.instagram =
-              action.payload.socialMedia.instagram || state.instagram;
-            state.linkedin =
-              action.payload.socialMedia.linkedin || state.linkedin;
-            state.twitter = action.payload.socialMedia.twitter || state.twitter;
-            state.whatsapp =
-              action.payload.socialMedia.whatsapp || state.whatsapp;
-            state.youtube = action.payload.socialMedia.youtube || state.youtube;
+          if (action.payload.socialMedias) {
+            const socialMedia = action.payload.socialMedias?.[0];
+            state.facebook = socialMedia.facebookUrl || state.facebook;
+            state.instagram = socialMedia.instagramUrl || state.instagram;
+            state.linkedin = socialMedia.linkedInUrl || state.linkedin;
+            state.twitter = socialMedia.twitterUrl || state.twitter;
+            state.whatsapp = socialMedia.whatsAppUrl || state.whatsapp;
+            state.youtube = socialMedia.youTubeUrl || state.youtube;
+            state.website = socialMedia.personalWebsiteUrl || state.website;
           }
         }
       })
