@@ -41,22 +41,26 @@ export default function TeacherSettings() {
   useEffect(() => {
     dispatch(fetchInstuctorProfile()).then((res) => {
       if (res.meta.requestStatus === "fulfilled" && res.payload) {
+        const socialMedia = res.payload.socialMedias?.[0] || {};
+        const appUser =
+          res.payload.socialMedias?.[0]?.instructor?.applicationUser || {};
+
         const formData = {
-          firstName: res.payload.firstName || "",
-          lastName: res.payload.lastName || "",
-          username: res.payload.userName || "",
-          fullName: res.payload.fullName || "",
-          phone: res.payload.phone || "",
-          title: res.payload.title || "",
+          firstName: appUser.firstName || "",
+          lastName: appUser.lastName || "",
+          username: appUser.userName || "",
+          fullName: appUser.fullName || "",
+          phone: appUser.phoneNumber || "",
+          title: res.payload.specialization || "",
           bio: res.payload.biography || "",
-          website: res.payload.website || "",
+          website: socialMedia.personalWebsiteUrl || "",
           //social
-          facebook: res.payload.socialMedia?.facebook || "",
-          instagram: res.payload.socialMedia?.instagram || "",
-          linkedin: res.payload.socialMedia?.linkedin || "",
-          twitter: res.payload.socialMedia?.twitter || "",
-          whatsapp: res.payload.socialMedia?.whatsapp || "",
-          youtube: res.payload.socialMedia?.youtube || "",
+          facebook: socialMedia.facebookUrl || "",
+          instagram: socialMedia.instagramUrl || "",
+          linkedin: socialMedia.linkedInUrl || "",
+          twitter: socialMedia.twitterUrl || "",
+          whatsapp: socialMedia.whatsAppUrl || "",
+          youtube: socialMedia.youTubeUrl || "",
         };
         reset(formData);
       }
@@ -81,11 +85,10 @@ export default function TeacherSettings() {
         linkedin: data.linkedin,
         twitter: data.twitter,
         whatsapp: data.whatsapp,
-        youtube: data.youtube,
+        youtube: data.youTubeUrl,
       };
 
-      // Dispatch both actions
-      await dispatch(fetchInstuctorProfile(profileData)).unwrap();
+      // await dispatch(fetchInstuctorProfile(profileData)).unwrap();
       await dispatch(AddSocialMedia(socialMediaData)).unwrap();
 
       // pop up
@@ -117,19 +120,22 @@ export default function TeacherSettings() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#093332] text-[white] px-4 py-4 mt-4"
+            className="bg-[#093332] text-[white] px-4 py-4 mt-4 cursor-pointer"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>
-
-          {/* Popup */}
-          {showPopup && (
-            <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in ">
-              {popupMessage}
-            </div>
-          )}
         </div>
       </form>
+
+      {/* Popup */}
+      {showPopup && (
+        <div
+          className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg  "
+          style={{ zIndex: 9999 }}
+        >
+          {popupMessage}
+        </div>
+      )}
     </FormProvider>
   );
 }
