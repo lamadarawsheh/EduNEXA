@@ -22,8 +22,7 @@ export const Store = configureStore({
     lecture:lectureReducer,
         app: noopReducer,
         checkout: checkoutReducer,
-  }
-  })
+ 
 
     adminDashboard: adminDashboardSlice,
     adminStudents: adminStudentSlice,
