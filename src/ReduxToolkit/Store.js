@@ -5,7 +5,7 @@ import subCategoryReducer from './Slices/CreateNewCourses/SubCategorySlice'
 import categoryReducer from './Slices/CreateNewCourses/CategorySlice'
 import sectionReucer from './Slices/CreateNewCourses/SectionSlice'
 import lectureReducer from './Slices/CreateNewCourses/LectureSlice'
-
+import checkoutReducer from './Slices/Checkout/CheckoutSlice'
 
 const noopReducer = (state = {}) => state;
 
@@ -18,6 +18,7 @@ export const Store = configureStore({
     section:sectionReucer,
     lecture:lectureReducer,
         app: noopReducer,
+        checkout: checkoutReducer,
   }
   })
 
