@@ -6,8 +6,11 @@ import AdvanceInfo from "./advancedInfo/advancedInfo";
 import Curriculum from "./curriculum/curriculum";
 import PublishCourse from "./publishCourse";
 import { useDispatch,useSelector } from "react-redux";
-import{addCourse,fetchCoursePreview} from '../../../ReduxToolkit/Slices/CreateNewCourses/CourseSlice'
+import{addCourse,fetchCoursePreview,fetchAllCourses} from '../../../ReduxToolkit/Slices/CreateNewCourses/CourseSlice'
 import { fetchAllCategories,fetchCoursesByCategory, } from "../../../ReduxToolkit/Slices/CreateNewCourses/CategorySlice";
+import {fetchAllSubCategories} from '../../../ReduxToolkit/Slices/CreateNewCourses/SubCategorySlice'
+import { useMemo } from "react";
+
 
 const STEPS = [
   "Basic Information",
@@ -22,15 +25,19 @@ export default function CourseForm() {
   const [step, setStep] = useState(0);
   const isLastStep = step === STEPS.length - 1;
 
-  const{categories , subcategories ,loading:categoryLoading}= useSelector((state)=>state.category)             
-  const {
-   
+  const{categories  ,loading:categoryLoading,CoursesByCategory}= useSelector((state)=>state.category)             
+  const {subcategories:allSubcategories , loading:subCategoryLoading}= useSelector((state)=>state.subCategory)
+  const {error:courseError,successMessage}=useSelector((state)=>state.Course)
+  
+  
+  const {  
     register,
     handleSubmit,
     watch,
     control,
     formState: { errors },
     getValues,
+    setValue,
     reset
   } = useForm({
     mode: "onBlur",
@@ -58,6 +65,85 @@ export default function CourseForm() {
       },
     }
   });
+
+    const selectedCategory = watch("category");
+    const filteredSubcategories = useMemo(() => {
+    if (!selectedCategory || !allSubcategories) return [];
+    
+    return allSubcategories.filter(
+      (subCat) => subCat.categoryId === selectedCategory
+    );
+  }, [selectedCategory, allSubcategories]);
+
+   // Fetch categories on mount
+  useEffect(() => {
+    dispatch(fetchAllCourses())
+    dispatch(fetchAllCategories());
+    dispatch(fetchAllSubCategories())
+  }, [dispatch]);
+
+
+  // Fetch subcategories when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      dispatch(fetchCoursesByCategory(selectedCategory));
+    } 
+  }, [selectedCategory, dispatch]);
+
+  // Load draft from localStorage
+  useEffect(() => {
+    const draft = localStorage.getItem("courseDraft");
+    if (draft) {
+      try {
+        const parsedDraft = JSON.parse(draft);
+        reset(parsedDraft);
+      } catch (error) {
+        console.error("Failed to load draft:", error);
+      }
+    }
+  }, [reset]);
+  
+  // Clear subcategory when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      // Clear subcategory field when category changes
+      const currentSubCategory = watch("subCategory");
+      const isValidSubCategory = filteredSubcategories.some(
+        (sub) => sub.id === currentSubCategory
+      );
+      
+      if (!isValidSubCategory) {
+        setValue("subCategory", "");
+      }
+    } else {
+      setValue("subCategory", "");
+    }
+  }, [selectedCategory, filteredSubcategories, setValue, watch])
+ 
+  // Show success message
+  useEffect(() => {
+    if (successMessage) {
+      alert(successMessage);
+      localStorage.removeItem("courseDraft");
+      reset();
+    }
+  }, [successMessage, reset]);
+
+// Show error message
+  useEffect(() => {
+    if (courseError) {
+      alert(`Error: ${JSON.stringify(courseError)}`);
+    }
+  }, [courseError])
+
+  // Handle Save (Draft)
+  const handleSave = () => {
+    const formData = getValues();
+    localStorage.setItem("courseDraft", JSON.stringify(formData));
+    alert("Course saved locally (draft) ✅");
+  };
+
+
   // Handle Save & Preview
   const handleSaveAndPreview = async () => {
     const formData = getValues();
@@ -67,7 +153,6 @@ export default function CourseForm() {
       // Fetch preview
       if (result?.id) {
         await dispatch(fetchCoursePreview(result.id)).unwrap();
-        // Optional: Open preview in new tab or modal
         window.open(`/course-preview/${result.id}`, '_blank');
       }
     } catch (error) {
@@ -76,51 +161,19 @@ export default function CourseForm() {
     }
   };
  
-  const selectedCategory = watch("category");
-  // Fetch categories on mount
-  useEffect(() => {
-    dispatch(fetchAllCategories());
-  }, [dispatch]);
-
-  // Fetch subcategories when category changes
-  useEffect(() => {
-    if (selectedCategory) {
-      dispatch(fetchCoursesByCategory(selectedCategory));
-    } 
-  }, [selectedCategory, dispatch]);
-
-
-
   // Handle Final Submit
   const onSubmit = async (data) => {
     try {
       const result = await dispatch(addCourse(data)).unwrap();
       console.log("Course submitted for review:", result);
-      // Optional: Redirect to courses list or show success page
       alert("Course submitted for review successfully!");
-      // Reset form or redirect
-      // navigate('/instructor/courses');
     } catch (error) {
       console.error("Failed to submit course:", error);
       alert("Failed to submit course. Please try again.");
     }
   };
 
-  // Handle Save (Draft)
- const handleSave = () => {
-  const formData = getValues();
-
-  localStorage.setItem("courseDraft", JSON.stringify(formData));
-
-  alert("Course saved locally (draft) ✅");
- }
- useEffect(() => {
-  const draft = localStorage.getItem("courseDraft");
-
-  if (draft) {
-    reset(JSON.parse(draft));
-  }
-}, [reset]);
+  //  const isLoading = categoryLoading || subcategoryLoading || courseLoading;
 
   return (
     <div className="p-4 sm:p-6 lg:p-10 bg-[#FFFFFF]">
@@ -161,8 +214,10 @@ export default function CourseForm() {
           <BasicInfo register={register} 
           watch={watch} errors={errors}
           categories={categories}
-          subcategories={subcategories}
+          subcategories={filteredSubcategories}
           categoryLoading={categoryLoading}
+       subcategoryLoading={subCategoryLoading}
+  
           />
         )}
         {step === 1 && <AdvanceInfo register={register} control={control} watch={watch}/>}

@@ -29,8 +29,8 @@ export const fetchLectures = createAsyncThunk(
     }
   },
 );
-
-export const fetchLecturesByCourseId = createAsyncThunk(
+// get lecture by section id
+export const fetchLecturesBySectionId = createAsyncThunk(
   "section/fetchBySectionId",
   async (sectionId, { rejectWithValue }) => {
     try {
@@ -45,6 +45,7 @@ export const fetchLecturesByCourseId = createAsyncThunk(
   },
 );
 
+// add lecture to section
 export const addLecture = createAsyncThunk(
   "section/addLecture",
   async ({sectionId,lectureData}, { rejectWithValue }) => {
@@ -101,15 +102,15 @@ const lectureSlice = createSlice({
         state.error = action.payload;
       })
       // Fetch Lectures by Section ID
-      .addCase(fetchLecturesByCourseId.pending, (state) => {
+      .addCase(fetchLecturesBySectionId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchLecturesByCourseId.fulfilled, (state, action) => {
+      .addCase(fetchLecturesBySectionId.fulfilled, (state, action) => {
         state.loading = false;
         state.lectures = action.payload;
       })
-      .addCase(fetchLecturesByCourseId.rejected, (state, action) => {
+      .addCase(fetchLecturesBySectionId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

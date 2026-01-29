@@ -34,8 +34,9 @@ export const addSubCategory = createAsyncThunk(
     try {
       const response = await axios.post(
         `${BaseURL}/api/SubCategory`,
+        subCategoryData,
         getAuthHeader(),
-        subCategoryData
+        
       );
       return response.data;
     } catch (error) {
