@@ -26,11 +26,23 @@ const defaultProfile = {
   },
 };
 
+const initialState = {
+  earnings: {
+    totalRevenue: 0,
+    todayRevenue: 0,
+    totalWithdrawals: 0,
+    balance: 0,
+    withdrawals: [],
+  },
+  loading: false,
+  error: null,
+};
+
 /* ======================
    Thunks
 ====================== */
 
-// 👤 Instructor Profile
+// Instructor Profile
 export const fetchInstructorProfile = createAsyncThunk(
   "profile/fetchInstructorProfile",
   async (_, { rejectWithValue }) => {
@@ -46,7 +58,7 @@ export const fetchInstructorProfile = createAsyncThunk(
   }
 );
 
-// 📚 Approved Courses
+// Approved Courses
 export const fetchApprovedCourses = createAsyncThunk(
   "profile/fetchApprovedCourses",
   async (_, { rejectWithValue }) => {
@@ -61,13 +73,28 @@ export const fetchApprovedCourses = createAsyncThunk(
     }
   }
 );
-// 📚 Reviews
+// Reviews
 export const fetchReviews = createAsyncThunk(
   "profile/fetchReviews",
   async (_, { rejectWithValue }) => {
     try {
       const res = await axios.get(
         `${BaseURL}/InstructorReview/GetInstructorReviews/DE2E2F10-9E91-4391-5938-08DE4AEF4B97`,
+        getAuthHeader()
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+// Earnings
+export const fetchEarnings = createAsyncThunk(
+  "profile/fetchEarnings",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${BaseURL}/Earnings`,
         getAuthHeader()
       );
       return res.data;
@@ -160,6 +187,21 @@ const profileSlice = createSlice({
         state.loadingReviews = false;
         state.errorReviews = action.payload;
         state.reviews = [];
+      })
+      /* ===== Earnings ===== */
+      .addCase(fetchEarnings.pending, (state) => {
+        state.loadingEarnings = true;
+      })
+
+      .addCase(fetchEarnings.fulfilled, (state, action) => {
+        state.earnings = action.payload || [];
+        state.loadingEarnings = false;
+      })
+
+      .addCase(fetchEarnings.rejected, (state, action) => {
+        state.loadingEarnings = false;
+        state.errorEarnings = action.payload;
+        state.earnings = [];
       })
   },
 });

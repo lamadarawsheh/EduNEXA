@@ -34,15 +34,15 @@ function Profile() {
 
     const [visibleReviews, setVisibleReviews] = useState(3);
     const handleLoadMore = () => {
-        setVisibleReviews((prev) => prev + 3); // كل مرة نضغط نزود 3 تانيين
+        setVisibleReviews((prev) => prev + 3); // Load 3 more reviews each time
     };
 
     const navigate = useNavigate();
     const handleCourseClick = (course, id) => {
-    navigate(`/teacher/course-analytics/${id}`, {
-      state: { course }
-    });
-  };
+        navigate(`/teacher/course-analytics/${id}`, {
+            state: { course }
+        });
+    };
 
     const profileData = {
         badge: "Top Rated",
@@ -282,12 +282,12 @@ function Profile() {
                                     <div className="p-5">
                                         <div className="flex justify-between items-center mb-5">
                                             <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.level}</span>
-                                            <span className="text-[#FF6636] font-bold text-xl">{course.price}$</span>
+                                            <span className="text-[#FF6636] font-bold text-xl">${course.price}</span>
                                         </div>
                                         <h3 className="font-bold text-lg mb-2">{course.title}</h3>
                                         <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description}</p>
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm">
-                                            <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.rating.toFixed(1)}</span>
+                                            <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.reviewCount.toFixed(1)}</span>
                                             <span className="text-gray-500"><b className="text-gray-500">{course.studentCount}</b> students</span>
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@ function Profile() {
                                 <h2 className="text-2xl font-bold text-[#1D2026]">Students Feedback</h2>
                                 <div className="relative group">
                                     <button className="flex items-center gap-3 border border-gray-200 px-4 py-2 rounded text-sm font-medium text-[#176D69] hover:bg-gray-50">
-                                        5 Star Rating <LuChevronDown />
+                                        4 Star Rating <LuChevronDown />
                                     </button>
                                 </div>
                             </div>
@@ -319,7 +319,7 @@ function Profile() {
                                                 <span className="text-[10px] text-[#176D69]">• {timeAgo(review.createdAt)}</span>
                                             </div>
                                             <div className="flex text-[#FD8E1F] gap-0.5 mb-3">
-                                                {[...Array(5)].map((_, i) => <FaStar key={i} size={12} />)}
+                                                {[...Array(review.rating)].map((_, i) => <FaStar key={i} size={12} />)}
                                             </div>
                                             <p className="text-[#0F4C4A] text-[15px] leading-relaxed max-w-3xl">{review.comment}</p>
                                         </div>
