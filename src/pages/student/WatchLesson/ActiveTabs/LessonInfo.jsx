@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DynamicReviewSection from "../../WriteReviewModal"; 
 import { Star, X } from "lucide-react";
 
-export default function LessonInfo({ title, commentCount, rating, onNewReview, hasRated }) {
+export default function LessonInfo({ title, commentCount, rating, onNewReview, hasRated, students = [] }) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [imgs, setImgs] = useState([]);
 
-  const imgs = [
-    { img: '../../../../image/A1.PNG' },
-    { img: '../../../../image/A2.PNG' },
-    { img: '../../../../image/A3.PNG' },
-    { img: '../../../../image/A4.PNG' },
-    { img: '../../../../image/A5.PNG' },
-  ];
+  useEffect(() => {
+    const studentImgs = (students || []).map((s, index) => ({
+      img: s.avatar || require(`../../../../image/A${(index % 5) + 1}.PNG`)
+    }));
+    setImgs(studentImgs);
+  }, [students]);
 
   return (
     <div className="w-full max-w-[1012px] mb-6 relative font-sans">
@@ -20,7 +20,6 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
       </h1>
 
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-sm text-gray-500 border-b border-gray-100 pb-6">
-        
         <div className="flex flex-wrap items-center gap-4 md:gap-6">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2 shrink-0">
@@ -31,9 +30,10 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
               ))}
             </div>
             <span className="text-[13px] md:text-sm">
-              <strong className="text-slate-800">512</strong> Students watching
+              <strong className="text-slate-800">{students.length}</strong> Students watching
             </span>
           </div>
+
           <button 
             onClick={() => setIsReviewOpen(true)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-orange-50 transition-colors group"

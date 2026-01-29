@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWalletData } from "../../../ReduxToolkit/walletSlice";
+import { fetchWalletData } from "../../../ReduxToolkit/Slices/walletSlice/walletSlice";
 import { Layers, Receipt, CreditCard, Crown } from "lucide-react";
 
 export default function EarningStats() {
