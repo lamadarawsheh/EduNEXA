@@ -1,7 +1,56 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/walletSlice";
 import { CheckCircle2, ChevronDown, Copy, PlusCircle, ArrowRight, ArrowLeft } from "lucide-react";
+// استدعاء مكتبة SweetAlert2
+import Swal from "sweetalert2";
 
 export default function EarningPayments() {
-    return ( 
+  const dispatch = useDispatch();
+
+  const walletState = useSelector((state) => state.wallet);
+  const { balance = 0, status = "idle" } = walletState || {};
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchWalletData());
+    }
+  }, [dispatch, status]);
+
+  const handleWithdrawClick = () => {
+    if (Number(balance) > 0) {
+      dispatch(withdrawMoney(balance))
+        .unwrap()
+        .then(() => {
+          // استبدال alert بالنجاح
+          Swal.fire({
+            title: "تم الإرسال!",
+            text: "تم إرسال طلب السحب بنجاح!",
+            icon: "success",
+            confirmButtonColor: "#1B5E5E",
+          });
+        })
+        .catch((err) => {
+          // استبدال alert بالخطأ
+          Swal.fire({
+            title: "فشلت العملية",
+            text: "فشلت العملية: " + err,
+            icon: "error",
+            confirmButtonColor: "#1B5E5E",
+          });
+        });
+    } else {
+      // استبدال alert للتنبيه بالرصيد الصفر
+      Swal.fire({
+        title: "تنبيه",
+        text: "عذراً، رصيدك الحالي هو 0، لا يمكن إجراء عملية سحب.",
+        icon: "warning",
+        confirmButtonColor: "#1B5E5E",
+      });
+    }
+  };
+
+  return ( 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 p-4 sm:p-6 bg-white overflow-hidden">
       
       <div className="space-y-6 w-full max-w-full">
@@ -99,10 +148,13 @@ export default function EarningPayments() {
 
         <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 sm:gap-0">
           <div className="text-center sm:text-left">
-            <p className="text-2xl font-bold text-gray-800">$12,500</p>
+            <p className="text-2xl font-bold text-gray-800">${Number(balance).toLocaleString()}</p>
             <p className="text-[11px] text-gray-400 font-medium">Current Balance</p>
           </div>
-          <button className="w-full sm:w-auto bg-[#1B5E5E] text-white px-10 py-3 rounded-lg font-medium hover:bg-[#154646] transition-all active:scale-95">
+          <button 
+            onClick={handleWithdrawClick} 
+            className="w-full sm:w-auto bg-[#1B5E5E] text-white px-10 py-3 rounded-lg font-medium hover:bg-[#154646] transition-all active:scale-95"
+          >
             Withdraw Money
           </button>
         </div>

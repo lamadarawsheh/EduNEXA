@@ -9,6 +9,7 @@ import checkoutReducer from './Slices/Checkout/CheckoutSlice'
 import adminDashboardSlice from "./slices/AdminDashboard"
 import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
+import walletReducer from './walletSlice'
 
 const noopReducer = (state = {}) => state;
 
@@ -27,5 +28,9 @@ export const Store = configureStore({
     adminDashboard: adminDashboardSlice,
     adminStudents: adminStudentSlice,
     adminProfile: adminProfileSlice,
+
+
+
+    wallet: walletReducer
   },
 });
