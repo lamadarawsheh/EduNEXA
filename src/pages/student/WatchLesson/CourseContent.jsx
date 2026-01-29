@@ -8,7 +8,7 @@ export default function CourseContent({ courseData, currentLessonTitle, onLesson
   const totalPercentage = allLessons.length > 0 ? Math.round((completedCount / allLessons.length) * 100) : 15;
 
   return (
-    <div className="w-full bg-white border border-[#e2e8f0] rounded-sm shadow-sm  font-sans">
+    <div className="w-full mt-10 bg-white border border-[#e2e8f0] rounded-sm shadow-sm  font-sans">
       
       <div className="p-5 flex justify-between items-center border-b border-[#e2e8f0]">
         <h2 className="text-[22px] font-bold text-[#08332e]">Course Contents</h2>

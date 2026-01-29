@@ -117,23 +117,23 @@ export default function WatchLesson() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fcfdfd] overflow-hidden">
-      <div className="max-w-[1600px] mx-auto flex flex-col xl:flex-row items-start gap-0 lg:gap-8 lg:p-6 xl:p-10 overflow-hidden">
-        <div className="w-full xl:flex-1 order-1 flex flex-col bg-white overflow-hidden">
-          <div className="px-4 py-3 lg:px-0 lg:pb-6 flex items-center">
-            <button 
-              onClick={() => navigate("/student/course-lessons")}
-              className="flex items-center gap-2 text-[#176D69] font-bold hover:opacity-70 transition-all cursor-pointer group"
-            >
+    <div className="min-h-screen bg-[#fcfdfd]">
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-start gap-6 p-4 lg:p-8">
+        <div className="w-full lg:flex-1 flex flex-col bg-white rounded-2xl">
+          <div className="pb-4 flex items-center">
+            <button onClick={() => navigate("/student/course-lessons")}
+              className="flex items-center gap-2 text-[#176D69] font-bold hover:opacity-70 transition-all cursor-pointer group">
               <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm">Back to My Courses</span>
             </button>
           </div>
-          <div className="w-full bg-black lg:rounded-2xl overflow-hidden shadow-2xl aspect-video">
+
+          <div className="w-full bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video">
             <VideoPage />
           </div>
-          <div className="p-4 sm:p-6 lg:p-8 overflow-hidden">
-            <div className="max-w-[1012px] overflow-hidden">
+
+          <div className="py-6 sm:py-8">
+            <div className="w-full">
               <LessonInfo 
                 title={lessonTitle} 
                 commentCount={comments.length} 
@@ -141,7 +141,7 @@ export default function WatchLesson() {
                 onNewReview={handleAddComment}
                 hasRated={hasRated}
               />
-              <div className="mt-8 border-t border-gray-100 pt-8 overflow-hidden">
+              <div className="mt-8 border-t border-gray-100 pt-8">
                 <ActiveTab 
                   comments={comments} 
                   onAddComment={handleAddComment} 
@@ -151,14 +151,13 @@ export default function WatchLesson() {
             </div>
           </div>
         </div>
-        <div className="w-full xl:w-[420px] order-2 xl:sticky xl:top-10 overflow-hidden">
-          <div className="bg-white lg:rounded-xl shadow-sm border border-gray-100 lg:border-none overflow-hidden">
             <CourseContent
               courseData={courseData} 
               currentLessonTitle={lessonTitle}
             />
-          </div>
-        </div>
+          
+      
+
       </div>
     </div>
   );
