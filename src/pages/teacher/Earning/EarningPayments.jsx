@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/walletSlice";
 import { CheckCircle2, ChevronDown, Copy, PlusCircle, ArrowRight, ArrowLeft } from "lucide-react";
-// استدعاء مكتبة SweetAlert2
 import Swal from "sweetalert2";
 
 export default function EarningPayments() {
@@ -22,7 +21,6 @@ export default function EarningPayments() {
       dispatch(withdrawMoney(balance))
         .unwrap()
         .then(() => {
-          // استبدال alert بالنجاح
           Swal.fire({
             title: "تم الإرسال!",
             text: "تم إرسال طلب السحب بنجاح!",
@@ -31,7 +29,6 @@ export default function EarningPayments() {
           });
         })
         .catch((err) => {
-          // استبدال alert بالخطأ
           Swal.fire({
             title: "فشلت العملية",
             text: "فشلت العملية: " + err,
@@ -40,7 +37,6 @@ export default function EarningPayments() {
           });
         });
     } else {
-      // استبدال alert للتنبيه بالرصيد الصفر
       Swal.fire({
         title: "تنبيه",
         text: "عذراً، رصيدك الحالي هو 0، لا يمكن إجراء عملية سحب.",
