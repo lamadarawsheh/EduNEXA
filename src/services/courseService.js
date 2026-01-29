@@ -1,17 +1,26 @@
+import api from "./api";
+
 /**
  * Course Service
  * Handles all API calls related to courses.
- * (To be connected with the backend later)
  */
 
+/* ================= Get All Courses ================= */
 export const getCourses = async () => {
-    // return axios.get('/api/courses');
-    console.log("Fetching courses...");
-    return [];
+    return api.get("/courses");
 };
 
+/* ================= Get Approved Courses ================= */
+export const getApprovedCourses = () => {
+    return api.get("/courses/approved");
+};
+
+/* ================= Create Course ================= */
 export const createCourse = async (courseData) => {
-    // return axios.post('/api/courses', courseData);
-    console.log("Creating course:", courseData);
-    return { success: true };
+    return api.post("/courses", courseData);
+};
+
+/* ================= Get Categories & Subcategories ================= */
+export const getCategoriesWithSubcategories = () => {
+    return api.get("/Courses/categories");
 };

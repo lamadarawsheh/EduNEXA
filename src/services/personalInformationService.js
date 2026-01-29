@@ -5,3 +5,5 @@ export const getStudentProfile = (studentId) =>
 
 export const updateStudentProfile = (studentId, profileData) =>
   api.put(`/PersonalInformation/${studentId}`, profileData);
+
+
