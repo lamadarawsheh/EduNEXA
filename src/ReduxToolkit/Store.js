@@ -8,6 +8,7 @@ import lectureReducer from './Slices/CreateNewCourses/LectureSlice'
 import adminDashboardSlice from "./slices/AdminDashboard"
 import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
+import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
 
 const noopReducer = (state = {}) => state;
 
@@ -23,5 +24,6 @@ export const Store = configureStore({
     adminDashboard: adminDashboardSlice,
     adminStudents: adminStudentSlice,
     adminProfile: adminProfileSlice,
+    profile: profileReducer,
   },
 });
