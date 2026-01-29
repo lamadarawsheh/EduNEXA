@@ -34,8 +34,9 @@ export const fetchCategory = createAsyncThunk(
     try {
       const response = await axios.post(
         `${BaseURL}/api/Category`,
+         catogeryData,
         getAuthHeader(),
-        catogeryData
+       
       );
       return response.data;
     } catch (error) {
@@ -98,7 +99,7 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories.push(action.payload);
+        // state.categories.push(action.payload);
       })
       .addCase(fetchCategory.rejected, (state, action) => {
         state.loading = false;
@@ -110,7 +111,7 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCoursesByCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.subcategories = action.payload;
+        state.coursesByCategory = action.payload;
       })
       .addCase(fetchCoursesByCategory.rejected, (state, action) => {
         state.loading = false;
