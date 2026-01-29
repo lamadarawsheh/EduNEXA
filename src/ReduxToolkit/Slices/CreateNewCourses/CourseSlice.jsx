@@ -11,6 +11,21 @@ const getAuthHeader = () => ({
 },
 });
 
+// get all courses
+  export const fetchAllCourses = createAsyncThunk(
+  "courses/fetchAllCourses",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BaseURL}/api/courses`,
+        getAuthHeader(),
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
+);
 
 //add course
 export const addCourse = createAsyncThunk(
@@ -24,29 +39,30 @@ export const addCourse = createAsyncThunk(
       formData.append('subtitle', courseData.subtitle || '');
       formData.append('category', courseData.category);
       formData.append('subCategory', courseData.subCategory);
-      formData.append('topic', courseData.topic);
+      formData.append('topic', courseData.courseTopic);
       formData.append('language', courseData.language);
       formData.append('price', courseData.price);
       formData.append('level', courseData.level);
-      formData.append('duration', courseData.duration);
+      formData.append('duration', courseData.estimatedDuration);
       
       // Files
       if (courseData.thumbnail && courseData.thumbnail.length > 0) {
-        formData.append('thumbnail', courseData.thumbnail[0]);
+        formData.append('thumbnail', courseData.thumbnailUrl[0]);
       }
       if (courseData.trailer && courseData.trailer.length > 0) {
-        formData.append('trailer', courseData.trailer[0]);
+        formData.append('trailer', courseData.trailerVideoUrl[0]);
       }
       
       // Description
       formData.append('description', courseData.description || '');
       
       // Arrays - convert to JSON strings
-      formData.append('learnItems', JSON.stringify(courseData.learnItems || []));
-      formData.append('audience', JSON.stringify(courseData.audience || []));
+      formData.append('learnItems', JSON.stringify(courseData.learningObjectives || []));
+      formData.append('audience', JSON.stringify(courseData.targetAudience || []));
       formData.append('requirements', JSON.stringify(courseData.requirements || []));
       formData.append('curriculum', JSON.stringify(courseData.curriculum || []));
-      
+      formData.append('what you will teach', JSON.stringify(courseData.whatYouWillTeach[0] || []));
+
       // Publish info
       if (courseData.publish) {
         formData.append('welcomeMessage', courseData.publish.welcomeMessage || '');
@@ -56,7 +72,7 @@ export const addCourse = createAsyncThunk(
       const response = await axios.post(
         `${BaseURL}/api/courses`,
         getAuthHeader(),
-        courseData
+       'Content-Type: multipart/form-data'
       );
       return response.data;
     } catch (error) {
@@ -80,6 +96,13 @@ export const fetchCoursePreview = createAsyncThunk(
   },
 );
 
+const extractUniqueValues = (courses, field) => {
+  const values = courses
+    .map(course => course[field])
+    .filter(value => value !== null && value !== undefined);
+  
+  return [...new Set(values)];
+};
 
 
 
@@ -106,6 +129,35 @@ const CourseSlice = createSlice({
     },
     extraReducers:(builder)=>
     builder
+      .addCase(fetchAllCourses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+       .addCase(fetchAllCourses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.courses = action.payload;
+          state.levels = extractUniqueValues(action.payload, 'level');
+        state.priceTiers = extractUniqueValues(action.payload, 'price');
+        state.durations = extractUniqueValues(action.payload, 'estimatedDuration');
+         const languageMap = {
+          0: 'English',
+          1: 'Arabic',
+          2: 'French',
+          3: 'Spanish',
+          4: 'German'
+        };
+         const uniqueLanguageCodes = extractUniqueValues(action.payload, 'language');
+        state.languages = uniqueLanguageCodes.map(code => ({
+          id: code,
+          code: code,
+          name: languageMap[code] || `Language ${code}`
+        }));
+       })
+       .addCase(fetchAllCourses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
      .addCase(addCourse.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -113,6 +165,7 @@ const CourseSlice = createSlice({
       .addCase(addCourse.fulfilled, (state, action) => {
         state.loading = false;
         state.courses = action.payload;
+         state.successMessage = "Course added successfully";
       })
       .addCase(addCourse.rejected, (state, action) => {
         state.loading = false;

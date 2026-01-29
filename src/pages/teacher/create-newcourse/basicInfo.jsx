@@ -1,16 +1,13 @@
 
-
-
-
-
 export default function BasicInfo({ register, watch,
    errors ,categories=[],
-   subcategories=[],categoryLoading=false}) {
+   subcategories=[],categoryLoading=false,subCategoryLoading =false}) {
  
  
  
     const title = watch("title", "");
   const subtitle = watch("subtitle", "");
+  const selectedCategory = watch("category", "");
 
   return (
     <>
@@ -25,6 +22,9 @@ export default function BasicInfo({ register, watch,
           />
           <span className="char-count">{title.length}/80</span>
         </div>
+         {errors.title && (
+          <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+        )}
       </div>
 
       {/* Subtitle */}
@@ -38,6 +38,9 @@ export default function BasicInfo({ register, watch,
           />
           <span className="char-count">{subtitle.length}/120</span>
         </div>
+         {errors.subtitle && (
+          <p className="text-red-500 text-sm mt-1">{errors.subtitle.message}</p>
+        )}
       </div>
 
       {/* Category */}
