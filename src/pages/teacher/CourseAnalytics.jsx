@@ -7,6 +7,7 @@ import { CiClock2 } from "react-icons/ci";
 import { LuChevronDown } from "react-icons/lu";
 import { AreaChart, Area, BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { PiChartBarHorizontal, PiPlayCircleDuotone, PiUsersDuotone, PiNotepad, PiTrophyDuotone } from "react-icons/pi";
+import { useLocation } from "react-router-dom";
 
 const chartData = [70, 90, 40, 95, 50, 78, 30, 60, 55];
 const overallRating = {
@@ -37,6 +38,11 @@ const data = [
 
 const CourseAnalytics = () => {
     const formattedBarData = chartData.map((val) => ({ value: val }));
+    const location = useLocation();
+  const { course } = location.state || {};
+  if (!course) {
+    return <p>No course data available</p>;
+  }
 
     return (
         <div className="w-full bg-white p-4 md:p-10">

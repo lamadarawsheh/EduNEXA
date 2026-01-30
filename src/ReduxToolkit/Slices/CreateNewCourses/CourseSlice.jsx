@@ -7,7 +7,6 @@ const BaseURL = "http://edunexa.runasp.net";
 const getAuthHeader = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json',
 },
 });
 
@@ -47,10 +46,10 @@ export const addCourse = createAsyncThunk(
       
       // Files
       if (courseData.thumbnail && courseData.thumbnail.length > 0) {
-        formData.append('thumbnail', courseData.thumbnailUrl[0]);
+        formData.append('thumbnail', courseData.thumbnail[0]);
       }
       if (courseData.trailer && courseData.trailer.length > 0) {
-        formData.append('trailer', courseData.trailerVideoUrl[0]);
+        formData.append('trailer', courseData.trailer[0]);
       }
       
       // Description
@@ -61,7 +60,7 @@ export const addCourse = createAsyncThunk(
       formData.append('audience', JSON.stringify(courseData.targetAudience || []));
       formData.append('requirements', JSON.stringify(courseData.requirements || []));
       formData.append('curriculum', JSON.stringify(courseData.curriculum || []));
-      formData.append('what you will teach', JSON.stringify(courseData.whatYouWillTeach[0] || []));
+      formData.append('whatYouWillTeach', JSON.stringify(courseData.whatYouWillTeach[0] || []));
 
       // Publish info
       if (courseData.publish) {
@@ -70,7 +69,7 @@ export const addCourse = createAsyncThunk(
         formData.append('instructors', JSON.stringify(courseData.publish.instructors || []));
       }
       const response = await axios.post(
-        `${BaseURL}/api/courses`,
+        `${BaseURL}/api/courses`,formData,
         getAuthHeader(),
        'Content-Type: multipart/form-data'
       );
@@ -83,11 +82,12 @@ export const addCourse = createAsyncThunk(
 //course preview
 export const fetchCoursePreview = createAsyncThunk(
   "course/fetchCoursePreview",
-  async (_, { rejectWithValue }) => {
+  async (courseId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BaseURL}/api/courses/courses/2135e0c6-aa66-4c6a-4fca-08de4dcde9bb/preview`,
+        `${BaseURL}/api/courses/courses/${courseId}/preview`,
         getAuthHeader(),
+          
       );
       return response.data;
     } catch (error) {
@@ -96,13 +96,13 @@ export const fetchCoursePreview = createAsyncThunk(
   },
 );
 
-const extractUniqueValues = (courses, field) => {
-  const values = courses
-    .map(course => course[field])
-    .filter(value => value !== null && value !== undefined);
+// const extractUniqueValues = (courses, field) => {
+//   const values = courses
+//     .map(course => course[field])
+//     .filter(value => value !== null && value !== undefined);
   
-  return [...new Set(values)];
-};
+//   return [...new Set(values)];
+// };
 
 
 
@@ -114,6 +114,23 @@ const CourseSlice = createSlice({
         error:null,
            successMessage: null,
         currentCourse: null,
+        level:[],
+        duration:[],
+        language:[],
+        price:[],
+        
+        thumbnailUrl:[],
+        trailerVideoUrl:[],
+        prerequisites:[],
+        learningObjectives:[],
+        whatYouWillTeach:[],
+        courseTopic:[],
+        targetAudience:[],
+        welcomeMessage:"",
+        publishedAt:"",
+        congratulationsMessage:"",
+        description:[],
+
     },
       reducers:{
      clearCourseError: (state) => {
@@ -125,6 +142,54 @@ const CourseSlice = createSlice({
     clearSuccessMessage: (state) => {
       state.successMessage = null;
     },
+    setLevel:(state , action)=>{
+      state.level= action.payload
+    },
+     setPrice:(state , action)=>{
+      state.price= action.payload
+    },
+     setLanguage:(state , action)=>{
+      state.language= action.payload
+    },
+     setDuration:(state , action)=>{
+      state.duration = action.payload
+    },
+      setThumbnailUrl:(state , action)=>{
+      state.thumbnailUrl = action.payload
+    },
+      setTrailerVideoUrl:(state , action)=>{
+      state.trailerVideoUrl = action.payload
+    },
+      setPrerequisites:(state , action)=>{
+      state.prerequisites = action.payload
+    },
+      setLearningObjectives:(state , action)=>{
+      state.learningObjectives = action.payload
+    },
+      setWhatYouWillTeach:(state , action)=>{
+      state.whatYouWillTeach = action.payload
+    },
+      setCourseTopic:(state , action)=>{
+      state.courseTopic = action.payload
+    },
+      setTargetAudience:(state , action)=>{
+      state.targetAudience = action.payload
+    },
+      setWelcomeMessage:(state , action)=>{
+      state.welcomeMessage = action.payload
+    },
+      setPublishedAt:(state , action)=>{
+      state.publishedAt = action.payload
+    },
+      setCongratulationsMessage:(state , action)=>{
+      state.congratulationsMessage = action.payload
+    },
+      setCourseTopi:(state , action)=>{
+      state.courseTopic = action.payload
+    },
+    setDescription : (state,action)=>{
+      state.description = action.payload
+    }
      
     },
     extraReducers:(builder)=>
@@ -136,22 +201,22 @@ const CourseSlice = createSlice({
        .addCase(fetchAllCourses.fulfilled, (state, action) => {
         state.loading = false;
         state.courses = action.payload;
-          state.levels = extractUniqueValues(action.payload, 'level');
-        state.priceTiers = extractUniqueValues(action.payload, 'price');
-        state.durations = extractUniqueValues(action.payload, 'estimatedDuration');
-         const languageMap = {
-          0: 'English',
-          1: 'Arabic',
-          2: 'French',
-          3: 'Spanish',
-          4: 'German'
-        };
-         const uniqueLanguageCodes = extractUniqueValues(action.payload, 'language');
-        state.languages = uniqueLanguageCodes.map(code => ({
-          id: code,
-          code: code,
-          name: languageMap[code] || `Language ${code}`
-        }));
+        state.level = action.payload.level;
+        state.price = action.payload.price;
+        state.duration = action.payload.duration;
+        state.language = action.payload.language;
+        state.congratulationsMessage = action.payload.congratulationsMessage;
+        state.courseTopic = action.payload.courseTopic;
+        state.learningObjectives= action.payload.learningObjectives;
+        state.prerequisites= action.payload.prerequisites;
+        state.whatYouWillTeach= action.payload.whatYouWillTeach;
+        state.welcomeMessage= action.payload.welcomeMessage;
+        state.targetAudience= action.payload.targetAudience;
+        state.thumbnailUrl = action.payload.thumbnailUrl;
+        state.trailerVideoUrl =  action.payload.trailerVideoUrl;
+        state.publishedAt = action.payload.publishedAt;
+        state.description= action.payload.description
+
        })
        .addCase(fetchAllCourses.rejected, (state, action) => {
         state.loading = false;
@@ -189,7 +254,13 @@ const CourseSlice = createSlice({
 export const {
   clearCourseError,
   clearSuccessMessage,
-  clearCurrentCourse
+  clearCurrentCourse,
+  language,
+  duration,
+  level,
+  price,
+  description,thumbnailUrl,trailerVideoUrl,welcomeMessage,targetAudience,publishedAt,learningObjectives,whatYouWillTeach,
+  courseTopic,congratulationsMessage,
 
 }= CourseSlice.actions;
 

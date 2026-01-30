@@ -1,16 +1,22 @@
 import { useForm } from "react-hook-form";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import StepNavbar from "./StepNavbar";
 import BasicInfo from "./basicInfo";
 import AdvanceInfo from "./advancedInfo/advancedInfo";
 import Curriculum from "./curriculum/curriculum";
 import PublishCourse from "./publishCourse";
-import { useDispatch,useSelector } from "react-redux";
-import{addCourse,fetchCoursePreview,fetchAllCourses} from '../../../ReduxToolkit/Slices/CreateNewCourses/CourseSlice'
-import { fetchAllCategories,fetchCoursesByCategory, } from "../../../ReduxToolkit/Slices/CreateNewCourses/CategorySlice";
-import {fetchAllSubCategories} from '../../../ReduxToolkit/Slices/CreateNewCourses/SubCategorySlice'
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCourse,
+  fetchCoursePreview,
+  fetchAllCourses,
+} from "../../../ReduxToolkit/Slices/CreateNewCourses/CourseSlice";
+import {
+  fetchAllCategories,
+  fetchCoursesByCategory,
+} from "../../../ReduxToolkit/Slices/CreateNewCourses/CategorySlice";
+import { fetchAllSubCategories } from "../../../ReduxToolkit/Slices/CreateNewCourses/SubCategorySlice";
 import { useMemo } from "react";
-
 
 const STEPS = [
   "Basic Information",
@@ -20,17 +26,22 @@ const STEPS = [
 ];
 
 export default function CourseForm() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [step, setStep] = useState(0);
   const isLastStep = step === STEPS.length - 1;
 
-  const{categories  ,loading:categoryLoading,CoursesByCategory}= useSelector((state)=>state.category)             
-  const {subcategories:allSubcategories , loading:subCategoryLoading}= useSelector((state)=>state.subCategory)
-  const {error:courseError,successMessage}=useSelector((state)=>state.Course)
-  
-  
-  const {  
+  const {
+    categories,
+    loading: categoryLoading,
+  } = useSelector((state) => state.category);
+  const { subcategories: allSubcategories, loading: subCategoryLoading } =
+    useSelector((state) => state.subCategory);
+  const {coursePreview, error: courseError, successMessage } = useSelector(
+    (state) => state.Course,
+  );
+
+  const {
     register,
     handleSubmit,
     watch,
@@ -38,7 +49,7 @@ export default function CourseForm() {
     formState: { errors },
     getValues,
     setValue,
-    reset
+    reset,
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -63,32 +74,68 @@ export default function CourseForm() {
         congratsMessage: "",
         instructors: [],
       },
-    }
+    },
   });
 
-    const selectedCategory = watch("category");
-    const filteredSubcategories = useMemo(() => {
+  const selectedCategory = watch("category");
+  const currentSubCategory = watch("subCategory");
+
+  const filteredSubcategories = useMemo(() => {
     if (!selectedCategory || !allSubcategories) return [];
-    
+
     return allSubcategories.filter(
-      (subCat) => subCat.categoryId === selectedCategory
+      (subCat) => subCat.categoryId === selectedCategory,
     );
   }, [selectedCategory, allSubcategories]);
 
-   // Fetch categories on mount
+  // Fetch categories on mount
   useEffect(() => {
     dispatch(fetchAllCourses())
     dispatch(fetchAllCategories());
-    dispatch(fetchAllSubCategories())
+    dispatch(fetchAllSubCategories());
   }, [dispatch]);
-
 
   // Fetch subcategories when category changes
   useEffect(() => {
     if (selectedCategory) {
       dispatch(fetchCoursesByCategory(selectedCategory));
-    } 
+    }
   }, [selectedCategory, dispatch]);
+  //api
+    useEffect(() => {
+    if (!coursePreview) return;
+
+    reset({
+      title: coursePreview.title || "",
+      subtitle: coursePreview.subtitle || "",
+      category: coursePreview.categoryId || "",
+      subCategory: coursePreview.subCategoryId || "",
+      topic: coursePreview.topic || "",
+      language: coursePreview.language || "",
+      price: coursePreview.price || "",
+      level: coursePreview.level || "",
+      duration: coursePreview.duration || "",
+      description: coursePreview.description || "",
+      
+      learnItems:
+        coursePreview.whatYouWillTeach?.map((item) => ({ value: item })) ||
+        [{ value: "" }],
+
+      audience:
+        coursePreview.targetAudience?.map((item) => ({ value: item })) ||
+        [{ value: "" }],
+
+      requirements:
+        coursePreview.learningObjectives?.map((item) => ({ value: item })) ||
+        [{ value: "" }],
+
+      publish: {
+        welcomeMessage: coursePreview.welcomeMessage || "",
+        congratsMessage: coursePreview.congratulationsMessage || "",
+        instructors: [],
+      },
+    })
+  },[coursePreview,reset])
 
   // Load draft from localStorage
   useEffect(() => {
@@ -102,24 +149,22 @@ export default function CourseForm() {
       }
     }
   }, [reset]);
-  
+
   // Clear subcategory when category changes
   useEffect(() => {
     if (selectedCategory) {
-      // Clear subcategory field when category changes
-      const currentSubCategory = watch("subCategory");
       const isValidSubCategory = filteredSubcategories.some(
-        (sub) => sub.id === currentSubCategory
+        (sub) => sub.id === currentSubCategory,
       );
-      
+
       if (!isValidSubCategory) {
         setValue("subCategory", "");
       }
     } else {
       setValue("subCategory", "");
     }
-  }, [selectedCategory, filteredSubcategories, setValue, watch])
- 
+  }, [selectedCategory, filteredSubcategories, setValue, watch]);
+
   // Show success message
   useEffect(() => {
     if (successMessage) {
@@ -129,57 +174,50 @@ export default function CourseForm() {
     }
   }, [successMessage, reset]);
 
-// Show error message
+  // Show error message
   useEffect(() => {
     if (courseError) {
       alert(`Error: ${JSON.stringify(courseError)}`);
     }
-  }, [courseError])
+  }, [courseError]);
 
-  // Handle Save (Draft)
+  // Handle save (Draft)
   const handleSave = () => {
     const formData = getValues();
     localStorage.setItem("courseDraft", JSON.stringify(formData));
-    alert("Course saved locally (draft) ✅");
+    alert("Course saved locally (draft) ");
   };
-
 
   // Handle Save & Preview
   const handleSaveAndPreview = async () => {
-    const formData = getValues();
-      localStorage.setItem("courseDraft", JSON.stringify(formData));
     try {
-    const result = await dispatch(fetchCoursePreview(formData)).unwrap();
-      // Fetch preview
-      if (result?.id) {
-        await dispatch(fetchCoursePreview(result.id)).unwrap();
-        window.open(`/course-preview/${result.id}`, '_blank');
-      }
-    } catch (error) {
-      console.error("Failed to save and preview:", error);
-      alert("Failed to save and preview course. Please try again.");
-    }
-  };
- 
-  // Handle Final Submit
-  const onSubmit = async (data) => {
-    try {
-      const result = await dispatch(addCourse(data)).unwrap();
-      console.log("Course submitted for review:", result);
-      alert("Course submitted for review successfully!");
-    } catch (error) {
-      console.error("Failed to submit course:", error);
-      alert("Failed to submit course. Please try again.");
+      const result = await dispatch(addCourse(getValues())).unwrap();
+      await dispatch(fetchCoursePreview(result.id)).unwrap();
+      window.open(`/course-preview/${result.id}`, "_blank");
+    } catch {
+      alert("Failed to save & preview");
     }
   };
 
-  //  const isLoading = categoryLoading || subcategoryLoading || courseLoading;
+  // Handle Final Submit
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(addCourse(data)).unwrap();
+      alert("Course submitted successfully ");
+    } catch {
+      alert("Failed to submit course");
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-10 bg-[#FFFFFF]">
       <div>
-        <h4 className="text-[#1E8A85] font-medium text-sm sm:text-base mb-8">Good Morning Ali </h4>
-        <h3 className="text-[#093332] font-semibold text-lg sm:text-xl">Create a new course</h3>
+        <h4 className="text-[#1E8A85] font-medium text-sm sm:text-base mb-8">
+          Good Morning Ali{" "}
+        </h4>
+        <h3 className="text-[#093332] font-semibold text-lg sm:text-xl">
+          Create a new course
+        </h3>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="bg-[#FFFFFF] p-8">
@@ -193,14 +231,14 @@ export default function CourseForm() {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button
-            onClick={handleSave}
+              onClick={handleSave}
               type="button"
               className=" bg-[#A6E5E35C] text-[#093332] font-semibold px-6 py-2 cursor-pointer"
             >
               Save
             </button>
             <button
-            onClick={handleSaveAndPreview}
+              onClick={handleSaveAndPreview}
               type="button"
               className="btn-light text-[#093332] font-semibold  cursor-pointer "
             >
@@ -211,23 +249,35 @@ export default function CourseForm() {
 
         {/* 🔹 STEP CONTENT */}
         {step === 0 && (
-          <BasicInfo register={register} 
-          watch={watch} errors={errors}
-          categories={categories}
-          subcategories={filteredSubcategories}
-          categoryLoading={categoryLoading}
-       subcategoryLoading={subCategoryLoading}
-  
+          <BasicInfo
+            register={register}
+            watch={watch}
+            errors={errors}
+            categories={categories}
+            subcategories={filteredSubcategories}
+            categoryLoading={categoryLoading}
+            subcategoryLoading={subCategoryLoading}
+          
           />
         )}
-        {step === 1 && <AdvanceInfo register={register} control={control} watch={watch}/>}
-        {step === 2 && <Curriculum register={register} control={control} watch={watch} />}
+        {step === 1 && (
+          <AdvanceInfo register={register}
+           control={control} watch={watch} 
+            thumbnail={coursePreview?.thumbnailUrl}
+            trailer={coursePreview?.trailerVideoUrl}
+          />
+        )}
+        {step === 2 && (
+          <Curriculum register={register} control={control} watch={watch} welcomeMessage={welcomeMessage} congratulationsMessage={congratulationsMessage}/>
+        )}
         {step === 3 && (
           <PublishCourse
             register={register}
             control={control}
             setStep={setStep}
             watch={watch}
+              welcomeMessage={coursePreview?.welcomeMessage}
+            congratulationsMessage={coursePreview?.congratulationsMessage}
           />
         )}
 

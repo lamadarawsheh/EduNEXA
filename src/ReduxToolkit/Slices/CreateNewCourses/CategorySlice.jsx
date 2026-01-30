@@ -7,17 +7,16 @@ const BaseURL = "http://edunexa.runasp.net";
 const getAuthHeader = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json',
 },
 });
 
 // get all categories
 export const fetchAllCategories = createAsyncThunk(
   "category/fetchAllCategories",
-  async (_, { rejectWithValue }) => {
+  async (categoryId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BaseURL}/api/Category`,
+        `${BaseURL}/api/Category/${categoryId}`,
         getAuthHeader(),
       );
       return response.data;
@@ -88,6 +87,8 @@ const categorySlice = createSlice({
       .addCase(fetchAllCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.categories = action.payload;
+        state.subcategories = action.payload.subCategories; // populate step 2
+
       })
       .addCase(fetchAllCategories.rejected, (state, action) => {
         state.loading = false;
@@ -99,7 +100,6 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategory.fulfilled, (state, action) => {
         state.loading = false;
-        // state.categories.push(action.payload);
       })
       .addCase(fetchCategory.rejected, (state, action) => {
         state.loading = false;
