@@ -2,7 +2,7 @@ import { useFieldArray } from "react-hook-form";
 import DynamicList from "./dynamicList";
 import image1 from "../images/download 1.svg";
 import image2 from "../images/images 1.svg";
-import { useState } from "react";
+import { useState,useEffect} from "react";
 
 export default function AdvanceInfo({ register, control ,watch}) {
  
@@ -10,6 +10,7 @@ export default function AdvanceInfo({ register, control ,watch}) {
   const [trailerPreview, setTrailerPreview] = useState(null);
 
  
+
   const learnList = useFieldArray({
     control,
     name: "learnItems",

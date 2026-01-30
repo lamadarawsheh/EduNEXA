@@ -1,7 +1,14 @@
 
 export default function BasicInfo({ register, watch,
    errors ,categories=[],
-   subcategories=[],categoryLoading=false,subCategoryLoading =false}) {
+   subcategories=[],categoryLoading=false,
+   subCategoryLoading =false,
+   levels = [],
+   prices=[],
+   durations=[],
+   languages=[],
+  
+  }) {
  
  
  
@@ -122,11 +129,14 @@ export default function BasicInfo({ register, watch,
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] font-[14px] p-2"
         >
             <option value="">Course Language</option>
-            <option value="english">English</option>
+              {languages.map(lang => (
+            <option key={lang.id} value={lang.code}>{lang.name}</option>
+          ))}
+            {/* <option value="english">English</option>
             <option value="arabic">Arabic</option>
             <option value="french">French</option>
             <option value="spanish">Spanish</option>
-            <option value="german">German</option>
+            <option value="german">German</option> */}
         </select>
 
         <select
@@ -134,14 +144,17 @@ export default function BasicInfo({ register, watch,
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
             <option value="">Course Price</option>
-            <option value="free">Free</option>
+             {prices.map(price => (
+            <option key={price} value={price}>{`${price}`}</option>
+          ))}
+            {/* <option value="free">Free</option>
             <option value="19.99">$19.99</option>
             <option value="29.99">$29.99</option>
             <option value="49.99">$49.99</option>
             <option value="79.99">$79.99</option>
             <option value="99.99">$99.99</option>
             <option value="149.99">$149.99</option>
-            <option value="199.99">$199.99</option>
+            <option value="199.99">$199.99</option> */}
         </select>
 
         <select
@@ -149,21 +162,27 @@ export default function BasicInfo({ register, watch,
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
             <option value="">Course Level</option>
-            <option value="beginner">Beginner</option>
+              {levels.map(level => (
+            <option key={level} value={level}>{level.charAt(0).toUpperCase() + level.slice(1)}</option>
+          ))}
+            {/* <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
-            <option value="all-levels">All Levels</option>        </select>
-
+            <option value="all-levels">All Levels</option> */}
+          </select>
         <select
           {...register("duration")}
           className="input border border-[#1E8A85]  w-full text-[#1E8A85] text-sm sm:text-base p-3 "
         >
-                     <option value="">Course Duration</option>
-            <option value="0-2">0-2 hours</option>
+          <option value="">Course Duration</option>
+            {durations.map(duration => (
+            <option key={duration} value={duration}>{duration} hours</option>
+          ))}
+            {/* <option value="0-2">0-2 hours</option>
             <option value="2-5">2-5 hours</option>
             <option value="5-10">5-10 hours</option>
             <option value="10-20">10-20 hours</option>
-            <option value="20+">20+ hours</option>
+            <option value="20+">20+ hours</option> */}
         </select>
         {errors[name] && (
               <p className="text-red-500 text-sm">
