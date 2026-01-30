@@ -43,8 +43,9 @@ const Landing = () => {
           imageUrl: c.imageUrl
         }));
         console.table(debugImages);
-        // Just take the first 3 or 6 for the landing page if there are many
-        setCourses(res.data.slice(0, 6));
+        // Sort by rating descending and take top 3
+        const sortedJson = res.data.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        setCourses(sortedJson.slice(0, 3));
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
@@ -188,7 +189,7 @@ const Landing = () => {
         {/* Simplified View All Link */}
         <div className="mt-12 text-center">
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/courses')}
             className="inline-flex items-center gap-3 text-[#0F4C4A] font-extrabold hover:text-[#4AA59B] transition-all group"
           >
             <span className="text-lg">Browse all available courses</span>

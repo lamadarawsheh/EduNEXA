@@ -11,7 +11,14 @@ const checkAuth = () => {
             title: 'Login Required',
             text: 'Please log in first to access this feature.',
             icon: 'info',
+            showCancelButton: true,
             confirmButtonColor: '#0F4C4A',
+            confirmButtonText: 'Login Now',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/login';
+            }
         });
         return false;
     }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X, Star, Users, Info, CheckCircle2, PlayCircle, Search, Filter, Heart } from "lucide-react";
 import { getApprovedCourses, getCategoriesWithSubcategories, BaseURL, isWorkingUrl, toggleCourseFavorite, formatDuration } from "../../../services/courseService";
 import Swal from 'sweetalert2';
+import CourseModal from "../../../components/common/CourseModal";
 
 const checkAuth = () => {
   const token = localStorage.getItem('token');
@@ -12,6 +13,13 @@ const checkAuth = () => {
       text: 'Please log in first to access this feature.',
       icon: 'info',
       confirmButtonColor: '#0F4C4A',
+      showCancelButton: true,
+      confirmButtonText: 'Login Now',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/login';
+      }
     });
     return false;
   }
@@ -26,7 +34,7 @@ const CourseCard = ({ id, image, title, description, level, students, instructor
   const toggleFavorite = (e) => {
     e.stopPropagation();
     if (checkAuth()) {
-      toggleCourseFavorite(id || title).then(() => {
+      toggleCourseFavorite(id).then(() => {
         setFavorite(!favorite);
         Swal.fire({
           toast: true,
@@ -158,152 +166,7 @@ const PackageCard = ({ title, price, features, isMiddle }) => {
 };
 
 
-/* ================= Modal ================= */
-const CourseModal = ({ course, onClose }) => {
-  const [showTrailer, setShowTrailer] = useState(false);
-  const navigate = useNavigate();
-  if (!course) return null;
 
-  return (
-    <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-y-auto md:overflow-hidden shadow-2xl relative animate-in zoom-in-95 duration-300"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 md:top-6 md:right-6 p-2 bg-white/80 hover:bg-white rounded-full text-gray-500 hover:text-[#0F4C4A] shadow-lg transition-all z-20"
-        >
-          <X size={20} className="md:w-6 md:h-6" />
-        </button>
-
-        <div className="flex flex-col md:flex-row h-full">
-          {/* Image Side */}
-          <div className="md:w-1/2 relative h-48 sm:h-64 md:h-auto shrink-0 bg-black">
-            {showTrailer ? (
-              <div className="w-full h-full relative">
-                <iframe
-                  src={(course.trailerVideoUrl && isWorkingUrl(course.trailerVideoUrl))
-                    ? (course.trailerVideoUrl.startsWith('http') ? course.trailerVideoUrl : `${BaseURL}/${course.trailerVideoUrl.replace(/^\//, '')}`)
-                    : ""}
-                  className="w-full h-full"
-                  title="Course Trailer"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                ></iframe>
-                <button
-                  onClick={() => setShowTrailer(false)}
-                  className="absolute top-2 left-2 p-2 bg-black/70 text-white rounded-full hover:bg-black transition-colors"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            ) : (
-              <>
-                <img
-                  src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `${BaseURL}/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
-                  alt={course.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.target.src = "/course_placeholder.png"; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white text-left">
-                  <span className="bg-[#4AA59B] px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
-                    Course Details
-                  </span>
-                  <button
-                    onClick={() => setShowTrailer(true)}
-                    className="flex items-center gap-2 group/play"
-                  >
-                    <PlayCircle size={24} className="md:w-8 md:h-8 text-white fill-white/20 group-hover/play:scale-110 transition-transform" />
-                    <span className="font-bold text-sm md:text-base">Watch Trailer</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Content Side */}
-          <div className="md:w-1/2 p-6 md:p-8 flex flex-col text-left">
-            <div className="flex items-center gap-2 mb-3 md:mb-4">
-              <span className="bg-[#F0F9F8] text-[#0F4C4A] px-2 py-0.5 md:px-3 md:py-1 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest leading-none border border-[#0F4C4A]/5">
-                {course.categoryName || "Education"}
-              </span>
-              <span className="text-gray-300 text-xs font-bold">●</span>
-              <span className="text-[#4AA59B] text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-                {course.level}
-              </span>
-            </div>
-
-            <div className="mb-2">
-              <span className="text-[10px] font-bold text-[#4AA59B] uppercase tracking-wider">{course.instructorName || "Expert Mentor"}</span>
-            </div>
-
-            <h2 className="text-xl md:text-2xl font-black text-[#0F172B] mb-3 md:mb-4 leading-tight">
-              {course.title}
-            </h2>
-
-            <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-4 md:mb-6">
-              <div className="flex items-center gap-1.5">
-                <Star size={16} fill="#EAB308" className="text-yellow-500 md:w-4.5 md:h-4.5" />
-                <span className="font-bold text-[#0F172B] text-sm md:text-base">{(course.rating || 0)}</span>
-                <span className="text-gray-400 text-[10px]">({course.reviewCount || 0})</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-gray-500">
-                <Users size={16} className="md:w-4.5 md:h-4.5" />
-                <span className="font-bold text-sm md:text-base">{(course.studentCount || 0).toLocaleString()}</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-gray-400 font-bold text-[10px] uppercase">
-                <span>{course.language}</span>
-                <span className="text-gray-200">|</span>
-                <span>{formatDuration(course.estimatedDuration)}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 md:space-y-3 mb-6 md:mb-8 overflow-y-auto max-h-[150px] pr-2 custom-scrollbar">
-              <h4 className="text-xs md:text-sm font-black text-[#0F4C4A] uppercase tracking-wider mb-2 flex items-center gap-2">
-                <Info size={14} className="md:w-4 md:h-4" /> About this course
-              </h4>
-              <p className="text-xs md:text-sm text-gray-600 leading-relaxed mb-4">
-                {course.description}
-              </p>
-              {[
-                "Master fundamental concepts",
-                "Hands-on projects and labs",
-                "Industry recognized standards"
-              ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600">
-                  <CheckCircle2 size={14} className="text-[#4AA59B] mt-0.5 shrink-0 md:w-4 md:h-4" />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-auto pt-4 md:pt-6 border-t border-gray-100 flex items-center justify-between gap-4">
-              <div className="shrink-0">
-                <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-0.5 md:mb-1">Investment</p>
-                <span className="text-xl md:text-2xl font-black text-[#0F4C4A]">${course.price || "Free"}</span>
-              </div>
-              <button
-                onClick={() => {
-                  if (checkAuth()) {
-                    navigate('/student/checkout', { state: { courseId: course.id } });
-                  }
-                }}
-                className="flex-1 max-w-[160px] bg-[#0F4C4A] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm hover:bg-[#4AA59B] transition-all shadow-lg shadow-[#0F4C4A]/20 active:scale-95 transform"
-              >
-                Enroll Now
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 /* ================= Page ================= */
 const Courses = () => {
