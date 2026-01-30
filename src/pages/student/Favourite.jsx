@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Trash2, Star, Users, UserCircle } from "lucide-react";
+import { BaseURL, isWorkingUrl, getFavoriteCourses, getFavoriteInstructors, toggleCourseFavorite, toggleInstructorFavorite } from "../../services/courseService";
+import Swal from 'sweetalert2';
 
 /* ================= Horizontal Card ================= */
-const FavoriteCard = ({ item, isMentor, reverse }) => {
+const FavoriteCard = ({ item, isMentor, reverse, onRemove }) => {
     return (
         <div
             className={`bg-[#F2F2F2] hover:bg-white border border-transparent hover:border-[#25ADA7]/20 transition-all rounded-xl p-3 flex items-center gap-3 w-full md:w-[380px] shadow-sm ${reverse ? "flex-row-reverse" : "flex-row"
@@ -14,9 +16,10 @@ const FavoriteCard = ({ item, isMentor, reverse }) => {
                     <UserCircle size={40} className="text-gray-400" />
                 ) : (
                     <img
-                        src={item.image}
+                        src={(item.image && isWorkingUrl(item.image)) ? (item.image.startsWith('http') ? item.image : `${BaseURL}/${item.image.replace(/^\//, '')}`) : "/course_placeholder.png"}
                         alt={item.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = "/course_placeholder.png"; }}
                     />
                 )}
             </div>
@@ -24,28 +27,29 @@ const FavoriteCard = ({ item, isMentor, reverse }) => {
             {/* Content Section */}
             <div className="flex-1 flex flex-col justify-between min-w-0 px-1">
                 <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-xs md:text-sm text-black truncate">{item.title}</h3>
-                    <button className="text-gray-400 hover:text-red-500 transition-colors shrink-0">
+                    <h3 className="font-bold text-xs md:text-sm text-black truncate">{item.title || item.name}</h3>
+                    <button
+                        onClick={() => onRemove(item.id, isMentor ? 'mentor' : 'course')}
+                        className="text-gray-400 hover:text-red-500 transition-colors shrink-0"
+                    >
                         <Trash2 size={14} />
                     </button>
                 </div>
 
-                <div className="space-y-0.5 mt-1">
-                    <p className="text-[10px] text-gray-800 font-medium truncate">{item.level || (isMentor ? "Expert Mentor" : "Beginner")}</p>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-gray-800 font-bold flex items-center gap-1">
-                            <Users size={12} /> {item.students || "1.2K"}
+                <p className="text-[10px] text-gray-800 font-medium truncate">{isMentor ? "Expert Mentor" : item.level}</p>
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-gray-800 font-bold flex items-center gap-1">
+                        <Users size={12} /> {item.studentCount || item.students || "0"}
+                    </span>
+                    {!isMentor && (
+                        <span className="text-[10px] text-yellow-600 font-bold flex items-center gap-1">
+                            <Star size={12} fill="currentColor" /> {item.rating || "0"}
                         </span>
-                        {!isMentor && (
-                            <span className="text-[10px] text-yellow-600 font-bold flex items-center gap-1">
-                                <Star size={12} fill="currentColor" /> 4.9
-                            </span>
-                        )}
-                    </div>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-black/5">
-                    <span className="text-xs font-black text-[#0F4C4A]">{item.extra1 || (isMentor ? "View Profile" : "800 L.E")}</span>
+                    <span className="text-xs text-black">{isMentor ? "View Profile" : `$${item.price || "800"}`}</span>
                     <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded">
                         {isMentor ? "Mentor" : "Course"}
                     </div>
@@ -57,35 +61,29 @@ const FavoriteCard = ({ item, isMentor, reverse }) => {
 
 /* ================= Favorites Page ================= */
 const Favourite = () => {
-    const [favorites, setFavorites] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [mentors, setMentors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Updated Mock Data
-        setFavorites([
-            // Courses
-            { title: "Web Development", image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200", level: "Beginner", students: "2.5K", extra1: "Project Based", type: 'course' },
-            { title: "React Mastery", image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=200", level: "Intermediate", students: "1.1K", extra1: "Hooks & Redux", type: 'course' },
-            { title: "UI Design Patterns", image: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?w=200", level: "Advanced", students: "700", extra1: "Figma & XD", type: 'course' },
-            { title: "Data Science", image: "https://images.unsplash.com/photo-1555949105-d40b991da97d?w=200", level: "Beginner", students: "1K", extra1: "Pandas & NumPy", type: 'course' },
-            { title: "Mobile Apps with React Native", image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=200", level: "Intermediate", students: "4.2K", extra1: "iOS & Android", type: 'course' },
-            { title: "Cyber Security Pro", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=200", level: "Advanced", students: "1.5K", extra1: "Network Sec", type: 'course' },
-            { title: "Digital Marketing", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200", level: "Beginner", students: "10K", extra1: "SEO & Ads", type: 'course' },
-            { title: "Python for Finance", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200", level: "Intermediate", students: "2.8K", extra1: "Analysis", type: 'course' },
-
-            // Mentors (No images, using UserCircle icon)
-            { title: "Dr. Angela Yu", level: "Senior Instructor", students: "150K", extra1: "Programming", type: 'mentor' },
-            { title: "Gary Simon", level: "Design Master", students: "89K", extra1: "UI/UX Design", type: 'mentor' },
-            { title: "Chris Anderson", level: "Business Advisor", students: "45K", extra1: "Business", type: 'mentor' },
-            { title: "Max Schwarz", level: "Lead Architect", students: "210K", extra1: "Full Stack", type: 'mentor' },
-            { title: "Neil Patel", level: "Marketing Guru", students: "1.2M", extra1: "SEO Expert", type: 'mentor' },
-            { title: "Andrei Neagoie", level: "Academy Lead", students: "800K", extra1: "Web Dev", type: 'mentor' },
-            { title: "Sarah Drasner", level: "Staff Engineer", students: "120K", extra1: "Vue Specialist", type: 'mentor' },
-            { title: "Kent C. Dodds", level: "Teacher", students: "95K", extra1: "React Expert", type: 'mentor' },
-        ]);
+        Promise.all([getFavoriteCourses(), getFavoriteInstructors()])
+            .then(([coursesRes, mentorsRes]) => {
+                setCourses(coursesRes.data || []);
+                setMentors(mentorsRes.data || []);
+            })
+            .catch(err => console.error("Error fetching favorites:", err))
+            .finally(() => setLoading(false));
     }, []);
 
-    const courses = favorites.filter(f => f.type === 'course');
-    const mentors = favorites.filter(f => f.type === 'mentor');
+    const handleRemove = (id, type) => {
+        const action = type === 'course' ? toggleCourseFavorite(id) : toggleInstructorFavorite(id);
+        action.then(() => {
+            if (type === 'course') setCourses(prev => prev.filter(c => c.id !== id));
+            else setMentors(prev => prev.filter(m => m.id !== id));
+
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Removed from favorites', showConfirmButton: false, timer: 2000 });
+        });
+    };
 
     return (
         <div className="px-4 py-12 max-w-7xl mx-auto flex flex-col items-center">
@@ -97,41 +95,48 @@ const Favourite = () => {
 
             {/* Split View Columns */}
             <div className="flex flex-col lg:flex-row justify-center gap-12 w-full relative">
-
-                {/* Left Column: Courses */}
-                <div className="flex flex-col items-center gap-6 flex-1">
-                    <h2 className="text-2xl font-black text-[#0F4C4A] uppercase tracking-widest">Courses</h2>
-                    <div className="w-full bg-gradient-to-b from-[#25ADA7]/20 to-transparent p-6 rounded-[40px] border border-[#25ADA7]/5 shadow-inner">
-                        <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
-                            {courses.length > 0 ? (
-                                courses.map((course, idx) => (
-                                    <FavoriteCard key={idx} item={course} isMentor={false} />
-                                ))
-                            ) : (
-                                <p className="text-gray-400 font-bold py-10">No courses saved.</p>
-                            )}
-                        </div>
+                {loading ? (
+                    <div className="flex justify-center items-center py-20 w-full">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F4C4A]"></div>
                     </div>
-                </div>
-
-                {/* Vertical Divider */}
-                <div className="hidden lg:block w-[1px] bg-black/10 absolute left-1/2 top-20 bottom-0"></div>
-
-                {/* Right Column: Mentors */}
-                <div className="flex flex-col items-center gap-6 flex-1">
-                    <h2 className="text-2xl font-black text-[#0F4C4A] uppercase tracking-widest">Mentors</h2>
-                    <div className="w-full bg-gradient-to-b from-[#25ADA7]/20 to-transparent p-6 rounded-[40px] border border-[#25ADA7]/5 shadow-inner">
-                        <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
-                            {mentors.length > 0 ? (
-                                mentors.map((mentor, idx) => (
-                                    <FavoriteCard key={idx} item={mentor} isMentor={true} reverse={true} />
-                                ))
-                            ) : (
-                                <p className="text-gray-400 font-bold py-10">No mentors saved.</p>
-                            )}
+                ) : (
+                    <>
+                        {/* Left Column: Courses */}
+                        <div className="flex flex-col items-center gap-6 flex-1">
+                            <h2 className="text-2xl font-black text-[#0F4C4A] uppercase tracking-widest">Courses</h2>
+                            <div className="w-full bg-gradient-to-b from-[#25ADA7]/20 to-transparent p-6 rounded-[40px] border border-[#25ADA7]/5 shadow-inner">
+                                <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
+                                    {courses.length > 0 ? (
+                                        courses.map((course, idx) => (
+                                            <FavoriteCard key={course.id || idx} item={course} isMentor={false} onRemove={handleRemove} />
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-400 font-bold py-10 text-center">No courses saved.</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+
+                        {/* Vertical Divider */}
+                        <div className="hidden lg:block w-[1px] bg-black/10 absolute left-1/2 top-20 bottom-0"></div>
+
+                        {/* Right Column: Mentors */}
+                        <div className="flex flex-col items-center gap-6 flex-1">
+                            <h2 className="text-2xl font-black text-[#0F4C4A] uppercase tracking-widest">Mentors</h2>
+                            <div className="w-full bg-gradient-to-b from-[#25ADA7]/20 to-transparent p-6 rounded-[40px] border border-[#25ADA7]/5 shadow-inner">
+                                <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
+                                    {mentors.length > 0 ? (
+                                        mentors.map((mentor, idx) => (
+                                            <FavoriteCard key={mentor.id || idx} item={mentor} isMentor={true} reverse={true} onRemove={handleRemove} />
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-400 font-bold py-10 text-center">No mentors saved.</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* Custom Styles */}

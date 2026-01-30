@@ -6,10 +6,12 @@ import { getApprovedCourses } from "../../../services/courseService";
 import FeatureCard from "./components/FeatureCard";
 import CourseCard from "./components/CourseCard";
 import MetricItem from "./components/MetricItem";
+import CourseModal from "../../../components/common/CourseModal";
 
 const Landing = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
 
 
@@ -32,6 +34,15 @@ const Landing = () => {
   useEffect(() => {
     getApprovedCourses()
       .then((res) => {
+        console.log("DEBUG: Landing Page Courses Data:", res.data);
+        const debugImages = res.data.slice(0, 3).map(c => ({
+          id: c.id,
+          title: c.title,
+          thumbnailUrl: c.thumbnailUrl,
+          imagePath: c.imagePath,
+          imageUrl: c.imageUrl
+        }));
+        console.table(debugImages);
         // Just take the first 3 or 6 for the landing page if there are many
         setCourses(res.data.slice(0, 6));
       })
@@ -161,9 +172,14 @@ const Landing = () => {
           {courses.map((course) => (
             <CourseCard
               key={course.id}
+              id={course.id}
               title={course.title}
-              students={course.students}
+              students={course.studentCount || 0}
+              instructor={course.instructorName}
+              rating={course.rating}
               level={course.level}
+              imageUrl={course.thumbnailUrl || course.imagePath || course.imageUrl}
+              onClick={() => setSelectedCourse(course)}
             />
           ))}
 
@@ -252,6 +268,12 @@ const Landing = () => {
         </div>
       </section>
 
+      {selectedCourse && (
+        <CourseModal
+          course={selectedCourse}
+          onClose={() => setSelectedCourse(null)}
+        />
+      )}
     </div>
   );
 };

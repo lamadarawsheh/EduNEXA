@@ -1,72 +1,118 @@
 import React, { useEffect, useState } from "react";
-import { getApprovedCourses, getCategoriesWithSubcategories } from "../../../services/courseService";
 import { useNavigate } from "react-router-dom";
-import { X, Star, Users, Info, CheckCircle2, PlayCircle, Search, Filter } from "lucide-react";
+import { X, Star, Users, Info, CheckCircle2, PlayCircle, Search, Filter, Heart } from "lucide-react";
+import { getApprovedCourses, getCategoriesWithSubcategories, BaseURL, isWorkingUrl, toggleCourseFavorite, formatDuration } from "../../../services/courseService";
+import Swal from 'sweetalert2';
+
+const checkAuth = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    Swal.fire({
+      title: 'Login Required',
+      text: 'Please log in first to access this feature.',
+      icon: 'info',
+      confirmButtonColor: '#0F4C4A',
+    });
+    return false;
+  }
+  return true;
+};
 
 /* ================= Course Card ================= */
-const CourseCard = ({ image, title, description, level, students, buttonText, onDetailsClick }) => {
+const CourseCard = ({ id, image, title, description, level, students, instructor, price, subCategory, onDetailsClick }) => {
   const [favorite, setFavorite] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorite(saved.some((item) => item.title === title));
-  }, [title]);
-
-  const toggleFavorite = () => {
-    let saved = JSON.parse(localStorage.getItem("favorites")) || [];
-
-    if (favorite) {
-      saved = saved.filter((item) => item.title !== title);
-    } else {
-      saved.push({ image, title, description, level, students });
+  const toggleFavorite = (e) => {
+    e.stopPropagation();
+    if (checkAuth()) {
+      toggleCourseFavorite(id || title).then(() => {
+        setFavorite(!favorite);
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Favorites updated',
+          showConfirmButton: false,
+          timer: 2000
+        });
+      });
     }
-
-    localStorage.setItem("favorites", JSON.stringify(saved));
-    setFavorite(!favorite);
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col cursor-pointer transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl h-full">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-40 object-cover rounded-lg mb-4"
-      />
+    <div
+      className="flex flex-col bg-white border border-transparent shadow-lg rounded-2xl p-4 w-full group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer relative overflow-hidden"
+      onClick={onDetailsClick}
+    >
+      <div className="absolute top-0 right-0 w-24 h-24 bg-[#4AA59B]/5 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700"></div>
 
-      <div className="flex justify-between items-center mb-2 w-full">
-        <h3 className="text-lg text-[#0F172B] font-bold text-left">{title}</h3>
-        <button
-          onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
-          className="focus:outline-none w-8 h-8 flex items-center justify-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className={`w-5 h-5 transition-all duration-300 transform
-              ${favorite ? "fill-red-500" : "fill-white stroke-red-500"}
-            `}
-            strokeWidth="3"
+      <div className="relative overflow-hidden rounded-xl mb-4 h-36">
+        <img
+          src={(image && isWorkingUrl(image)) ? (image.startsWith('http') ? image : `${BaseURL}/${image.replace(/^\//, '')}`) : "/course_placeholder.png"}
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          onError={(e) => { e.target.src = "/course_placeholder.png"; }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="absolute top-3 right-3 z-20">
+          <button
+            onClick={toggleFavorite}
+            className={`p-2 rounded-full backdrop-blur-md transition-all duration-300 transform active:scale-90 ${favorite
+              ? 'bg-red-500 text-white shadow-lg'
+              : 'bg-white/80 text-gray-400 hover:text-red-500 hover:bg-white'
+              }`}
           >
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-          </svg>
+            <Heart size={16} fill={favorite ? "currentColor" : "none"} />
+          </button>
+        </div>
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <span className="bg-white/95 backdrop-blur-sm px-2 py-1 rounded-md text-[8px] font-black text-[#0F4C4A] shadow-md uppercase tracking-wider leading-none border border-[#0F4C4A]/5">{level}</span>
+          <span className="bg-[#4AA59B]/90 backdrop-blur-sm px-1.5 py-0.5 rounded-md text-[7px] font-bold text-white shadow-md uppercase tracking-wider leading-none">{subCategory || "Education"}</span>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 text-white transform scale-90 group-hover:scale-100 transition-transform duration-300">
+            <PlayCircle size={32} />
+          </div>
+        </div>
+      </div>
+
+      <span className="text-[#0F172B] font-black text-lg mb-2 leading-tight group-hover:text-[#4AA59B] transition-colors line-clamp-1">{title}</span>
+      <p className="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed font-medium">{description}</p>
+
+      <div className="flex items-center gap-3 py-3 border-t border-gray-50 mt-auto">
+        <div className="flex items-center gap-1 text-yellow-500 font-bold text-xs">
+          <Star size={12} fill="currentColor" />
+          <span>4.5</span>
+        </div>
+        <div className="flex items-center gap-1 text-gray-400 font-semibold text-[10px] border-l border-gray-100 pl-3">
+          <Users size={12} />
+          <span>{(students || 0).toLocaleString()}</span>
+        </div>
+        <div className="ml-auto">
+          <span className="text-[#0F4C4A] font-black text-base">${price}</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 mt-4 relative z-10">
+        <button
+          onClick={(e) => { e.stopPropagation(); onDetailsClick(); }}
+          className="bg-white text-[#0F4C4A] border border-[#0F4C4A]/10 py-2.5 rounded-xl font-bold text-[10px] hover:bg-[#F0F9F8] transition-all shadow-sm active:scale-95 transform"
+        >
+          Preview
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (checkAuth()) {
+              navigate('/student/checkout', { state: { courseId: id } });
+            }
+          }}
+          className="bg-[#0F4C4A] text-white py-2.5 rounded-xl font-bold text-[10px] hover:bg-[#4AA59B] transition-all shadow-md active:scale-95 transform"
+        >
+          Enroll Now
         </button>
       </div>
-
-      <p className="text-[#176D69] text-sm mb-4 text-left line-clamp-2">
-        {description}
-      </p>
-
-      <div className="flex justify-between mb-4 w-full mt-auto">
-        <span className="text-[#176D69] text-xs">{level}</span>
-        <span className="text-[#176D69] text-xs">{students} Students</span>
-      </div>
-
-      <button
-        onClick={onDetailsClick}
-        className="bg-[#0F4C4A] text-white px-4 py-2 rounded hover:bg-white hover:text-[#0F4C4A] hover:border transition font-bold"
-      >
-        {buttonText || "Details"}
-      </button>
     </div>
   );
 };
@@ -114,6 +160,8 @@ const PackageCard = ({ title, price, features, isMiddle }) => {
 
 /* ================= Modal ================= */
 const CourseModal = ({ course, onClose }) => {
+  const [showTrailer, setShowTrailer] = useState(false);
+  const navigate = useNavigate();
   if (!course) return null;
 
   return (
@@ -134,22 +182,48 @@ const CourseModal = ({ course, onClose }) => {
 
         <div className="flex flex-col md:flex-row h-full">
           {/* Image Side */}
-          <div className="md:w-1/2 relative h-48 sm:h-64 md:h-auto shrink-0">
-            <img
-              src={course.thumbnailUrl}
-              alt={course.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-            <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white text-left">
-              <span className="bg-[#4AA59B] px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
-                Course Details
-              </span>
-              <div className="flex items-center gap-2">
-                <PlayCircle size={24} className="md:w-8 md:h-8 text-white fill-white/20" />
-                <span className="font-bold text-sm md:text-base">View Syllabus</span>
+          <div className="md:w-1/2 relative h-48 sm:h-64 md:h-auto shrink-0 bg-black">
+            {showTrailer ? (
+              <div className="w-full h-full relative">
+                <iframe
+                  src={(course.trailerVideoUrl && isWorkingUrl(course.trailerVideoUrl))
+                    ? (course.trailerVideoUrl.startsWith('http') ? course.trailerVideoUrl : `${BaseURL}/${course.trailerVideoUrl.replace(/^\//, '')}`)
+                    : ""}
+                  className="w-full h-full"
+                  title="Course Trailer"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                ></iframe>
+                <button
+                  onClick={() => setShowTrailer(false)}
+                  className="absolute top-2 left-2 p-2 bg-black/70 text-white rounded-full hover:bg-black transition-colors"
+                >
+                  <X size={16} />
+                </button>
               </div>
-            </div>
+            ) : (
+              <>
+                <img
+                  src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `${BaseURL}/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                  alt={course.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.src = "/course_placeholder.png"; }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white text-left">
+                  <span className="bg-[#4AA59B] px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
+                    Course Details
+                  </span>
+                  <button
+                    onClick={() => setShowTrailer(true)}
+                    className="flex items-center gap-2 group/play"
+                  >
+                    <PlayCircle size={24} className="md:w-8 md:h-8 text-white fill-white/20 group-hover/play:scale-110 transition-transform" />
+                    <span className="font-bold text-sm md:text-base">Watch Trailer</span>
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Content Side */}
@@ -164,6 +238,10 @@ const CourseModal = ({ course, onClose }) => {
               </span>
             </div>
 
+            <div className="mb-2">
+              <span className="text-[10px] font-bold text-[#4AA59B] uppercase tracking-wider">{course.instructorName || "Expert Mentor"}</span>
+            </div>
+
             <h2 className="text-xl md:text-2xl font-black text-[#0F172B] mb-3 md:mb-4 leading-tight">
               {course.title}
             </h2>
@@ -171,11 +249,17 @@ const CourseModal = ({ course, onClose }) => {
             <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-4 md:mb-6">
               <div className="flex items-center gap-1.5">
                 <Star size={16} fill="#EAB308" className="text-yellow-500 md:w-4.5 md:h-4.5" />
-                <span className="font-bold text-[#0F172B] text-sm md:text-base">{(course.rating || 4.8)}</span>
+                <span className="font-bold text-[#0F172B] text-sm md:text-base">{(course.rating || 0)}</span>
+                <span className="text-gray-400 text-[10px]">({course.reviewCount || 0})</span>
               </div>
               <div className="flex items-center gap-1.5 text-gray-500">
                 <Users size={16} className="md:w-4.5 md:h-4.5" />
-                <span className="font-bold text-sm md:text-base">{(course.studentsCount || 0).toLocaleString()}</span>
+                <span className="font-bold text-sm md:text-base">{(course.studentCount || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-gray-400 font-bold text-[10px] uppercase">
+                <span>{course.language}</span>
+                <span className="text-gray-200">|</span>
+                <span>{formatDuration(course.estimatedDuration)}</span>
               </div>
             </div>
 
@@ -204,7 +288,11 @@ const CourseModal = ({ course, onClose }) => {
                 <span className="text-xl md:text-2xl font-black text-[#0F4C4A]">${course.price || "Free"}</span>
               </div>
               <button
-                onClick={() => window.location.href = '/login'}
+                onClick={() => {
+                  if (checkAuth()) {
+                    navigate('/student/checkout', { state: { courseId: course.id } });
+                  }
+                }}
                 className="flex-1 max-w-[160px] bg-[#0F4C4A] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm hover:bg-[#4AA59B] transition-all shadow-lg shadow-[#0F4C4A]/20 active:scale-95 transform"
               >
                 Enroll Now
@@ -367,11 +455,15 @@ const Courses = () => {
             {filteredCourses.map((course) => (
               <CourseCard
                 key={course.id}
+                id={course.id}
                 image={course.thumbnailUrl}
                 title={course.title}
+                instructor={course.instructorName}
                 description={course.description}
                 level={course.level}
-                students={course.studentsCount}
+                price={course.price}
+                students={course.studentCount}
+                subCategory={course.categoryName}
                 onDetailsClick={() => setSelectedCourse(course)}
               />
             ))}

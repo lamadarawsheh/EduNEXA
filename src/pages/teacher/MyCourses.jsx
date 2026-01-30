@@ -12,6 +12,7 @@ import {
     AlertCircle,
     BookOpen
 } from 'lucide-react';
+import { BaseURL, isWorkingUrl } from '../../services/courseService';
 
 const MyCourses = () => {
     const navigate = useNavigate();
@@ -178,7 +179,12 @@ const MyCourses = () => {
                         >
                             {/* Image Header */}
                             <div className="relative h-48 overflow-hidden">
-                                <img src={course.image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                <img
+                                    src={(course.image && isWorkingUrl(course.image)) ? (course.image.startsWith('http') ? course.image : `${BaseURL}/${course.image.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                                    alt={course.title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                    onError={(e) => { e.target.src = "/course_placeholder.png"; }}
+                                />
                                 <div className="absolute top-4 right-4 focus-within:z-10">
                                     <button className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-[#1E6B65] transition-all">
                                         <MoreVertical size={18} />
