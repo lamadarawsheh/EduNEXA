@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import code from "../../assets/code.svg";
+import cProgramming from '../../assets/C-programming.jpg'
+import aspProgramming from '../../assets/asp.png'
 import { GoPerson } from "react-icons/go";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { CiCreditCard1 } from "react-icons/ci";
@@ -38,6 +39,15 @@ const data = [
     { name: '15', uv: 61 },
 ];
 
+const courseImages= [
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        aspProgramming,
+    ]
+
 const CourseAnalytics = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,7 +62,7 @@ const CourseAnalytics = () => {
     // console.log("Earnings Data:", earnings.totalRevenue);
 
     const location = useLocation();
-    const { course } = location.state || {};
+    const { course, imageIndex } = location.state || {};
     if (!course) {
         return <p>No course data available</p>;
     }
@@ -68,7 +78,7 @@ const CourseAnalytics = () => {
                     {/* Image Section */}
                     <div className="lg:col-span-1 h-56 bg-gray-100 overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            <img src={course.thumbnailUrl} alt="" className="max-w-full h-auto" />
+                            <img src={courseImages[imageIndex]} alt="" className="max-w-full h-auto" />
                         </div>
                     </div>
 

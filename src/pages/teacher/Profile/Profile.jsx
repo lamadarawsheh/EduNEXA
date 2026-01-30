@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { TbCrown } from "react-icons/tb";
 
-import profileImage from '../../../assets/profileimage.svg'
-import ux from '../../../assets/ux.svg'
-import design from '../../../assets/design.svg'
-import code from '../../../assets/code.svg'
+import profileImage from '../../../assets/profile.png'
+import cProgramming from '../../../assets/C-programming.jpg'
+import aspProgramming from '../../../assets/asp.png'
 import circle from '../../../assets/circle.svg'
 import { useNavigate } from "react-router-dom";
 import { FaStar } from 'react-icons/fa';
@@ -38,9 +37,9 @@ function Profile() {
     };
 
     const navigate = useNavigate();
-    const handleCourseClick = (course, id) => {
+    const handleCourseClick = (course, id, imageIndex) => {
         navigate(`/teacher/course-analytics/${id}`, {
-            state: { course }
+            state: { course, imageIndex }
         });
     };
 
@@ -77,6 +76,15 @@ function Profile() {
             return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
         }
     };
+
+    const courseImages= [
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        aspProgramming,
+    ]
 
 
     // const reviewsList = [
@@ -276,9 +284,9 @@ function Profile() {
                     <div>
                         <h2 className="text-xl font-medium mb-6 ml-20">All Courses <span className="font-normal">(0{courses.length})</span></h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[#A6E5E3]/17 p-4 md:p-8 ">
-                            {courses.map((course) => (
-                                <div onClick={() => handleCourseClick(course, course.id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <img src={course.thumbnailUrl} className="w-full h-44 object-cover cursor-pointer" />
+                            {courses.map((course, id) => (
+                                <div onClick={() => handleCourseClick(course, course.id, id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                    <img src={courseImages[id]} className="w-full h-44 object-cover cursor-pointer" />
                                     <div className="p-5">
                                         <div className="flex justify-between items-center mb-5">
                                             <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.level}</span>
