@@ -104,12 +104,22 @@ const AvailableCourses = () => {
                 // 1. Fetch Categories First (to build lookup map)
                 const catRes = await getCategoriesWithSubcategories();
                 const cats = catRes.data;
-                setCategoriesList(cats);
+
+                // Normalize subcategory IDs to ensure consistent 'id' field
+                const normalizedCats = cats.map(cat => ({
+                    ...cat,
+                    subCategories: (cat.subCategories || []).map(sub => ({
+                        ...sub,
+                        id: sub.id || sub.subCategoryID || sub.subCategoryId || sub.subcategoryID || sub.subcategoryId
+                    }))
+                }));
+
+                setCategoriesList(normalizedCats);
 
                 // Helper to find names
-                const findCategoryName = (id) => cats.find(c => c.id === id)?.name || 'General';
+                const findCategoryName = (id) => normalizedCats.find(c => c.id === id)?.name || 'General';
                 const findSubCategoryName = (catId, subId) => {
-                    const cat = cats.find(c => c.id === catId);
+                    const cat = normalizedCats.find(c => c.id === catId);
                     return cat?.subCategories?.find(s => s.id === subId)?.name || 'Course';
                 };
 
@@ -133,26 +143,31 @@ const AvailableCourses = () => {
 
                 console.log("DEBUG: AvailableCourses API Response:", courseRes.data);
 
-                setAllCourses((courseRes.data || []).map(c => ({
-                    ...c,
-                    id: c.id,
-                    title: c.title || 'Untitled Course',
-                    description: c.description || c.shortDescription || c.details || c.content || "No description available.",
-                    instructor: c.instructorName || 'Expert Mentor',
-                    rating: c.rating || 0,
-                    reviewCount: c.reviewCount || 0,
-                    enrolled: c.studentCount || 0,
-                    price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
-                    // Improved Category Mapping: Use Name if present, otherwise lookup ID
-                    category: c.categoryName || findCategoryName(c.categoryId),
-                    subCategory: c.subCategoryName || findSubCategoryName(c.categoryId, c.subCategoryId),
-                    categoryId: c.categoryId,
-                    subCategoryId: c.subCategoryId,
-                    level: c.level || 'Beginner',
-                    language: c.language || 'EN',
-                    duration: formatDuration(c.estimatedDuration || '00:00:00'),
-                    image: c.thumbnailUrl || c.imagePath || c.imageUrl
-                })));
+                setAllCourses((courseRes.data || []).map(c => {
+                    // Normalize subCategoryId (API returns both subCategoryID and subCategoryId)
+                    const normalizedSubCategoryId = c.subCategoryId || c.subCategoryID || c.subcategoryId || c.subcategoryID;
+
+                    return {
+                        ...c,
+                        id: c.id,
+                        title: c.title || 'Untitled Course',
+                        description: c.description || c.shortDescription || c.details || c.content || "No description available.",
+                        instructor: c.instructorName || 'Expert Mentor',
+                        rating: c.rating || 0,
+                        reviewCount: c.reviewCount || 0,
+                        enrolled: c.studentCount || 0,
+                        price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
+                        // Improved Category Mapping: Use Name if present, otherwise lookup ID
+                        category: c.categoryName || findCategoryName(c.categoryId),
+                        subCategory: c.subCategoryName || findSubCategoryName(c.categoryId, normalizedSubCategoryId),
+                        categoryId: c.categoryId,
+                        subCategoryId: normalizedSubCategoryId,
+                        level: c.level || 'Beginner',
+                        language: c.language || 'EN',
+                        duration: formatDuration(c.estimatedDuration || '00:00:00'),
+                        image: c.thumbnailUrl || c.imagePath || c.imageUrl
+                    };
+                }));
 
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -174,50 +189,57 @@ const AvailableCourses = () => {
 
         fetchFn().then(res => {
             // Map response similarly to initial load
-            setAllCourses((res.data || []).map(c => ({
-                ...c,
-                id: c.id,
-                title: c.title || 'Untitled Course',
-                description: c.description || c.shortDescription || c.details || c.content || "No description available.",
-                instructor: c.instructorName || 'Expert Mentor',
-                rating: c.rating || 0,
-                reviewCount: c.reviewCount || 0,
-                enrolled: c.studentCount || 0,
-                price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
-                category: c.categoryName || 'General',
-                subCategory: c.subCategoryName || 'Course',
-                categoryId: c.categoryId,
-                subCategoryId: c.subCategoryId,
-                level: c.level || 'Beginner',
-                language: c.language || 'EN',
-                duration: formatDuration(c.estimatedDuration || '00:00:00'),
-                image: c.thumbnailUrl || c.imagePath || c.imageUrl
-            })));
+            setAllCourses((res.data || []).map(c => {
+                const normalizedSubCategoryId = c.subCategoryId || c.subCategoryID || c.subcategoryId || c.subcategoryID;
+
+                return {
+                    ...c,
+                    id: c.id,
+                    title: c.title || 'Untitled Course',
+                    description: c.description || c.shortDescription || c.details || c.content || "No description available.",
+                    instructor: c.instructorName || 'Expert Mentor',
+                    rating: c.rating || 0,
+                    reviewCount: c.reviewCount || 0,
+                    enrolled: c.studentCount || 0,
+                    price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
+                    category: c.categoryName || 'General',
+                    subCategory: c.subCategoryName || 'Course',
+                    categoryId: c.categoryId,
+                    subCategoryId: normalizedSubCategoryId,
+                    level: c.level || 'Beginner',
+                    language: c.language || 'EN',
+                    duration: formatDuration(c.estimatedDuration || '00:00:00'),
+                    image: c.thumbnailUrl || c.imagePath || c.imageUrl
+                };
+            }));
         }).catch(err => {
             console.error("Error fetching sorted courses:", err);
             // Fallback to approved courses if specialized endpoint fails
             if (fetchFn !== getApprovedCourses) {
                 getApprovedCourses().then(res => {
-                    setAllCourses((res.data || []).map(c => ({
-                        // ... same mapping ...
-                        ...c,
-                        id: c.id,
-                        title: c.title || 'Untitled Course',
-                        description: c.description || c.shortDescription || c.details || c.content || "No description available.",
-                        instructor: c.instructorName || 'Expert Mentor',
-                        rating: c.rating || 0,
-                        reviewCount: c.reviewCount || 0,
-                        enrolled: c.studentCount || 0,
-                        price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
-                        category: c.categoryName || 'General',
-                        subCategory: c.subCategoryName || 'Course',
-                        categoryId: c.categoryId,
-                        subCategoryId: c.subCategoryId,
-                        level: c.level || 'Beginner',
-                        language: c.language || 'EN',
-                        duration: formatDuration(c.estimatedDuration || '00:00:00'),
-                        image: c.thumbnailUrl || c.imagePath || c.imageUrl
-                    })));
+                    setAllCourses((res.data || []).map(c => {
+                        const normalizedSubCategoryId = c.subCategoryId || c.subCategoryID || c.subcategoryId || c.subcategoryID;
+
+                        return {
+                            ...c,
+                            id: c.id,
+                            title: c.title || 'Untitled Course',
+                            description: c.description || c.shortDescription || c.details || c.content || "No description available.",
+                            instructor: c.instructorName || 'Expert Mentor',
+                            rating: c.rating || 0,
+                            reviewCount: c.reviewCount || 0,
+                            enrolled: c.studentCount || 0,
+                            price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
+                            category: c.categoryName || 'General',
+                            subCategory: c.subCategoryName || 'Course',
+                            categoryId: c.categoryId,
+                            subCategoryId: normalizedSubCategoryId,
+                            level: c.level || 'Beginner',
+                            language: c.language || 'EN',
+                            duration: formatDuration(c.estimatedDuration || '00:00:00'),
+                            image: c.thumbnailUrl || c.imagePath || c.imageUrl
+                        };
+                    }));
                 });
             }
         }).finally(() => setIsLoading(false));

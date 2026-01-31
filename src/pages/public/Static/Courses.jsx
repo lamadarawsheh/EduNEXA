@@ -219,10 +219,16 @@ const Courses = () => {
 
         const favIds = new Set(favRes.data?.map(c => c.id) || []);
 
-        const coursesWithFav = courseRes.data.map(c => ({
-          ...c,
-          isFavorite: favIds.has(c.id)
-        }));
+        const coursesWithFav = courseRes.data.map(c => {
+          // Normalize subCategoryId (API returns both subCategoryID and subCategoryId)
+          const normalizedSubCategoryId = c.subCategoryId || c.subCategoryID || c.subcategoryId || c.subcategoryID;
+
+          return {
+            ...c,
+            subCategoryId: normalizedSubCategoryId,
+            isFavorite: favIds.has(c.id)
+          };
+        });
 
         setCourses(coursesWithFav);
       } catch (err) {
@@ -239,7 +245,16 @@ const Courses = () => {
   useEffect(() => {
     getCategoriesWithSubcategories()
       .then((res) => {
-        setCategories(res.data);
+        // Normalize subcategory IDs to ensure consistent 'id' field
+        const normalizedCats = res.data.map(cat => ({
+          ...cat,
+          subCategories: (cat.subCategories || []).map(sub => ({
+            ...sub,
+            id: sub.id || sub.subCategoryID || sub.subCategoryId || sub.subcategoryID || sub.subcategoryId
+          }))
+        }));
+
+        setCategories(normalizedCats);
       })
       .catch((err) => console.error("Error fetching categories catalog:", err));
   }, []);
@@ -262,7 +277,7 @@ const Courses = () => {
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory ? course.categoryId === selectedCategory : true;
-    const matchesSubcategory = selectedSubcategory ? course.subcategoryId === selectedSubcategory : true;
+    const matchesSubcategory = selectedSubcategory ? course.subCategoryId === selectedSubcategory : true;
     return matchesSearch && matchesCategory && matchesSubcategory;
   });
 
