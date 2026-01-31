@@ -103,7 +103,7 @@ export default function CourseForm() {
     formState: { errors },
     getValues,
     setValue,
-    reset
+    reset,
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -128,7 +128,7 @@ export default function CourseForm() {
         congratsMessage: "",
         instructors: [],
       },
-    }
+    },
   });
 
   const selectedCategory = watch("category");

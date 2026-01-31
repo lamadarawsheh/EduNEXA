@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TbCrown } from "react-icons/tb";
 
 import profileImage from '../../../assets/profileimage.svg'
@@ -6,110 +6,78 @@ import ux from '../../../assets/ux.svg'
 import design from '../../../assets/design.svg'
 import code from '../../../assets/code.svg'
 import circle from '../../../assets/circle.svg'
-
+import { useNavigate } from "react-router-dom";
 import { FaStar } from 'react-icons/fa';
 import { PiUsersLight, PiGlobeSimple, PiSpinnerGapThin } from 'react-icons/pi';
 import { IoPlayCircle } from 'react-icons/io5';
 import { FaInstagram, FaTwitter, FaWhatsapp, FaYoutube, FaFacebookF } from 'react-icons/fa6';
 import { LuChevronDown } from "react-icons/lu";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchInstructorProfile, fetchApprovedCourses, fetchReviews } from '../../../ReduxToolkit/Profile/ProfileSlice';
 function Profile() {
+
+    const dispatch = useDispatch(); // Initialize dispatch function
+
+    const {
+        data,
+        courses,
+        reviews,
+    } = useSelector((state) => state.profile);  // Access profile data from Redux store
+
+    useEffect(() => {
+        dispatch(fetchInstructorProfile());
+        dispatch(fetchApprovedCourses());
+        dispatch(fetchReviews());
+    }, [dispatch]);
+
+
+    const [visibleReviews, setVisibleReviews] = useState(3);
+    const handleLoadMore = () => {
+        setVisibleReviews((prev) => prev + 3); // كل مرة نضغط نزود 3 تانيين
+    };
+
+    const navigate = useNavigate();
+    const handleCourseClick = (course, id) => {
+    navigate(`/teacher/course-analytics/${id}`, {
+      state: { course }
+    });
+  };
+
     const profileData = {
-        name: "Ali Ahmed",
-        title: "Ui Ux Designer & Web Designer",
         badge: "Top Rated",
-        website: "https://www.Ali Ahmed .com",
         rating: 4.8,
         reviews: "134,633",
         students: "430,117",
-        coursesCount: 7,
         image: profileImage
     };
 
     const [activeTab, setActiveTab] = useState('courses');
 
-    const coursesData = [
-        {
-            id: 1,
-            tag: "DEVELOPMENTS",
-            price: "$57",
-            title: "Ui Ux Design",
-            desc: "Your Gateway to UI/UX Design, Learn How to Craft Digital Products Users Love.",
-            rating: 5.0,
-            students: "265.7K",
-            image: ux
-        },
-        {
-            id: 2,
-            tag: "DEVELOPMENTS",
-            price: "$57",
-            title: "Web Development",
-            desc: "Learn HTML, CSS, JavaScript and create professional websites from scratch.",
-            rating: 5.0,
-            students: "265.7K",
-            image: code
-        },
-        {
-            id: 3,
-            tag: "DEVELOPMENTS",
-            price: "$57",
-            title: "Graphic Design",
-            desc: "Fundamentals of design, Photoshop, and Illustrator for creative professionals.",
-            rating: 5.0,
-            students: "265.7K",
-            image: design
-        }
-    ];
+    const timeAgo = (dateString) => {
+        const now = new Date();
+        const createdAt = new Date(dateString);
 
-    const reviewsList = [
-        {
-            id: 1,
-            name: "Guy Hawkins",
-            date: "1 week ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-            text: "I appreciate the precise short videos (10 mins or less each) because overly long videos tend to make me lose focus. The instructor is very knowledgeable in Web Design and it shows as he shares his knowledge. These were my best 6 months of training. Thanks, Ali."
-        },
-        {
-            id: 2,
-            name: "Dianne Russell",
-            date: "51 mins ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-            text: "This course is just amazing! has great course content, the best practices, and a lot of real-world knowledge. I love the way of giving examples, the best tips by the instructor which are pretty interesting, fun and knowledgeable and I was never getting bored throughout the course. Highly recommend this course!"
-        },
-        {
-            id: 3,
-            name: "Bessie Cooper",
-            date: "6 hours ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-            text: "Webflow course was good, it covers design secrets, and to build responsive web pages, blog, and some more tricks and tips about webflow. I enjoyed the course and it helped me to add web development skills related to webflow in my toolbox. Thank you Ali."
-        },
-        {
-            id: 1,
-            name: "Guy Hawkins",
-            date: "1 week ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-            text: "I appreciate the precise short videos (10 mins or less each) because overly long videos tend to make me lose focus. The instructor is very knowledgeable in Web Design and it shows as he shares his knowledge. These were my best 6 months of training. Thanks, Ali."
-        },
-        {
-            id: 2,
-            name: "Dianne Russell",
-            date: "51 mins ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-            text: "This course is just amazing! has great course content, the best practices, and a lot of real-world knowledge. I love the way of giving examples, the best tips by the instructor which are pretty interesting, fun and knowledgeable and I was never getting bored throughout the course. Highly recommend this course!"
-        },
-        {
-            id: 3,
-            name: "Bessie Cooper",
-            date: "6 hours ago",
-            rating: 5,
-            avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-            text: "Webflow course was good, it covers design secrets, and to build responsive web pages, blog, and some more tricks and tips about webflow. I enjoyed the course and it helped me to add web development skills related to webflow in my toolbox. Thank you Ali."
+        const diffInSeconds = Math.floor((now - createdAt) / 1000);
+
+        const minutes = Math.floor(diffInSeconds / 60);
+        const hours = Math.floor(diffInSeconds / 3600);
+        const days = Math.floor(diffInSeconds / 86400);
+        const weeks = Math.floor(diffInSeconds / 604800);
+
+        if (diffInSeconds < 60) {
+            return "just now";
+        } else if (minutes < 60) {
+            return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        } else if (hours < 24) {
+            return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+        } else if (days < 7) {
+            return `${days} day${days > 1 ? "s" : ""} ago`;
+        } else {
+            return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
         }
-    ];
+    };
+
     return (
         <div className='bg-white w-full'>
             {/* top section */}
@@ -126,13 +94,13 @@ function Profile() {
 
                     <div className='text-[#093332]'>
                         <div className='flex flex-col sm:flex-row sm:items-center gap-2 mb-2 justify-center md:justify-start'>
-                            <h2 className='text-xl sm:text-2xl font-bold'>{profileData.name}</h2>
+                            <h2 className='text-xl sm:text-2xl font-bold uppercase'>{data.name}</h2>
                             <span className='flex items-center bg-white px-3 py-1 gap-1 justify-center sm:justify-start'>
                                 <TbCrown /> {profileData.badge}
                             </span>
                         </div>
 
-                        <span className='block mb-3'>{profileData.title}</span>
+                        <span className='block mb-3'>{data.title}</span>
 
                         <div className='flex flex-wrap justify-center md:justify-start gap-4 mt-4'>
                             <div className="flex items-center gap-2">
@@ -151,7 +119,7 @@ function Profile() {
 
                             <div className="flex items-center gap-2">
                                 <span className="text-2xl"><IoPlayCircle /></span>
-                                <span className="font-medium">{profileData.coursesCount}</span>
+                                <span className="font-medium">{data.courses?.length}</span>
                                 <span>courses</span>
                             </div>
                         </div>
@@ -165,15 +133,15 @@ function Profile() {
                         target="_blank"
                         className='flex items-center gap-1 text-[#564FFD] break-all'
                     >
-                        <PiGlobeSimple /> {profileData.website}
+                        <PiGlobeSimple /> {data.website}
                     </a>
 
                     <div className='flex gap-3 flex-wrap justify-center lg:justify-end'>
-                        <a href="" className='p-3 bg-white text-[#176D69]'><FaFacebookF /></a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'><FaTwitter /></a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'><FaInstagram /></a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'><FaYoutube /></a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'><FaWhatsapp /></a>
+                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.facebook && <FaFacebookF />}</a>
+                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.twitter && <FaTwitter />}</a>
+                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.instagram && <FaInstagram />}</a>
+                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.youtube && <FaYoutube />}</a>
+                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.whatsapp && <FaWhatsapp />}</a>
                     </div>
                 </div>
 
@@ -223,21 +191,21 @@ function Profile() {
                 {/* --- Dynamic Content --- */}
                 {activeTab === 'courses' ? (
                     <div>
-                        <h2 className="text-xl font-medium mb-6 ml-20">Ali Courses <span className="font-normal">(02)</span></h2>
+                        <h2 className="text-xl font-medium mb-6 ml-20">All Courses <span className="font-normal">(0{courses.length})</span></h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[#A6E5E3]/17 p-4 md:p-8 ">
-                            {coursesData.map((course) => (
-                                <div key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <img src={course.image} alt={course.title} className="w-full h-44 object-cover" />
+                            {courses.map((course) => (
+                                <div onClick={() => handleCourseClick(course, course.id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                    <img src={course.thumbnailUrl} className="w-full h-44 object-cover cursor-pointer" />
                                     <div className="p-5">
                                         <div className="flex justify-between items-center mb-5">
-                                            <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.tag}</span>
-                                            <span className="text-[#FF6636] font-bold text-xl">{course.price}</span>
+                                            <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.level}</span>
+                                            <span className="text-[#FF6636] font-bold text-xl">{course.price}$</span>
                                         </div>
                                         <h3 className="font-bold text-lg mb-2">{course.title}</h3>
-                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.desc}</p>
+                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description}</p>
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm">
                                             <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.rating.toFixed(1)}</span>
-                                            <span className="text-gray-500"><b className="text-gray-500">{course.students}</b> students</span>
+                                            <span className="text-gray-500"><b className="text-gray-500">{course.studentCount}</b> students</span>
                                         </div>
                                     </div>
                                 </div>
@@ -259,18 +227,18 @@ function Profile() {
                             </div>
 
                             <div className="space-y-10">
-                                {reviewsList.map((review) => (
+                                {reviews.slice(0, visibleReviews).map((review) => (
                                     <div key={review.id} className="flex gap-4 border-b border-gray-50 pb-10 last:border-0">
-                                        <img src={review.avatar} alt={review.name} className="w-12 h-12 rounded-full object-cover" />
+                                        <img src={review.avatar} className="w-12 h-12 rounded-full object-cover" />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-1">
                                                 <h4 className="font-bold text-[#093332]">{review.name}</h4>
-                                                <span className="text-[10px] text-[#176D69]">• {review.date}</span>
+                                                <span className="text-[10px] text-[#176D69]">• {timeAgo(review.createdAt)}</span>
                                             </div>
                                             <div className="flex text-[#FD8E1F] gap-0.5 mb-3">
                                                 {[...Array(5)].map((_, i) => <FaStar key={i} size={12} />)}
                                             </div>
-                                            <p className="text-[#0F4C4A] text-[15px] leading-relaxed max-w-3xl">{review.text}</p>
+                                            <p className="text-[#0F4C4A] text-[15px] leading-relaxed max-w-3xl">{review.comment}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -279,9 +247,14 @@ function Profile() {
                                 <img src={circle} alt="" />
                             </div>
 
-                            <button className="mt-12 flex items-center gap-2 bg-[#A6E5E3]/36 text-[#176D69] px-6 py-3 rounded font-bold text-sm hover:bg-[#1E8A85] hover:text-white transition-all">
-                                Load More <PiSpinnerGapThin size={20} className="animate-spin-slow" />
-                            </button>
+                            {visibleReviews < reviews.length && (
+                                <button
+                                    onClick={handleLoadMore}
+                                    className="mt-12 flex items-center gap-2 bg-[#A6E5E3]/36 text-[#176D69] px-6 py-3 rounded font-bold text-sm hover:bg-[#1E8A85] hover:text-white transition-all"
+                                >
+                                    Load More <PiSpinnerGapThin size={20} className="animate-spin-slow" />
+                                </button>
+                            )}
                         </div>
 
                     </div>

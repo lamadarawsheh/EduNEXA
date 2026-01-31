@@ -4,7 +4,7 @@ import api from "../../../services/api";
 // get all categories
 export const fetchAllCategories = createAsyncThunk(
   "category/fetchAllCategories",
-  async (_, { rejectWithValue }) => {
+  async (categoryId, { rejectWithValue }) => {
     try {
       const response = await api.get("/Courses/categories");
       return response.data;
@@ -67,6 +67,8 @@ const categorySlice = createSlice({
       .addCase(fetchAllCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.categories = action.payload;
+        state.subcategories = action.payload.subCategories; // populate step 2
+
       })
       .addCase(fetchAllCategories.rejected, (state, action) => {
         state.loading = false;

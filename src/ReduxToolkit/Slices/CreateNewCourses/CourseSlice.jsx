@@ -98,7 +98,7 @@ export const fetchCoursePreview = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
-  },
+  }
 );
 
 // Publish course
