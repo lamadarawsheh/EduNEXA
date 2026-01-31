@@ -23,29 +23,42 @@ import {
     LineChart,
     Line
 } from 'recharts';
-import { getInstructorDashboard } from '../../services/teacherDashboardService';
+import { getInstructorDashboard, getInstructorReviews } from '../../services/teacherDashboardService';
 
 const TeacherDashboard = () => {
     const [dashboardData, setDashboardData] = useState(null);
+    const [reviewsData, setReviewsData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchDashboard = async () => {
+        const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const data = await getInstructorDashboard();
                 setDashboardData(data);
+
+                // Dynamically get instructor ID from state/localStorage
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                const instructorId = user.id || '';
+
+                if (instructorId) {
+                    const reviews = await getInstructorReviews(instructorId);
+                    // Handle JSON.NET $values if present
+                    const rawReviews = Array.isArray(reviews) ? reviews : (reviews?.$values || []);
+                    setReviewsData(rawReviews);
+                }
+
                 setError(null);
             } catch (err) {
                 console.error("Dashboard Fetch Error:", err);
-                setError("Failed to load dashboard statistics. Please try again.");
+                setError("Failed to load dashboard insights. Please try again.");
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchDashboard();
+        fetchData();
     }, []);
 
     if (isLoading) {
@@ -107,12 +120,20 @@ const TeacherDashboard = () => {
         { label: 'Course Sold', value: coursesSold, icon: <Layout size={28} className="text-[#1E6B65]" />, bg: 'bg-[#F2F4F7]' },
     ];
 
-    const activities = [
-        { id: 1, user: 'Kevin', action: 'comments on your lecture "What is ux" in "2021 ui/ux design with figma"', time: 'Just now', icon: <MessageSquare size={14} />, color: 'bg-[#1E6B65]' },
-        { id: 2, user: 'John', action: 'give a 5 star rating on your course "2021 ui/ux design with figma"', time: '5 mins ago', icon: <Star size={14} fill="currentColor" />, color: 'bg-[#0F4C4A]' },
-        { id: 3, user: 'Sraboni', action: 'purchase your course "2021 ui/ux design with figma"', time: '6 mins ago', icon: <Layout size={14} />, color: 'bg-[#1E6B65]' },
-        { id: 4, user: 'Arif', action: 'purchase your course "2021 ui/ux design with figma"', time: '12 mins ago', icon: <Layout size={14} />, color: 'bg-[#1E6B65]' },
-    ];
+    // Process Reviews for Activities and Charts
+    const activities = reviewsData.slice(0, 4).map(review => ({
+        id: review.id,
+        user: review.studentName || 'A Student',
+        action: `gave a ${review.rating} star rating: "${review.comment || 'No comment'}"`,
+        time: review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'Recent',
+        icon: <Star size={14} fill="currentColor" />,
+        color: 'bg-[#0F4C4A]'
+    }));
+
+    // If no reviews, use fallback activities
+    if (activities.length === 0) {
+        activities.push({ id: 1, user: 'EduNexa', action: 'Welcome to your new dashboard! Start by creating a course.', time: 'Now', icon: <Trophy size={14} />, color: 'bg-[#1E6B65]' });
+    }
 
     const profileViewData = [
         { name: 'Jan', value: 400 }, { name: 'Feb', value: 300 }, { name: 'Mar', value: 600 },
@@ -124,13 +145,23 @@ const TeacherDashboard = () => {
         { v: 10 }, { v: 25 }, { v: 15 }, { v: 35 }, { v: 20 }, { v: 30 }, { v: 18 }, { v: 38 }, { v: 22 }
     ];
 
+    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    reviewsData.forEach(r => {
+        if (r.rating >= 1 && r.rating <= 5) ratingCounts[r.rating]++;
+    });
+
+    const totalReviews = reviewsData.length || 1;
     const ratingDistribution = [
-        { stars: 5, label: '5 Star', percentage: 56 },
-        { stars: 4, label: '4 Star', percentage: 37 },
-        { stars: 3, label: '3 Star', percentage: 8 },
-        { stars: 2, label: '2 Star', percentage: 1 },
-        { stars: 1, label: '1 Star', percentage: '<1' },
+        { stars: 5, label: '5 Star', percentage: Math.round((ratingCounts[5] / totalReviews) * 100) },
+        { stars: 4, label: '4 Star', percentage: Math.round((ratingCounts[4] / totalReviews) * 100) },
+        { stars: 3, label: '3 Star', percentage: Math.round((ratingCounts[3] / totalReviews) * 100) },
+        { stars: 2, label: '2 Star', percentage: Math.round((ratingCounts[2] / totalReviews) * 100) },
+        { stars: 1, label: '1 Star', percentage: Math.round((ratingCounts[1] / totalReviews) * 100) },
     ];
+
+    const averageRating = reviewsData.length > 0
+        ? (reviewsData.reduce((acc, r) => acc + (r.rating || 0), 0) / reviewsData.length).toFixed(1)
+        : "0.0";
 
     const fullImageUrl = imageUrl ? `http://edunexa.runasp.net${imageUrl}` : "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
 
@@ -248,13 +279,16 @@ const TeacherDashboard = () => {
                     </div>
                     <div className="flex items-end gap-12 pt-4">
                         <div className="shrink-0 text-center">
-                            <p className="text-[64px] font-black text-[#0F172B] leading-none mb-4">4.6</p>
+                            <p className="text-[64px] font-black text-[#0F172B] leading-none mb-4">{averageRating}</p>
                             <div className="flex justify-center gap-1 mb-2 text-[#1E6B65]">
-                                <Star size={18} fill="currentColor" />
-                                <Star size={18} fill="currentColor" />
-                                <Star size={18} fill="currentColor" />
-                                <Star size={18} fill="currentColor" />
-                                <Star size={18} />
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star
+                                        key={star}
+                                        size={18}
+                                        fill={star <= Math.round(averageRating) ? "currentColor" : "none"}
+                                        className={star <= Math.round(averageRating) ? "" : "text-gray-200"}
+                                    />
+                                ))}
                             </div>
                             <p className="text-[10px] font-bold text-[#45556C] uppercase tracking-wider">Overall Rating</p>
                         </div>

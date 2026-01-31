@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Facebook, Phone, Loader2 } from 'lucide-react';
 import Popup from '../../components/common/Popup';
 import WelcomeAnimation from '../../components/common/WelcomeAnimation';
@@ -7,7 +7,19 @@ import { register as registerService } from '../../services/authService';
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Initialize role based on query parameter
     const [role, setRole] = useState('Student');
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const urlRole = params.get('role');
+        if (urlRole === 'Instructor' || urlRole === 'Student') {
+            setRole(urlRole);
+        }
+    }, [location]);
+
     const [showPassword, setShowPassword] = useState(false);
 
     // Form State

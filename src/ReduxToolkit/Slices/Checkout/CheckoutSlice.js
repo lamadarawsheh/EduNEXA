@@ -31,7 +31,25 @@ const checkoutSlice = createSlice({
       })
       .addCase(fetchCoursePreview.fulfilled, (state, action) => {
         state.loading = false;
-        state.course = action.payload;
+        const c = action.payload;
+        // Normalize data to ensure all UI components get what they need
+        state.course = {
+          ...c,
+          id: c.id || c.courseId,
+          title: c.title || 'Untitled Course',
+          description: c.description || c.shortDescription || c.details || "No description available.",
+          shortDescription: c.shortDescription || c.description || "",
+          instructorName: c.instructorName || c.instructorFullName || c.instructor?.fullName || c.instructor?.name || 'Expert Mentor',
+          rating: c.rating || 0,
+          reviewCount: c.reviewCount || 0,
+          enrollmentCount: c.enrollmentCount || c.studentCount || 0,
+          price: typeof c.price === 'number' ? c.price : parseFloat(c.price) || 0,
+          estimatedDuration: c.estimatedDuration || "Self-paced",
+          level: c.level || "Beginner",
+          categoryName: c.categoryName || c.category?.name || "Premium Course",
+          subCategoryName: c.subCategoryName || c.subCategory?.name || "",
+          thumbnailUrl: c.thumbnailUrl || c.imagePath || c.imageUrl || c.image
+        };
       })
       .addCase(fetchCoursePreview.rejected, (state, action) => {
         state.loading = false;

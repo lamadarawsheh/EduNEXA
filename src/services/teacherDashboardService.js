@@ -14,3 +14,14 @@ export const getInstructorDashboard = async () => {
         throw error;
     }
 };
+
+// Get Instructor Reviews for charts and feedback
+export const getInstructorReviews = async (instructorId) => {
+    try {
+        const response = await api.get(`/InstructorReview/GetInstructorReviews/${instructorId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching instructor reviews:", error);
+        throw error;
+    }
+};
