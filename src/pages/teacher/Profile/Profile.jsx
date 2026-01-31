@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { TbCrown } from "react-icons/tb";
 
-import profileImage from '../../../assets/profileimage.svg'
-import ux from '../../../assets/ux.svg'
-import design from '../../../assets/design.svg'
-import code from '../../../assets/code.svg'
+import profileImage from '../../../assets/profile.png'
+import cProgramming from '../../../assets/C-programming.jpg'
+import aspProgramming from '../../../assets/asp.png'
 import circle from '../../../assets/circle.svg'
 import { useNavigate } from "react-router-dom";
 import { FaStar } from 'react-icons/fa';
@@ -34,15 +33,15 @@ function Profile() {
 
     const [visibleReviews, setVisibleReviews] = useState(3);
     const handleLoadMore = () => {
-        setVisibleReviews((prev) => prev + 3); // كل مرة نضغط نزود 3 تانيين
+        setVisibleReviews((prev) => prev + 3); // Load 3 more reviews each time
     };
 
     const navigate = useNavigate();
-    const handleCourseClick = (course, id) => {
-    navigate(`/teacher/course-analytics/${id}`, {
-      state: { course }
-    });
-  };
+    const handleCourseClick = (course, id, imageIndex) => {
+        navigate(`/teacher/course-analytics/${id}`, {
+            state: { course, imageIndex }
+        });
+    };
 
     const profileData = {
         badge: "Top Rated",
@@ -77,6 +76,15 @@ function Profile() {
             return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
         }
     };
+
+    const courseImages= [
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        cProgramming,
+        aspProgramming,
+    ]
 
     return (
         <div className='bg-white w-full'>
@@ -193,18 +201,18 @@ function Profile() {
                     <div>
                         <h2 className="text-xl font-medium mb-6 ml-20">All Courses <span className="font-normal">(0{courses.length})</span></h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[#A6E5E3]/17 p-4 md:p-8 ">
-                            {courses.map((course) => (
-                                <div onClick={() => handleCourseClick(course, course.id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <img src={course.thumbnailUrl} className="w-full h-44 object-cover cursor-pointer" />
+                            {courses.map((course, id) => (
+                                <div onClick={() => handleCourseClick(course, course.id, id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                    <img src={courseImages[id]} className="w-full h-44 object-cover cursor-pointer" />
                                     <div className="p-5">
                                         <div className="flex justify-between items-center mb-5">
                                             <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.level}</span>
-                                            <span className="text-[#FF6636] font-bold text-xl">{course.price}$</span>
+                                            <span className="text-[#FF6636] font-bold text-xl">${course.price}</span>
                                         </div>
                                         <h3 className="font-bold text-lg mb-2">{course.title}</h3>
                                         <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description}</p>
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm">
-                                            <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.rating.toFixed(1)}</span>
+                                            <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.reviewCount.toFixed(1)}</span>
                                             <span className="text-gray-500"><b className="text-gray-500">{course.studentCount}</b> students</span>
                                         </div>
                                     </div>
@@ -221,7 +229,7 @@ function Profile() {
                                 <h2 className="text-2xl font-bold text-[#1D2026]">Students Feedback</h2>
                                 <div className="relative group">
                                     <button className="flex items-center gap-3 border border-gray-200 px-4 py-2 rounded text-sm font-medium text-[#176D69] hover:bg-gray-50">
-                                        5 Star Rating <LuChevronDown />
+                                        4 Star Rating <LuChevronDown />
                                     </button>
                                 </div>
                             </div>
@@ -236,7 +244,7 @@ function Profile() {
                                                 <span className="text-[10px] text-[#176D69]">• {timeAgo(review.createdAt)}</span>
                                             </div>
                                             <div className="flex text-[#FD8E1F] gap-0.5 mb-3">
-                                                {[...Array(5)].map((_, i) => <FaStar key={i} size={12} />)}
+                                                {[...Array(review.rating)].map((_, i) => <FaStar key={i} size={12} />)}
                                             </div>
                                             <p className="text-[#0F4C4A] text-[15px] leading-relaxed max-w-3xl">{review.comment}</p>
                                         </div>
