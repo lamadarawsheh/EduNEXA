@@ -5,7 +5,6 @@ import { CreditCard, Globe, Settings, UserRound, ArrowLeft } from "lucide-react"
 const navItems = [
     { to: "personal", label: "Personal info", icon: UserRound },
     { to: "settings", label: "Settings", icon: Settings },
-    { to: "payment", label: "Payment", icon: CreditCard },
 ];
 
 const StudentProfileLayout = () => {
