@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Mail, Phone, AlertCircle, CheckCircle2 } from "lucide-react";
 
-export default function StudentForm() {
+export default function StudentForm({ onValidationChange }) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -10,16 +10,32 @@ export default function StudentForm() {
 
   const [errors, setErrors] = useState({});
 
+  // Initialize with user data
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        setFormData(prev => ({
+          ...prev,
+          fullName: user.fullName || user.userName || user.name || "",
+          email: user.email || "",
+          phone: user.phoneNumber || user.phone || ""
+        }));
+      } catch (e) { console.error("Error parsing user data", e); }
+    }
+  }, []);
+
   const validateField = (name, value) => {
     let error = "";
-    if (!value.trim()) {
+    if (!value || !value.trim()) {
       error = "This field is required";
     } else {
       if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
         error = "Please enter a valid email address";
       }
-      if (name === "phone" && !/^\+?[0-9]{10,14}$/.test(value.replace(/\s/g, ""))) {
-        error = "Please enter a valid phone number";
+      if (name === "phone" && !/^\+?[0-9\s-]{10,15}$/.test(value)) {
+        error = "Please enter a valid phone number (min 10 digits)";
       }
       if (name === "fullName" && value.trim().length < 3) {
         error = "Name must be at least 3 characters";
@@ -28,10 +44,30 @@ export default function StudentForm() {
     return error;
   };
 
+  // Check overall form validity
+  useEffect(() => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Check each field
+    (['fullName', 'email', 'phone']).forEach(field => {
+      const value = formData[field];
+      const error = validateField(field, value);
+      if (error) {
+        isValid = false;
+      }
+    });
+
+    if (onValidationChange) {
+      onValidationChange(isValid);
+    }
+  }, [formData, onValidationChange]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
+    // Real-time error clearing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -48,19 +84,19 @@ export default function StudentForm() {
 
   return (
     <div className="w-full max-w-[843px] min-h-[384px] bg-white border border-borderGray rounded-2xl p-6 sm:p-8 mx-auto shadow-sm">
-      
+
       <div className="mb-6">
         <h3 className="text-primetext text-xl font-bold font-inter">Student Information</h3>
         <p className="text-gray-400 text-sm mt-1">Please provide your details to complete the enrollment</p>
       </div>
 
       <div className="w-full flex flex-col gap-6">
-        
+
         <div className="w-full max-w-[793px]">
           <label className={labelStyle}>Full Name *</label>
           <div className="relative">
             <User className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.fullName ? 'text-red-400' : 'text-gray-400'}`} />
-            <input 
+            <input
               name="fullName"
               placeholder="Your full name"
               value={formData.fullName}
@@ -79,7 +115,7 @@ export default function StudentForm() {
           <label className={labelStyle}>Email Address *</label>
           <div className="relative">
             <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.email ? 'text-red-400' : 'text-gray-400'}`} />
-            <input 
+            <input
               name="email"
               type="email"
               placeholder="example@mail.com"
@@ -99,7 +135,7 @@ export default function StudentForm() {
           <label className={labelStyle}>Phone Number *</label>
           <div className="relative">
             <Phone className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${errors.phone ? 'text-red-400' : 'text-gray-400'}`} />
-            <input 
+            <input
               name="phone"
               type="tel"
               placeholder="+20 123 456 7890"

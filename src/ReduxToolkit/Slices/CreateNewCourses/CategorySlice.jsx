@@ -1,25 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const BaseURL = "http://edunexa.runasp.net";
-
-
-const getAuthHeader = () => ({
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json',
-},
-});
+import api from "../../../services/api";
 
 // get all categories
 export const fetchAllCategories = createAsyncThunk(
   "category/fetchAllCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BaseURL}/api/Category`,
-        getAuthHeader(),
-      );
+      const response = await api.get("/Courses/categories");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -32,12 +19,7 @@ export const fetchCategory = createAsyncThunk(
   "category/fetchCategory",
   async (catogeryData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BaseURL}/api/Category`,
-         catogeryData,
-        getAuthHeader(),
-       
-      );
+      const response = await api.post("/Category", catogeryData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -50,10 +32,7 @@ export const fetchCoursesByCategory = createAsyncThunk(
   "category/fetchCoursesByCategory",
   async (categoryId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BaseURL}/api/SubCategory/CoursesByCategory/${categoryId}`,
-        getAuthHeader(),
-      );
+      const response = await api.get(`/SubCategory/CoursesByCategory/${categoryId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -67,7 +46,7 @@ const categorySlice = createSlice({
   initialState: {
     categories: [],
     subcategories: [],
-      coursesByCategory: [],
+    coursesByCategory: [],
     loading: false,
     error: null,
   },
@@ -99,7 +78,6 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategory.fulfilled, (state, action) => {
         state.loading = false;
-        // state.categories.push(action.payload);
       })
       .addCase(fetchCategory.rejected, (state, action) => {
         state.loading = false;
@@ -120,5 +98,5 @@ const categorySlice = createSlice({
   },
 });
 
-export const { clearCategoryError ,clearSubcategories} = categorySlice.actions;
+export const { clearCategoryError, clearSubcategories } = categorySlice.actions;
 export default categorySlice.reducer;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Star, Users, X, Info, CheckCircle2, PlayCircle, Heart } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getApprovedCourses, getNewestCourses, getPopularCourses, getCategoriesWithSubcategories, BaseURL, isWorkingUrl, toggleCourseFavorite, formatDuration } from '../../services/courseService';
+import { getApprovedCourses, getNewestCourses, getPopularCourses, getCategoriesWithSubcategories, BaseURL, isWorkingUrl, toggleCourseFavorite, formatDuration, getFavoriteCourses } from '../../services/courseService';
 import CourseModal from '../../components/common/CourseModal';
 
 const checkAuth = () => {
@@ -21,26 +21,39 @@ const checkAuth = () => {
 
 const AvailableCourses = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('All');
     const [subCategory, setSubCategory] = useState('All');
     const [categoriesList, setCategoriesList] = useState([]); // Real categories from API
     const [sortBy, setSortBy] = useState('popular');
     const [selectedCourse, setSelectedCourse] = useState(null);
-    const [favorites, setFavorites] = useState([1, 2]);
-
+    const [favorites, setFavorites] = useState([]);
     const [allCourses, setAllCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Effect to select category if passed via navigation
+    useEffect(() => {
+        if (location.state?.categoryId && categoriesList.length > 0) {
+            const foundCat = categoriesList.find(c => c.id === location.state.categoryId);
+            if (foundCat) {
+                setCategory(foundCat);
+                // Clear state so it doesn't stick on refresh/navigation
+                navigate(location.pathname, { replace: true, state: {} });
+            }
+        }
+    }, [categoriesList, location.state]);
 
     const toggleFavorite = (e, courseId) => {
         e.stopPropagation();
         if (checkAuth()) {
             toggleCourseFavorite(courseId).then(() => {
-                setFavorites(prev =>
-                    prev.includes(courseId)
-                        ? prev.filter(id => id !== courseId)
-                        : [...prev, courseId]
-                );
+                setFavorites(prev => {
+                    const idStr = String(courseId);
+                    return prev.includes(idStr)
+                        ? prev.filter(id => id !== idStr)
+                        : [...prev, idStr];
+                });
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -101,19 +114,35 @@ const AvailableCourses = () => {
                 };
 
                 // 2. Fetch Courses
-                const courseRes = await getApprovedCourses();
+                const promises = [getApprovedCourses()];
+                const token = localStorage.getItem('token');
+
+                if (token) {
+                    promises.push(getFavoriteCourses().catch(() => ({ data: [] })));
+                }
+
+                const [courseRes, favRes] = await Promise.all(promises);
+
+                // Initialize Favorites (Normalize IDs to strings for safety)
+                if (favRes && favRes.data) {
+                    // Handle case where IDs might be numbers or strings
+                    const favIds = favRes.data.map(c => String(c.id || c.courseId || '').trim());
+                    console.log("DEBUG: Initial Favorites:", favIds);
+                    setFavorites(favIds);
+                }
+
                 console.log("DEBUG: AvailableCourses API Response:", courseRes.data);
 
-                setAllCourses(courseRes.data.map(c => ({
+                setAllCourses((courseRes.data || []).map(c => ({
                     ...c,
                     id: c.id,
-                    title: c.title,
+                    title: c.title || 'Untitled Course',
                     description: c.description || c.shortDescription || c.details || c.content || "No description available.",
                     instructor: c.instructorName || 'Expert Mentor',
                     rating: c.rating || 0,
                     reviewCount: c.reviewCount || 0,
                     enrolled: c.studentCount || 0,
-                    price: c.price.toString().startsWith('$') ? c.price : `$${c.price}`,
+                    price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
                     // Improved Category Mapping: Use Name if present, otherwise lookup ID
                     category: c.categoryName || findCategoryName(c.categoryId),
                     subCategory: c.subCategoryName || findSubCategoryName(c.categoryId, c.subCategoryId),
@@ -145,16 +174,16 @@ const AvailableCourses = () => {
 
         fetchFn().then(res => {
             // Map response similarly to initial load
-            setAllCourses(res.data.map(c => ({
+            setAllCourses((res.data || []).map(c => ({
                 ...c,
                 id: c.id,
-                title: c.title,
+                title: c.title || 'Untitled Course',
                 description: c.description || c.shortDescription || c.details || c.content || "No description available.",
                 instructor: c.instructorName || 'Expert Mentor',
                 rating: c.rating || 0,
                 reviewCount: c.reviewCount || 0,
                 enrolled: c.studentCount || 0,
-                price: c.price.toString().startsWith('$') ? c.price : `$${c.price}`,
+                price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
                 category: c.categoryName || 'General',
                 subCategory: c.subCategoryName || 'Course',
                 categoryId: c.categoryId,
@@ -169,17 +198,17 @@ const AvailableCourses = () => {
             // Fallback to approved courses if specialized endpoint fails
             if (fetchFn !== getApprovedCourses) {
                 getApprovedCourses().then(res => {
-                    setAllCourses(res.data.map(c => ({
+                    setAllCourses((res.data || []).map(c => ({
                         // ... same mapping ...
                         ...c,
                         id: c.id,
-                        title: c.title,
+                        title: c.title || 'Untitled Course',
                         description: c.description || c.shortDescription || c.details || c.content || "No description available.",
                         instructor: c.instructorName || 'Expert Mentor',
                         rating: c.rating || 0,
                         reviewCount: c.reviewCount || 0,
                         enrolled: c.studentCount || 0,
-                        price: c.price.toString().startsWith('$') ? c.price : `$${c.price}`,
+                        price: c.price ? (c.price.toString().startsWith('$') ? c.price : `$${c.price}`) : '$0',
                         category: c.categoryName || 'General',
                         subCategory: c.subCategoryName || 'Course',
                         categoryId: c.categoryId,
@@ -324,7 +353,28 @@ const AvailableCourses = () => {
                 </div>
 
                 {/* Course Grid */}
-                {filteredCourses.length > 0 ? (
+                {isLoading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                            <div key={i} className="flex flex-col bg-white border border-transparent rounded-2xl p-4 w-full h-[350px] animate-pulse">
+                                <div className="rounded-xl h-36 bg-gray-200 mb-4 w-full relative">
+                                    <div className="absolute top-3 left-3 w-16 h-4 bg-gray-300 rounded"></div>
+                                </div>
+                                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                                <div className="h-3 bg-gray-200 rounded w-full mb-4"></div>
+                                <div className="mt-auto flex justify-between items-center border-t border-gray-50 pt-3">
+                                    <div className="h-3 bg-gray-200 rounded w-10"></div>
+                                    <div className="h-3 bg-gray-200 rounded w-10"></div>
+                                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                                </div>
+                                <div className="flex gap-2 mt-4">
+                                    <div className="h-8 bg-gray-200 rounded-xl flex-1"></div>
+                                    <div className="h-8 bg-gray-200 rounded-xl flex-1"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : filteredCourses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {filteredCourses.map(course => (
                             <div
@@ -345,12 +395,12 @@ const AvailableCourses = () => {
                                     <div className="absolute top-3 right-3 z-20">
                                         <button
                                             onClick={(e) => toggleFavorite(e, course.id)}
-                                            className={`p-2 rounded-full backdrop-blur-md transition-all duration-300 transform active:scale-90 ${favorites.includes(course.id)
+                                            className={`p-2 rounded-full backdrop-blur-md transition-all duration-300 transform active:scale-90 ${favorites.includes(String(course.id).trim())
                                                 ? 'bg-red-500 text-white shadow-lg'
                                                 : 'bg-white/80 text-gray-400 hover:text-red-500 hover:bg-white'
                                                 }`}
                                         >
-                                            <Heart size={16} fill={favorites.includes(course.id) ? "currentColor" : "none"} />
+                                            <Heart size={16} fill={favorites.includes(String(course.id).trim()) ? "currentColor" : "none"} />
                                         </button>
                                     </div>
                                     <div className="absolute top-3 left-3 flex flex-col gap-1.5">
@@ -392,7 +442,7 @@ const AvailableCourses = () => {
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             if (checkAuth()) {
-                                                navigate('/student/checkout', { state: { courseId: course.id } });
+                                                navigate(`/student/checkout/${course.id}`);
                                             }
                                         }}
                                         className="bg-[#0F4C4A] text-white py-2.5 rounded-xl font-bold text-[10px] hover:bg-[#4AA59B] transition-all shadow-md active:scale-95 transform"
@@ -425,7 +475,7 @@ const AvailableCourses = () => {
                 course={selectedCourse}
                 onClose={() => setSelectedCourse(null)}
             />
-        </div>
+        </div >
     );
 };
 

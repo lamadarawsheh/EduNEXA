@@ -104,7 +104,20 @@ export const getFavoriteInstructors = () => {
     return api.get("/favorite/instructors");
 };
 
+export const isCourseFavorite = (courseId) => {
+    return api.get(`/favorite/is-course-favorite?courseId=${courseId}`);
+};
+
+export const isInstructorFavorite = (instructorId) => {
+    return api.get(`/favorite/is-instructor-favorite?instructorId=${instructorId}`);
+};
+
 /* ================= Create Course ================= */
 export const createCourse = async (courseData) => {
     return api.post("/courses", courseData);
+};
+
+/* ================= Check Enrollment Status ================= */
+export const isStudentEnrolled = (courseId) => {
+    return api.get(`/courses/${courseId}/is-enrolled`);
 };

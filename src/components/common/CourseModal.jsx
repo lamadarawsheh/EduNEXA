@@ -194,7 +194,7 @@ const CourseModal = ({ course, onClose }) => {
                             <button
                                 onClick={() => {
                                     if (checkAuth()) {
-                                        navigate('/student/checkout', { state: { courseId: course.id } });
+                                        navigate(`/student/checkout/${course.id}`);
                                     }
                                 }}
                                 className="flex-1 max-w-[200px] bg-[#0F4C4A] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#1a6d6a] transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"

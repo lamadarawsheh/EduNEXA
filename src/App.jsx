@@ -115,7 +115,7 @@ function App() {
           <Route index element={<StudentDashboard />} />
           <Route path="available-courses" element={<AvailableCourses />} />
           <Route path="favourite" element={<Favourite />} />
-          <Route path="checkout" element={<Checkout />} />
+          <Route path="checkout/:courseId" element={<Checkout />} />
           <Route path="my-courses" element={<MyCoursesList />} />
           <Route path="course-lessons" element={<MyLessons />} />
           <Route path="watchlesson" element={<WatchLesson />} />
