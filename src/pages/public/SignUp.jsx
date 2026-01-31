@@ -120,7 +120,12 @@ const SignUp = () => {
                 console.log("Registration Success:", data);
 
                 // Store Authentication Data consistently for ProtectedRoute
-                localStorage.setItem('user', JSON.stringify(data.user || data));
+                // Ensure the selected role is persisted if the server response is minimal
+                const userToStore = data.user || data;
+                if (!userToStore.roles || userToStore.roles.length === 0) {
+                    userToStore.roles = [role];
+                }
+                localStorage.setItem('user', JSON.stringify(userToStore));
                 if (data.token) localStorage.setItem('token', data.token);
 
                 // Show animation instead of popup
