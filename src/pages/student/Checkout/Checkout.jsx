@@ -158,6 +158,7 @@ export default function Checkout() {
               selectedMethod={paymentMethod}
               setSelectedMethod={setPaymentMethod}
               onDetailsChange={setPaymentDetails}
+              onComplete={handlePurchase}
             />
           </div>
           <div className="lg:col-span-1 lg:sticky lg:top-8">

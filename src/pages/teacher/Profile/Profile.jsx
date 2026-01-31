@@ -14,21 +14,34 @@ import { LuChevronDown } from "react-icons/lu";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInstructorProfile, fetchApprovedCourses, fetchReviews } from '../../../ReduxToolkit/Profile/ProfileSlice';
+import { BaseURL, isWorkingUrl } from '../../../services/courseService';
+
 function Profile() {
 
     const dispatch = useDispatch(); // Initialize dispatch function
 
     const {
         data,
-        courses,
         reviews,
     } = useSelector((state) => state.profile);  // Access profile data from Redux store
 
+    // Filter only approved courses from the instructor's courses
+    const approvedCourses = (data.courses || []).filter(course => course.status === "Approved");
+
     useEffect(() => {
-        dispatch(fetchInstructorProfile());
-        dispatch(fetchApprovedCourses());
-        dispatch(fetchReviews());
+        dispatch(fetchInstructorProfile()).then((res) => {
+            console.log("DEBUG: Instructor Profile Data:", res.payload);
+            // After fetching profile, we fetch reviews
+            const instructorId = "DE2E2F10-9E91-4391-5938-08DE4AEF4B97";
+            dispatch(fetchReviews(instructorId));
+        });
     }, [dispatch]);
+
+    useEffect(() => {
+        if (data.image) {
+            console.log("DEBUG: Final Instructor Image URL:", (data.image.startsWith('http') ? data.image : `${BaseURL}/${data.image.replace(/^\//, '')}`));
+        }
+    }, [data.image]);
 
 
     const [visibleReviews, setVisibleReviews] = useState(3);
@@ -54,6 +67,7 @@ function Profile() {
     const [activeTab, setActiveTab] = useState('courses');
 
     const timeAgo = (dateString) => {
+        if (!dateString) return "";
         const now = new Date();
         const createdAt = new Date(dateString);
 
@@ -77,7 +91,7 @@ function Profile() {
         }
     };
 
-    const courseImages= [
+    const courseImages = [
         cProgramming,
         cProgramming,
         cProgramming,
@@ -94,11 +108,14 @@ function Profile() {
 
                 {/* Left section */}
                 <div className='flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto text-center md:text-left'>
-                    <img
-                        src={profileImage}
-                        alt=""
-                        className='w-32 h-32 md:w-40 md:h-40 lg:w-auto lg:h-auto rounded-full md:rounded-none object-cover'
-                    />
+                    <div className="relative shrink-0">
+                        <img
+                            src={data.image ? (data.image.startsWith('http') ? data.image : `http://edunexa.runasp.net/${data.image.replace(/^\//, '')}`) : profileImage}
+                            alt={data.name}
+                            className='w-32 h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full object-cover border-4 border-white shadow-xl'
+                            onError={(e) => { e.target.src = profileImage; }}
+                        />
+                    </div>
 
                     <div className='text-[#093332]'>
                         <div className='flex flex-col sm:flex-row sm:items-center gap-2 mb-2 justify-center md:justify-start'>
@@ -127,7 +144,7 @@ function Profile() {
 
                             <div className="flex items-center gap-2">
                                 <span className="text-2xl"><IoPlayCircle /></span>
-                                <span className="font-medium">{data.courses?.length}</span>
+                                <span className="font-medium">{approvedCourses.length}</span>
                                 <span>courses</span>
                             </div>
                         </div>
@@ -137,19 +154,19 @@ function Profile() {
                 {/* Right section */}
                 <div className='flex flex-col justify-center items-center lg:items-end gap-3 mt-6 lg:mt-0 w-full lg:w-auto'>
                     <a
-                        href={profileData.website}
+                        href={data.website}
                         target="_blank"
                         className='flex items-center gap-1 text-[#564FFD] break-all'
                     >
-                        <PiGlobeSimple /> {data.website}
+                        <PiGlobeSimple /> {data.website || "No Website"}
                     </a>
 
                     <div className='flex gap-3 flex-wrap justify-center lg:justify-end'>
-                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.facebook && <FaFacebookF />}</a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.twitter && <FaTwitter />}</a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.instagram && <FaInstagram />}</a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.youtube && <FaYoutube />}</a>
-                        <a href="" className='p-3 bg-white text-[#176D69]'>{data.socials.whatsapp && <FaWhatsapp />}</a>
+                        {data.socials?.facebook && <a href={data.socials.facebook} className='p-3 bg-white text-[#176D69]'><FaFacebookF /></a>}
+                        {data.socials?.twitter && <a href={data.socials.twitter} className='p-3 bg-white text-[#176D69]'><FaTwitter /></a>}
+                        {data.socials?.instagram && <a href={data.socials.instagram} className='p-3 bg-white text-[#176D69]'><FaInstagram /></a>}
+                        {data.socials?.youtube && <a href={data.socials.youtube} className='p-3 bg-white text-[#176D69]'><FaYoutube /></a>}
+                        {data.socials?.whatsapp && <a href={`https://wa.me/${data.socials.whatsapp}`} className='p-3 bg-white text-[#176D69]'><FaWhatsapp /></a>}
                     </div>
                 </div>
 
@@ -160,16 +177,7 @@ function Profile() {
             <div className='px-8 lg:px-20 pb-10 lg:pb-20'>
                 <h2 className='text-2xl font-bold mb-4 text-[#093332]'>ABOUT ME</h2>
                 <div className='text-[#176D69] leading-5'>
-                    <p className='mb-4'>One day Ali had enough with the 9-to-5 grind, or more like 9-to-9 in his case,
-                        and quit his job, or more like got himself fired from his own startup. </p>
-                    <p className='mb-4'>He decided to work on his dream: be his own boss, travel the world, only do the work he enjoyed,
-                        and make a lot more money in the process. No more begging for vacation days and living
-                        from paycheck to paycheck. After trying everything from e-commerce stores to professional
-                        poker his lucky break came when he started freelance design. Ali fell in love with the
-                        field that gives him the lifestyle of his dreams. </p>
-                    <p className='mb-4'>Ali realizes that people who take courses on EduNEXA want to
-                        transform their lives. Today with his courses and mentoring Ali is helping
-                        thousands of people transform their lives, just like he did once. </p>
+                    <p className='mb-4'>EduNEXA Instructor focusing on delivering high-quality educational content and helping students achieve their professional goals.</p>
                 </div>
             </div>
 
@@ -177,11 +185,11 @@ function Profile() {
 
 
                 {/* --- Tabs Section--- */}
-                <div className="border-b border-gray-200 mb-8  md:px-8 ">
-                    <div className="flex gap-30">
+                <div className="border-b border-gray-200 mb-8 px-4 md:px-8">
+                    <div className="flex gap-8 md:gap-24 justify-center md:justify-start">
                         <button
                             onClick={() => setActiveTab('courses')}
-                            className={`pb-4 px-2 font-medium transition-all relative ml-20 ${activeTab === 'courses' ? 'text-teal-700' : 'text-black'}`}
+                            className={`pb-4 px-2 font-medium transition-all relative md:ml-20 ${activeTab === 'courses' ? 'text-teal-700' : 'text-black'}`}
                         >
                             Courses
                             {activeTab === 'courses' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-teal-600"></div>}
@@ -199,21 +207,30 @@ function Profile() {
                 {/* --- Dynamic Content --- */}
                 {activeTab === 'courses' ? (
                     <div>
-                        <h2 className="text-xl font-medium mb-6 ml-20">All Courses <span className="font-normal">(0{courses.length})</span></h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[#A6E5E3]/17 p-4 md:p-8 ">
-                            {courses.map((course, id) => (
-                                <div onClick={() => handleCourseClick(course, course.id, id)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <img src={courseImages[id]} className="w-full h-44 object-cover cursor-pointer" />
-                                    <div className="p-5">
+                        <h2 className="text-xl font-medium mb-6 px-6 md:ml-28">Approved Courses <span className="font-normal">({approvedCourses.length})</span></h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6 md:p-12">
+                            {approvedCourses.map((course, index) => (
+                                <div onClick={() => handleCourseClick(course, course.id, index)} key={course.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col h-full">
+                                    <div className="relative h-44 overflow-hidden">
+                                        <img
+                                            src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `http://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            onError={(e) => { e.target.src = "/course_placeholder.png"; }}
+                                        />
+                                    </div>
+                                    <div className="p-5 flex flex-col flex-1">
                                         <div className="flex justify-between items-center mb-5">
-                                            <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider">{course.level}</span>
-                                            <span className="text-[#FF6636] font-bold text-xl">${course.price}</span>
+                                            <span className="text-[10px] font-bold bg-indigo-50 text-[#342F98] px-2 py-1 rounded tracking-wider uppercase">{course.level || "Beginner"}</span>
+                                            <span className="text-[#FF6636] font-bold text-xl">${course.price || 0}</span>
                                         </div>
-                                        <h3 className="font-bold text-lg mb-2">{course.title}</h3>
-                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description}</p>
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm">
-                                            <span className="flex items-center gap-1 font-bold text-gray-500"><FaStar className="text-orange-400" /> {course.reviewCount.toFixed(1)}</span>
-                                            <span className="text-gray-500"><b className="text-gray-500">{course.studentCount}</b> students</span>
+                                        <h3 className="font-bold text-lg mb-2 line-clamp-1">{course.title}</h3>
+                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description || "No description available."}</p>
+                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm mt-auto">
+                                            <span className="flex items-center gap-1 font-bold text-gray-500">
+                                                <FaStar className="text-orange-400" />
+                                                {(course.rating || 0).toFixed(1)}
+                                            </span>
+                                            <span className="text-gray-500"><b className="text-gray-500">{course.studentCount || course.students || 0}</b> students</span>
                                         </div>
                                     </div>
                                 </div>
