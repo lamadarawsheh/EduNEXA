@@ -27,9 +27,14 @@ const checkAuth = () => {
 };
 
 /* ================= Course Card ================= */
-const CourseCard = ({ id, image, title, description, level, students, instructor, price, subCategory, onDetailsClick }) => {
-  const [favorite, setFavorite] = useState(false);
+const CourseCard = ({ id, image, title, description, level, students, instructor, price, subCategory, onDetailsClick, isFavorite }) => {
+  const [favorite, setFavorite] = useState(isFavorite);
   const navigate = useNavigate();
+
+  // Sync state if prop changes (e.g. after refetch)
+  useEffect(() => {
+    setFavorite(isFavorite);
+  }, [isFavorite]);
 
   const toggleFavorite = (e) => {
     e.stopPropagation();
@@ -113,7 +118,7 @@ const CourseCard = ({ id, image, title, description, level, students, instructor
           onClick={(e) => {
             e.stopPropagation();
             if (checkAuth()) {
-              navigate('/student/checkout', { state: { courseId: id } });
+              navigate(`/student/checkout/${id}`);
             }
           }}
           className="bg-[#0F4C4A] text-white py-2.5 rounded-xl font-bold text-[10px] hover:bg-[#4AA59B] transition-all shadow-md active:scale-95 transform"
@@ -203,16 +208,31 @@ const Courses = () => {
 
   /* ================= API Calls ================= */
   // Get Courses
+  // Get Courses & Favorites
   useEffect(() => {
-    getApprovedCourses()
-      .then((res) => {
-        setCourses(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
+    const fetchData = async () => {
+      try {
+        const [courseRes, favRes] = await Promise.all([
+          getApprovedCourses(),
+          localStorage.getItem('token') ? getFavoriteCourses() : Promise.resolve({ data: [] })
+        ]);
+
+        const favIds = new Set(favRes.data?.map(c => c.id) || []);
+
+        const coursesWithFav = courseRes.data.map(c => ({
+          ...c,
+          isFavorite: favIds.has(c.id)
+        }));
+
+        setCourses(coursesWithFav);
+      } catch (err) {
         console.error(err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Get Categories and their Subcategories in one call
@@ -327,6 +347,7 @@ const Courses = () => {
                 price={course.price}
                 students={course.studentCount}
                 subCategory={course.categoryName}
+                isFavorite={course.isFavorite} // Pass favorite status
                 onDetailsClick={() => setSelectedCourse(course)}
               />
             ))}

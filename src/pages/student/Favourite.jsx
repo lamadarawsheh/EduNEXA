@@ -16,7 +16,20 @@ const FavoriteCard = ({ item, isMentor, reverse, onRemove }) => {
                     <UserCircle size={40} className="text-gray-400" />
                 ) : (
                     <img
-                        src={(item.image && isWorkingUrl(item.image)) ? (item.image.startsWith('http') ? item.image : `${BaseURL}/${item.image.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                        src={(
+                            item.thumbnailUrl || item.image || item.imagePath || item.imageUrl ||
+                            item.thumbnail || item.courseImage || item.url || item.profileImage
+                        ) && isWorkingUrl(
+                            item.thumbnailUrl || item.image || item.imagePath || item.imageUrl ||
+                            item.thumbnail || item.courseImage || item.url || item.profileImage
+                        )
+                            ? ((
+                                item.thumbnailUrl || item.image || item.imagePath || item.imageUrl ||
+                                item.thumbnail || item.courseImage || item.url || item.profileImage
+                            ).startsWith('http')
+                                ? (item.thumbnailUrl || item.image || item.imagePath || item.imageUrl || item.thumbnail || item.courseImage || item.url || item.profileImage)
+                                : `${BaseURL}/${(item.thumbnailUrl || item.image || item.imagePath || item.imageUrl || item.thumbnail || item.courseImage || item.url || item.profileImage).replace(/^\//, '')}`)
+                            : "/course_placeholder.png"}
                         alt={item.title}
                         className="w-full h-full object-cover"
                         onError={(e) => { e.target.src = "/course_placeholder.png"; }}
@@ -29,7 +42,7 @@ const FavoriteCard = ({ item, isMentor, reverse, onRemove }) => {
                 <div className="flex justify-between items-start">
                     <h3 className="font-bold text-xs md:text-sm text-black truncate">{item.title || item.name}</h3>
                     <button
-                        onClick={() => onRemove(item.id, isMentor ? 'mentor' : 'course')}
+                        onClick={onRemove}
                         className="text-gray-400 hover:text-red-500 transition-colors shrink-0"
                     >
                         <Trash2 size={14} />
@@ -76,12 +89,42 @@ const Favourite = () => {
     }, []);
 
     const handleRemove = (id, type) => {
-        const action = type === 'course' ? toggleCourseFavorite(id) : toggleInstructorFavorite(id);
-        action.then(() => {
-            if (type === 'course') setCourses(prev => prev.filter(c => c.id !== id));
-            else setMentors(prev => prev.filter(m => m.id !== id));
+        Swal.fire({
+            title: 'Remove from favorites?',
+            text: "Are you sure you want to remove this item?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#0F4C4A',
+            confirmButtonText: 'Yes, remove it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const action = type === 'course' ? toggleCourseFavorite(id) : toggleInstructorFavorite(id);
+                action.then(() => {
+                    // Refresh data from server to ensure sync
+                    if (type === 'course') {
+                        getFavoriteCourses().then(res => setCourses(res.data || []));
+                    } else {
+                        getFavoriteInstructors().then(res => setMentors(res.data || []));
+                    }
 
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Removed from favorites', showConfirmButton: false, timer: 2000 });
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Removed from favorites',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }).catch((err) => {
+                    console.error("Error removing favorite:", err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to remove from favorites.',
+                    });
+                });
+            }
         });
     };
 
@@ -108,7 +151,7 @@ const Favourite = () => {
                                 <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
                                     {courses.length > 0 ? (
                                         courses.map((course, idx) => (
-                                            <FavoriteCard key={course.id || idx} item={course} isMentor={false} onRemove={handleRemove} />
+                                            <FavoriteCard key={course.id || idx} item={course} isMentor={false} onRemove={() => handleRemove(course.id || course.courseId, 'course')} />
                                         ))
                                     ) : (
                                         <p className="text-gray-400 font-bold py-10 text-center">No courses saved.</p>
@@ -127,7 +170,7 @@ const Favourite = () => {
                                 <div className="max-h-[500px] overflow-y-auto pr-2 flex flex-col items-center gap-4 custom-scrollbar">
                                     {mentors.length > 0 ? (
                                         mentors.map((mentor, idx) => (
-                                            <FavoriteCard key={mentor.id || idx} item={mentor} isMentor={true} reverse={true} onRemove={handleRemove} />
+                                            <FavoriteCard key={mentor.id || idx} item={mentor} isMentor={true} reverse={true} onRemove={() => handleRemove(mentor.id || mentor.instructorId, 'mentor')} />
                                         ))
                                     ) : (
                                         <p className="text-gray-400 font-bold py-10 text-center">No mentors saved.</p>
