@@ -13,7 +13,8 @@ import walletReducer from './walletSlice'
 import adminTeachersSlice from "./slices/AdminTeachers";
 import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
 import pendingCoursesSlice from "./slices/AdminPendingCourses";
-
+import reviewCourseReducer from "./slices/AdminCourseReview";
+import courseActionReducer from "./slices/AdminCoursesActions";
 
 const noopReducer = (state = {}) => state;
 
@@ -31,11 +32,10 @@ export const Store = configureStore({
     adminStudents: adminStudentSlice,
     adminProfile: adminProfileSlice,
     wallet: walletReducer,
-    adminDashboard: adminDashboardSlice,
-    adminStudents: adminStudentSlice,
-    adminProfile: adminProfileSlice,
     adminTeachers: adminTeachersSlice,
     acceptedCoursesData: acceptedCoursesSlice,
     pendingCoursesData: pendingCoursesSlice,
+    courseReview: reviewCourseReducer,
+    courseAction: courseActionReducer,
   },
 });
