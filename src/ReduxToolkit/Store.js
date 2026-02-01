@@ -11,6 +11,7 @@ import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
 import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
 import walletReducer from './walletSlice'
+import reviewReducer from './Slices/ReviewSlice'
 
 const noopReducer = (state = {}) => state;
 
@@ -24,6 +25,7 @@ export const Store = configureStore({
     lecture:lectureReducer,
         app: noopReducer,
         checkout: checkoutReducer,
+        reviews: reviewReducer,
  
 
     adminDashboard: adminDashboardSlice,
