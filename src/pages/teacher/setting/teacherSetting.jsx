@@ -33,6 +33,7 @@ export default function TeacherSettings() {
       twitter: "",
       whatsapp: "",
       youtube: "",
+      profileImage:"",
     },
   });
 
@@ -54,6 +55,7 @@ export default function TeacherSettings() {
           title: res.payload.specialization || "",
           bio: res.payload.biography || "",
           website: socialMedia.personalWebsiteUrl || "",
+          profileImage:appUser.imageUrl || "",
           //social
           facebook: socialMedia.facebookUrl || "",
           instagram: socialMedia.instagramUrl || "",
@@ -77,6 +79,8 @@ export default function TeacherSettings() {
         title: data.title,
         biography: data.bio,
         website: data.website,
+        profileImage :data.imageUrl
+
       };
       // console.log(data.firstName)
       const socialMediaData = {
@@ -98,7 +102,7 @@ export default function TeacherSettings() {
       ).unwrap();
 
       if (profileRes?.message) {
-        setPopupMessage(profileRes.message || "Profile saved successfully!");
+        setPopupMessage( "Profile saved successfully!");
         setShowPopup(true);
 
         setTimeout(() => setShowPopup(false), 2500);
