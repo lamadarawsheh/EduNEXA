@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Record from './Record'
 import { FiEdit, FiFilter, FiPrinter, FiTrash, FiArrowUp, FiArrowDown } from 'react-icons/fi'
+import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
 
 export default function Table({ records, columns, noOfCourses,pageName , sortBy, onSortChange, filters, onFiltersChange, isFilter, sortKey}) {
         const [showFilters, setShowFilters] = useState(false);
@@ -11,7 +12,7 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
             return { key: sortKey, direction: prev.direction === "asc" ? "desc" : "asc" };
             });
             };
-        
+        const [openPopup, setOpenPopup] = useState(false); 
     return (
         <>
             <div className="my-6 flex justify-between">
@@ -31,10 +32,14 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
                     <button className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-gray-200">
                         <FiPrinter />
                     </button>
-                    <button className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-red-100">
+                    <button 
+                    onClick={() => setOpenPopup(true)}
+                    className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-red-100">
                         <FiTrash />
                     </button>
-                    <button className=" rounded-xl  py-1 px-1 text-sm  hover:bg-gray-200">
+                    <button
+                    onClick={() => setOpenPopup(true)}
+                    className=" rounded-xl  py-1 px-1 text-sm  hover:bg-gray-200">
                         <FiEdit /> 
                     </button>
                 </div>
@@ -80,6 +85,10 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
                     </table>
                 </div>
             </div>
+        <UnderDevelopmentPopup
+        isOpen={openPopup}
+        onClose={() => setOpenPopup(false)}
+        />
         </>
     )
 }

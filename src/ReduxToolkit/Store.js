@@ -17,6 +17,7 @@ import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
 import pendingCoursesSlice from "./slices/AdminPendingCourses";
 import reviewCourseReducer from "./slices/AdminCourseReview";
 import courseActionReducer from "./slices/AdminCoursesActions";
+import updateProfileReducer from "./slices/AdminUpdateProfile";
 
 const noopReducer = (state = {}) => state;
 
@@ -44,5 +45,6 @@ export const Store = configureStore({
     pendingCoursesData: pendingCoursesSlice,
     courseReview: reviewCourseReducer,
     courseAction: courseActionReducer,
+    updateProfile: updateProfileReducer,
   },
 });
