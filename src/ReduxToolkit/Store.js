@@ -11,6 +11,7 @@ import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
 import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
 import walletReducer from './walletSlice'
+import reviewReducer from './Slices/ReviewSlice'
 import adminTeachersSlice from "./slices/AdminTeachers";
 import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
 import pendingCoursesSlice from "./slices/AdminPendingCourses";
@@ -27,6 +28,11 @@ export const Store = configureStore({
     category:categoryReducer,
     section:sectionReucer,
     lecture:lectureReducer,
+        app: noopReducer,
+        checkout: checkoutReducer,
+        reviews: reviewReducer,
+ 
+
     app: noopReducer,
     checkout: checkoutReducer,
     adminDashboard: adminDashboardSlice,

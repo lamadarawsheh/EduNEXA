@@ -1,14 +1,47 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { submitNewReview, fetchCourseReviews } from "../../ReduxToolkit/Slices/ReviewSlice"; 
+import Swal from "sweetalert2";
 
-export default function WriteReviewModal({ onSubmitReview, onClose }) {
+export default function WriteReviewModal({ courseId, onClose }) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState("");
+  
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth || {});
+  const { user } = useSelector((state) => state.review || {}); 
 
-  const handleSubmit = () => {
-    onSubmitReview(feedback, rating);
-    onClose();
+  const handleSubmit = async () => {
+    if (rating === 0) return;
+
+    const reviewData = {
+      courseId: courseId,
+      studentId: user?.id || "9044837B-AA68-46EC-010C-08DE487F569E", 
+      reviewText: feedback,
+      rating: rating,
+    };
+
+    try {
+      await dispatch(submitNewReview(reviewData)).unwrap();
+
+      Swal.fire({
+        title: "Success!",
+        text: "Your review has been submitted successfully.",
+        icon: "success",
+        confirmButtonColor: "#FF6A35",
+      });
+
+      dispatch(fetchCourseReviews(courseId));
+      onClose();
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: error?.message || "Something went wrong.",
+        icon: "error",
+      });
+    }
   };
 
   const getRatingText = (val) => {
@@ -19,13 +52,14 @@ export default function WriteReviewModal({ onSubmitReview, onClose }) {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto overflow-hidden">
-      <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100 bg-white">
+    <div className="w-full max-w-lg mx-auto overflow-hidden bg-white rounded-lg">
+      <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100">
         <h2 className="text-[#093332] text-md font-bold">Write a Review</h2>
       </div>
 
-      <div className="p-6 md:p-10 flex flex-col items-center bg-white/95 backdrop-blur-sm rounded-b-lg shadow-lg">
-
+      <div className="p-6 md:p-10 flex flex-col items-center bg-white/95 backdrop-blur-sm shadow-lg">
+        
+        {/* Rating Header */}
         <div className="mb-4 flex items-center gap-2">
           <span className="text-2xl font-bold text-[#093332]">
             {(hover || rating || 0).toFixed(1)}
@@ -35,6 +69,7 @@ export default function WriteReviewModal({ onSubmitReview, onClose }) {
           </span>
         </div>
 
+        {/* Stars */}
         <div className="flex gap-2 mb-8">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -58,18 +93,20 @@ export default function WriteReviewModal({ onSubmitReview, onClose }) {
           ))}
         </div>
 
+        {/* Feedback Area */}
         <div className="w-full space-y-2 text-left">
           <label className="text-sm font-bold text-[#093332] block ml-0.5">
-            Feedback
+            Your Feedback
           </label>
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Write down your feedback here..."
+            placeholder="Tell us what you think about this course..."
             className="w-full h-32 p-4 bg-[#F4F7F7] border-none rounded-md outline-none text-[#093332] placeholder:text-[#638483] resize-none text-sm focus:ring-1 focus:ring-orange-200 transition-all"
           />
         </div>
 
+        {/* Actions */}
         <div className="w-full mt-10 flex items-center justify-between">
           <button 
             onClick={onClose}
@@ -80,12 +117,12 @@ export default function WriteReviewModal({ onSubmitReview, onClose }) {
           
           <button 
             onClick={handleSubmit}
-            disabled={rating === 0}
+            disabled={rating === 0 || isLoading}
             className={`flex items-center gap-2 px-6 py-2.5 rounded-sm text-white font-bold text-sm transition-all active:scale-95
-              ${rating === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-[#FF6A35] hover:bg-[#ef5d2a] shadow-md shadow-orange-100"}`}
+              ${rating === 0 || isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-[#FF6A35] hover:bg-[#ef5d2a] shadow-md shadow-orange-100"}`}
           >
-            Submit Review
-            <Send size={18} fill="white" className="ml-1" />
+            {isLoading ? "Submitting..." : "Submit Review"}
+            {!isLoading && <Send size={18} fill="white" className="ml-1" />}
           </button>
         </div>
       </div>
