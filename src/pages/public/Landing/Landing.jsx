@@ -63,7 +63,7 @@ const Landing = () => {
           {/* ===== Image ===== */}
           <div className="order-1 lg:order-2 flex justify-center items-center w-full">
             <img
-              src="/image 1.png"
+              src="/image/e-learning-online-education-home-3d-illustration_68747-295.jpg.avif"
               alt="Hero"
               className="w-full sm:w-[80%] md:w-full max-h-[50vh] md:max-h-[80vh] object-contain rounded-lg drop-shadow-xl"
             />
