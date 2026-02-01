@@ -8,13 +8,14 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdArrowOutward } from "react-icons/md";
 import Avatar from './Avatar';
-
+import MobileAdminMenu from "../../../layouts/MobileAdminMenu"
 const items = [
   { title: "Students", field: "studentsCount", bgColor: "#D8DDE9", icon: FaUserGraduate },
   { title: "Teachers", field: "instructorsCount", bgColor: "#D1DFCC", icon: GiTeacher },
   { title: "Courses", field: "totalCourses", bgColor: "#EFF3A2", icon: BsBookFill },
   { title: "Growth", field: "pendingCourses", bgColor: "#DBEAFE", icon: FaArrowTrendUp },
 ]
+
 export default function Header({ header, admin }) {
   const [search, setSearch] = useState("");
 
@@ -80,9 +81,12 @@ export default function Header({ header, admin }) {
             src={admin?.imageUrl}
             name={admin?.fullName}
             size={45} />
+            <div className='flex items-center'>
           <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
             <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />
           </button>
+          <MobileAdminMenu /> 
+          </div>
         </div>
         <div className="flex justify-center w-full ">
           <img src="/Heading1.png" alt="Admin NEXA" className="mb-4 w-40" />
@@ -106,6 +110,7 @@ export default function Header({ header, admin }) {
       <div className="my-4 flex flex-wrap gap-2 justify-between lg:hidden px-4">
         {items.map((item, index) => {
           const Icon = item.icon;
+          const value = header?.[item.field] ?? 0;
           return (
             <div
               key={index}
@@ -119,7 +124,7 @@ export default function Header({ header, admin }) {
                 <BsThreeDotsVertical className="text-gray-600" />
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-3xl font-bold">{item.field}</p>
+                <p className="text-3xl font-bold">{Number(value)}</p>
                 <p className="text-green-500 bg-[#F2F2F2] p-4 rounded-full">
                   <MdArrowOutward />
                 </p>

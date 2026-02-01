@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 const FavoriteCard = ({ course, reverse }) => {
   return (
     <div
-      className={`bg-[#F2F2F2] text-white rounded-lg p-3 flex items-center gap-3 w-full md:w-[380px] text-sm ${
-        reverse ? "flex-row-reverse" : "flex-row"
-      }`}
+      className={`bg-[#F2F2F2] text-white rounded-lg p-3 flex items-center gap-3 w-full md:w-[380px] text-sm ${reverse ? "flex-row-reverse" : "flex-row"
+        }`}
     >
       {/* الصورة */}
       <img
@@ -25,7 +24,7 @@ const FavoriteCard = ({ course, reverse }) => {
 
         <div className="flex flex-col gap-0.5">
           <span className="text-xs text-black">50 video</span>
-          <span className="text-xs text-black">{course.extra1 || "800 L.E"}</span>
+          <span className="text-xs text-black">{course.extra1 || "$800"}</span>
         </div>
       </div>
     </div>
@@ -55,55 +54,55 @@ const FavoritesPage = () => {
   const rightFavorites = favorites.slice(half);
 
   return (
-   <div className="px-4 py-10">
-    {/* Header */}
-     <div className="text-left mb-4  ">
-  <h2 className="text-4xl font-bold mb-4 text-[#0F4C4A] ps-3 pb-5">My Favorite</h2>
+    <div className="px-4 py-10">
+      {/* Header */}
+      <div className="text-left mb-4  ">
+        <h2 className="text-4xl font-bold mb-4 text-[#0F4C4A] ps-3 pb-5">My Favorite</h2>
 
-</div>
-  {favorites.length === 0 ? (
-    <p className="text-center text-gray-500 text-lg">
-      You have no favorite courses yet.
-    </p>
-  ) : (
-    <div className="flex flex-col md:flex-row md:justify-center gap-6 relative">
-        
-
-      {/* ===== Left Column ===== */}
-      <div className="flex flex-col gap-4">
-        {/* العنوان فوق الخلفية */}
-        <h1 className="text-3xl font-bold text-center text-[#0F4C4A] mb-2">
-          Courses
-        </h1>
-
-        {/* الخلفية الشفافة الكبيرة للعمود */}
-        <div className="relative flex flex-col gap-4 p-6   bg-gradient-to-b from-[#25ADA7]/30 to-[#25ADA7]/5">
-          {leftFavorites.map((course, index) => (
-            <FavoriteCard key={index} course={course} />
-          ))}
-        </div>
       </div>
+      {favorites.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">
+          You have no favorite courses yet.
+        </p>
+      ) : (
+        <div className="flex flex-col md:flex-row md:justify-center gap-6 relative">
 
-      {/* Divider */}
-      <div className="w-full md:w-1 bg-black" />
 
-      <div className="flex flex-col gap-4">
-        {/* العنوان فوق الخلفية */}
-        <h1 className="text-3xl font-bold text-center text-[#0F4C4A] mb-2">
-          Mentors
-        </h1>
+          {/* ===== Left Column ===== */}
+          <div className="flex flex-col gap-4">
+            {/* العنوان فوق الخلفية */}
+            <h1 className="text-3xl font-bold text-center text-[#0F4C4A] mb-2">
+              Courses
+            </h1>
 
-        {/* الخلفية الشفافة الكبيرة للعمود */}
-        <div className="relative flex flex-col gap-4 p-6   bg-gradient-to-b from-[#25ADA7]/30 to-[#25ADA7]/5">
-          {rightFavorites.map((course, index) => (
-            <FavoriteCard key={index} course={course} reverse />
-          ))}
+            {/* الخلفية الشفافة الكبيرة للعمود */}
+            <div className="relative flex flex-col gap-4 p-6   bg-gradient-to-b from-[#25ADA7]/30 to-[#25ADA7]/5">
+              {leftFavorites.map((course, index) => (
+                <FavoriteCard key={index} course={course} />
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full md:w-1 bg-black" />
+
+          <div className="flex flex-col gap-4">
+            {/* العنوان فوق الخلفية */}
+            <h1 className="text-3xl font-bold text-center text-[#0F4C4A] mb-2">
+              Mentors
+            </h1>
+
+            {/* الخلفية الشفافة الكبيرة للعمود */}
+            <div className="relative flex flex-col gap-4 p-6   bg-gradient-to-b from-[#25ADA7]/30 to-[#25ADA7]/5">
+              {rightFavorites.map((course, index) => (
+                <FavoriteCard key={index} course={course} reverse />
+              ))}
+            </div>
+          </div>
+
         </div>
-      </div>
-
+      )}
     </div>
-  )}
-</div>
   );
 };
 

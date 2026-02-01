@@ -1,25 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../../services/api";
 
-const BaseURL = "http://edunexa.runasp.net";
-
-
-const getAuthHeader = () => ({
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json',
-},
-});
-
-// get all caregories
+// get all subcategories
 export const fetchAllSubCategories = createAsyncThunk(
   "subCategory/fetchAllSubCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BaseURL}/api/SubCategory`,
-        getAuthHeader(),
-      );
+      const response = await api.get("/SubCategory");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -32,11 +19,7 @@ export const addSubCategory = createAsyncThunk(
   "subCategory/add",
   async (subCategoryData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BaseURL}/api/SubCategory`,
-        getAuthHeader(),
-        subCategoryData
-      );
+      const response = await api.post("/SubCategory", subCategoryData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -49,11 +32,7 @@ export const deleteSubCategory = createAsyncThunk(
   "subCategory/delete",
   async (subCategoryId, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${BaseURL}/api/SubCategory/${subCategoryId}`,
-        getAuthHeader(),
-        
-      );
+      const response = await api.delete(`/SubCategory/${subCategoryId}`);
       return response;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -68,23 +47,22 @@ const subcategorySlice = createSlice({
     subcategories: [],
     loading: false,
     error: null,
-    name:"",
-    catName:"",
-    categoryId:null,
-
+    name: "",
+    catName: "",
+    categoryId: null,
   },
   reducers: {
     clearSubcategoryError: (state) => {
       state.error = null;
     },
-    setName:(state,action)=>{
-        state.name= action.payload
+    setName: (state, action) => {
+      state.name = action.payload
     },
-       setCatName:(state,action)=>{
-        state.catName= action.payload
+    setCatName: (state, action) => {
+      state.catName = action.payload
     },
-       setCategoryId:(state,action)=>{
-        state.categoryId= action.payload
+    setCategoryId: (state, action) => {
+      state.categoryId = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -133,5 +111,5 @@ const subcategorySlice = createSlice({
   },
 });
 
-export const { clearSubcategoryError,setCatName,setName,setCategoryId } = subcategorySlice.actions
+export const { clearSubcategoryError, setCatName, setName, setCategoryId } = subcategorySlice.actions
 export default subcategorySlice.reducer;

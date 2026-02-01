@@ -27,17 +27,16 @@ export default function DynamicList({
 
       {/* Inputs */}
       <div className="space-y-3">
-      
+
         {fieldArray.fields.map((item, index) => (
-          <>
-          <span>{item.id}</span>
-          <input
-            key={item.id}
-            {...register(`${name}.${index}.value`)}
-            placeholder={placeholder}
-            className="input border border-[#176D69] w-full text-[#176D69] p-2"
-          />
-          </>
+          <div key={item.id} className="flex flex-col gap-1">
+            <span className="text-[10px] text-gray-400 font-bold uppercase ml-1"># {index + 1}</span>
+            <input
+              {...register(`${name}.${index}.value`)}
+              placeholder={placeholder}
+              className="input border border-[#176D69] w-full text-[#176D69] p-2"
+            />
+          </div>
         ))}
       </div>
     </div>

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { FiSearch } from "react-icons/fi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import Avatar from '../Avatar';
+import MobileAdminMenu from '../../../../layouts/MobileAdminMenu';
 
 
 export default function PageHeader({pageName, input, onChange, placeholder,admin}) {
-    
+ 
 return (
     <>
         <div className="flex items-center justify-between md:hidden">
@@ -17,6 +18,7 @@ return (
             <div className="w-10 h-10">
                 <Avatar src={admin?.imageUrl} name={admin?.fullName} size={40} />
             </div>
+                <MobileAdminMenu /> 
         </div>
         </div>
         <div className= "px-2 py-4 md:px-4 rounded-2xl shadow-md  min-h-[40px] flex-col items-between bg-[#176D69]">
