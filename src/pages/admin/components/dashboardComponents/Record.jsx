@@ -15,14 +15,14 @@ export default function Record({ record, pageName }) {
         md:w-11 md:h-11
         lg:w-12 lg:h-12"
             size={42} />
-          <span className="font-semibold text-[#093332]">{record.userName}</span>
+          <span className="font-semibold text-[#093332]">{record.userName || record.fullName}</span>
         </div>
       </td>
 
       <td className="pe-2 md:p-4 text-left  text-gray-700">{record.email}</td>
       <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.phoneNumber : record.specialization}</td>
-      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.birthDate : record.rate}</td>
-      <td className=" md:p-4 text-left md:text-center text-gray-700">{record.noOfCourses}</td>
+      <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.birthDate : record.rating}</td>
+      <td className=" md:p-4 text-left md:text-center text-gray-700">{record.coursesCount}</td>
     </tr>
   );
 }

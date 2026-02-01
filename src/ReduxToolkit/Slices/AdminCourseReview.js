@@ -32,5 +32,4 @@ const reviewCourseSlice = createSlice({
     }
 
 })
-export const { clearCourseReview } = reviewCourseSlice.actions;
 export default reviewCourseSlice.reducer;
