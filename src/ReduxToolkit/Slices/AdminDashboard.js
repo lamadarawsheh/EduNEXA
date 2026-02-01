@@ -16,10 +16,10 @@ export const fetchAdminDashboard = createAsyncThunk("dashboard/fetchAdminDashboa
     extraReducers:(builder)=>{
         builder.addCase(fetchAdminDashboard.fulfilled, (state,action)=>{
             state.isLoading = false;
-            state.dashboardData= action.payload
+            state.dashboardData= action.payload;
         })
         builder.addCase(fetchAdminDashboard.pending, (state)=>{
-            state.isLoading= true
+            state.isLoading= true;
             state.error = null;
         })
         builder.addCase(fetchAdminDashboard.rejected, (state,action)=>{

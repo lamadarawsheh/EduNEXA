@@ -8,56 +8,35 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from "react-router-dom";
 
 
-export default function Course() {
-
-    const courses = [
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },  
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, }, 
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },  
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },  
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Active", statusBg: "bg-green-200",course:"Machine Learning for review",  durationWeeks: 16, startDate: "12/12/2025",  },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Needs Review", statusBg: "bg-green-200",course:"Machine Learning for review", students: 85, durationWeeks: 16, startDate: "12/12/2025", rating: 5, },
-    { title: "ًWeb Development", instructor: "Dr. Sarah Mohamed", status: "Needs Review", statusBg: "bg-green-200",course:"Machine Learning for review",  durationWeeks: 16, startDate: "12/12/2025",  },  
-    { title: "ًTest 1", instructor: "Dr. Sarah Mohamed", status: "Needs Review", statusBg: "bg-green-200",course:"Machine Learning for review", startDate: "12/12/2025", durationWeeks: 16, },
-    { title: "ًTest", instructor: "Dr. Sarah Mohamed", status: "Needs Review", statusBg: "bg-green-200",course:"Machine Learning for review",  durationWeeks: 16, startDate: "12/12/2025", },
-    ];
-    const [course, setCourse] = useState();
+export default function Course({acceptedCourses, pendingCourses}) {
     const navigate = useNavigate();
-
+   const courses = [...acceptedCourses, ...pendingCourses];
     return (
 <>
 <div className="rounded-xl border border-gray-200 bg-white my-6 p-4 w-[100%] ">
     
         <div className="mt-4 flex flex-wrap gap-4 justify-between">
         {courses.map((course, index) => (
-        <div className='shadow-md mb-4 pt-4 pb-2 px-4 rounded-lg border border-gray-200 w-[100%] xl:w-[48%]'>
-        <div key={index} className="flex justify-between items-start gap-4">
+        <div key={course.id ?? index} className='shadow-md mb-4 pt-4 pb-2 px-4 rounded-lg border border-gray-200 w-[100%] xl:w-[48%]'>
+        <div  className="flex justify-between items-start gap-4">
             <div className='flex justify-start items-start gap-4'>
             <div className="flex flex-col">
                 <h4 className="text-md font-semibold">{course.title}</h4>
-                <h4 className="text-sm text-gray-600 mb-4">{course.instructor}</h4>
+                <h4 className="text-sm text-gray-600 mb-4">{course.instructorName}</h4>
                 <div className="flex gap-4">
                     <div className="me-2 flex gap-2">
-                    {course.status === "Active" ? (
+                    {course.status === "Approved" ? (
                     <FiUsers />
                     ) : () => "null"}
                     <span className="text-sm text-gray-600">
-                    {course.students ? `${course.students} Students` : ''}
+                    {course.studentsCount ? `${course.studentsCount} Students` : '-'}
                     </span>
                     </div>
-                    {course.status === "Active" ? (
+                    {course.status === "Approved" ? (
                     <div className="me-2 flex gap-2">
                         <TbClockHour4 />
                         <span className="text-sm text-gray-600">
-                        {course.durationWeeks} weeks
+                        {course.estimatedDuration? `${course.estimatedDuration} hours`: "" }
                         </span>
                     </div>
                     ) : () => "null"}
@@ -65,9 +44,9 @@ export default function Course() {
                     <div className="flex gap-4">
                     <div className="me-2 flex gap-2 items-center">
                         <MdOutlineDateRange />
-                        <span className="text-sm text-gray-600">{course.startDate}</span>
+                        <span className="text-sm text-gray-600">{course.createdAt.split("T")[0]}</span>
                     </div>
-                    {course.status === "Active" ? (
+                    {course.status === "Approved" ? (
                     <div className="me-2 flex gap-2 items-center">
                         <CiStar />
                         <span className="text-sm text-gray-600">{course.rating}</span>
@@ -82,7 +61,7 @@ export default function Course() {
             </div>
             </div>
             <div className="flex flex-col ">
-                {course.status === "Active" ? (
+                {course.status === "Approved" ? (
                 <div className="flex justify-between items-center">
                 <span className="rounded-md text-[12px] p-1 bg-green-200">
                 {course.status}

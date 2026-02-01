@@ -6,8 +6,13 @@ export const isWorkingUrl = (url) => {
     if (!url) return false;
     const lowerUrl = url.toLowerCase();
 
-    // 1. Allow relative paths that follow the new storage structure
-    if (lowerUrl.includes('/thumbnails/') || lowerUrl.includes('/trailers/')) {
+    // 1. Allow relative paths that follow the storage structure
+    if (
+        lowerUrl.includes('thumbnails/') ||
+        lowerUrl.includes('trailers/') ||
+        lowerUrl.includes('uploads/') ||
+        lowerUrl.includes('images/')
+    ) {
         return true;
     }
 

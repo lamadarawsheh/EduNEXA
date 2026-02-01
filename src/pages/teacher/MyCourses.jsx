@@ -360,10 +360,10 @@ const MyCourses = () => {
                 </div>
             ) : filteredCourses.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredCourses.map(course => (
+                    {filteredCourses.map((course, index) => (
                         <div
                             key={course.id}
-                            onClick={() => navigate(`/teacher/course-analytics/${course.id}`)}
+                            onClick={() => navigate(`/teacher/course-analytics/${course.id}`, { state: { course, imageIndex: index % 6 } })}
                             className="group bg-white rounded-[32px] border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-[#1E6B65]/5 transition-all duration-500 cursor-pointer flex flex-col"
                         >
                             {/* Image Header */}
@@ -435,7 +435,7 @@ const MyCourses = () => {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                navigate(`/teacher/course-analytics/${course.id}`);
+                                                navigate(`/teacher/course-analytics/${course.id}`, { state: { course, imageIndex: index % 6 } });
                                             }}
                                             className="w-full flex items-center justify-center gap-2 bg-[#1E6B65] text-white py-3 rounded-xl text-xs font-black hover:bg-[#154d4a] transition-all shadow-lg active:scale-95"
                                         >
