@@ -512,7 +512,7 @@ const StudentDashboard = () => {
                     <div className="relative reveal-on-scroll delay-300">
                         <div className="absolute inset-0 bg-[#1E8A85]/10 blur-[120px] rounded-full animate-pulse" />
                         <img
-                            src="/student_studying_hero.png"
+                            src="/image/seal-2523199_1920.png"
                             alt="Student"
                             className="w-full max-w-xl mx-auto relative z-10 animate-float"
                         />
@@ -534,9 +534,9 @@ const StudentDashboard = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[
-                            { name: "Dr. Angela Yu", role: "Fullstack Architect", students: "2M+", courses: "15", img: "https://randomuser.me/api/portraits/men/32.jpg", delay: "delay-100" },
-                            { name: "Gary Simon", role: "Design Visionary", students: "800K+", courses: "22", img: "https://randomuser.me/api/portraits/men/32.jpg", delay: "delay-200" },
-                            { name: "Maximilian S.", role: "Software Engineer", students: "1.5M+", courses: "30", img: "https://randomuser.me/api/portraits/men/46.jpg", delay: "delay-300" }
+                            { name: "Dr. Angelo Yu", role: "Fullstack Architect", students: "2M+", courses: "15", img: "/image/person2.avif", delay: "delay-100" },
+                            { name: "Gary Simon", role: "Design Visionary", students: "800K+", courses: "22", img: "/image/person 3.avif", delay: "delay-200" },
+                            { name: "Maximilian S.", role: "Software Engineer", students: "1.5M+", courses: "30", img: "/image/team2.png", delay: "delay-300" }
                         ].map((mentor, idx) => (
                             <MagneticCard key={idx} className={`group relative reveal-on-scroll ${mentor.delay}`}>
                                 <div className="relative h-[500px] rounded-[50px] overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-[#1E8A85]/20">
