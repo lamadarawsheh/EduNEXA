@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { TbCrown } from "react-icons/tb";
 
-import profileImage from '../../../assets/profile.png'
+import profileImage from '../../../assets/profile.jpg'
 import cProgramming from '../../../assets/C-programming.jpg'
 import aspProgramming from '../../../assets/asp.png'
 import circle from '../../../assets/circle.svg'
+import reviewboy from '../../../assets/reviewboy.svg'
+import reviewgirl from '../../../assets/reviewgirl.svg'
 import { useNavigate } from "react-router-dom";
 import { FaStar } from 'react-icons/fa';
 import { PiUsersLight, PiGlobeSimple, PiSpinnerGapThin } from 'react-icons/pi';
@@ -42,6 +44,19 @@ function Profile() {
             state: { course, imageIndex }
         });
     };
+
+    const reviewsImg = [
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewboy,
+        reviewgirl,
+        reviewgirl,
+    ]
 
     const profileData = {
         badge: "Top Rated",
@@ -86,6 +101,7 @@ function Profile() {
         aspProgramming,
     ]
 
+    console.log("Profile Data:", data);
 
     // const reviewsList = [
     //     {
@@ -180,7 +196,7 @@ function Profile() {
                     <img
                         src={profileImage}
                         alt=""
-                        className='w-32 h-32 md:w-40 md:h-40 lg:w-auto lg:h-auto rounded-full md:rounded-none object-cover'
+                        className='w-32 h-32 md:w-40 md:h-40 lg:w-50 lg:h-50 rounded-full object-cover'
                     />
 
                     <div className='text-[#093332]'>
@@ -199,12 +215,12 @@ function Profile() {
                                     <FaStar />
                                 </div>
                                 <span className="font-medium">4.8</span>
-                                <span className="text-xs sm:text-sm">({profileData.reviews} review)</span>
+                                <span className="text-xs sm:text-sm">({reviews.length} review)</span>
                             </div>
 
                             <div className="flex items-center gap-2">
                                 <span className="text-2xl"><PiUsersLight /></span>
-                                <span className="font-medium">{profileData.students}</span>
+                                <span className="font-medium">{data.students || 100}</span>
                                 <span>students</span>
                             </div>
 
@@ -318,12 +334,12 @@ function Profile() {
                             </div>
 
                             <div className="space-y-10">
-                                {reviews.slice(0, visibleReviews).map((review) => (
+                                {reviews.slice(0, visibleReviews).map((review, index) => (
                                     <div key={review.id} className="flex gap-4 border-b border-gray-50 pb-10 last:border-0">
-                                        <img src={review.avatar} className="w-12 h-12 rounded-full object-cover" />
+                                        <img src={reviewsImg[index]} className="w-12 h-12 rounded-full object-cover" />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-1">
-                                                <h4 className="font-bold text-[#093332]">{review.name}</h4>
+                                                <h4 className="font-bold text-[#093332]">{review.studentName}</h4>
                                                 <span className="text-[10px] text-[#176D69]">• {timeAgo(review.createdAt)}</span>
                                             </div>
                                             <div className="flex text-[#FD8E1F] gap-0.5 mb-3">

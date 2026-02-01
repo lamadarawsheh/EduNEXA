@@ -136,6 +136,7 @@ const profileSlice = createSlice({
           title: apiData?.specialization || defaultProfile.title,
           image: apiData?.imageUrl || defaultProfile.image,
           courses: apiData?.courses,
+          reviews: apiData?.instructorReviews,
           website:
             socials.personalWebsiteUrl || defaultProfile.website,
 
