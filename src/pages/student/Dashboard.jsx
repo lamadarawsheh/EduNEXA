@@ -159,8 +159,8 @@ const StudentDashboard = () => {
                     <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_80%_20%,#15615E,transparent_50%)] animate-mesh-3"></div>
                 </div>
 
-                <div className="max-w-7xl mx-auto text-center relative z-20 reveal-on-scroll">
-                    <h1 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-none animate-shimmer-text">
+                <div className="max-w-7xl mx-auto text-center relative z-20 reveal-on-scroll px-4">
+                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-none animate-shimmer-text uppercase">
                         find your <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#4AA59B] to-white bg-[length:200%_auto] animate-gradient-text">favourite</span> course
                     </h1>
@@ -230,7 +230,7 @@ const StudentDashboard = () => {
                     return (
                         <MagneticCard
                             onClick={() => navigate(`/student/checkout/${featured.id}`)}
-                            className="bg-[#093332] rounded-[50px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative aspect-[21/9] md:aspect-[25/8] group cursor-pointer border border-white/5"
+                            className="bg-[#093332] rounded-3xl md:rounded-[50px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative aspect-square md:aspect-[21/9] lg:aspect-[25/8] group cursor-pointer border border-white/5"
                         >
                             <img
                                 src={safeImgUrl}
@@ -238,20 +238,20 @@ const StudentDashboard = () => {
                                 className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-[3000ms]"
                                 onError={(e) => { e.target.src = "/featured_course_banner.png"; }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#0F4C4A]/90 via-[#0F4C4A]/20 to-transparent flex items-center px-12">
-                                <div className="text-white max-w-xl space-y-4 md:space-y-6">
-                                    <span className="inline-flex items-center gap-2 bg-[#1E8A85] px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-xl">
+                            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0F4C4A]/95 via-[#0F4C4A]/40 to-transparent flex items-end md:items-center px-6 md:px-12 py-10 md:py-0">
+                                <div className="text-white max-w-xl space-y-3 md:space-y-6">
+                                    <span className="inline-flex items-center gap-2 bg-[#1E8A85] px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-xl">
                                         <Sparkles size={12} className="animate-pulse" /> Trending Masterclass
                                     </span>
-                                    <h2 className="text-3xl md:text-6xl font-black tracking-tighter leading-[0.9] uppercase group-hover:text-[#4AA59B] transition-colors line-clamp-2">
+                                    <h2 className="text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter leading-[1] md:leading-[0.9] uppercase group-hover:text-[#4AA59B] transition-colors line-clamp-2">
                                         {featured.title}
                                     </h2>
-                                    <p className="text-white/60 text-sm md:text-lg font-medium max-w-md leading-relaxed line-clamp-2">
+                                    <p className="text-white/60 text-xs md:text-base lg:text-lg font-medium max-w-md leading-relaxed line-clamp-2">
                                         {featured.description || featured.shortDescription || featured.details || "Advance your career with this comprehensive industry-standard curriculum and hands-on projects."}
                                     </p>
-                                    <div className="flex items-center gap-6 pt-4">
-                                        <button className="bg-white text-[#0F4C4A] px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-[#4AA59B] hover:text-white transition-all">Enroll Now</button>
-                                        <div className="flex items-center gap-2 text-white/40 text-xs font-bold uppercase tracking-widest">
+                                    <div className="flex flex-wrap items-center gap-3 md:gap-6 pt-2 md:pt-4">
+                                        <button className="bg-white text-[#0F4C4A] px-6 py-2.5 md:px-8 md:py-3 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#4AA59B] hover:text-white transition-all">Enroll Now</button>
+                                        <div className="flex items-center gap-2 text-white/40 text-[9px] md:text-xs font-bold uppercase tracking-widest">
                                             <Users size={14} />
                                             <span>{(featured.studentCount || featured.enrolled || featured.enrolledStudents || 0).toLocaleString()} Enrolled</span>
                                         </div>
@@ -285,10 +285,10 @@ const StudentDashboard = () => {
 
             {/* 3. POPULAR COURSES SECTION */}
             <section className="max-w-7xl mx-auto px-6 mb-32 reveal-on-scroll">
-                <div className="flex justify-between items-end mb-16">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
                     <div>
-                        <h2 className="text-4xl font-black tracking-tighter text-[#0F172B]">Popular Courses</h2>
-                        <div className="w-20 h-2 bg-[#1E8A85] mt-4 rounded-full" />
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-[#0F172B]">Popular Courses</h2>
+                        <div className="w-16 md:w-20 h-2 bg-[#1E8A85] mt-3 rounded-full" />
 
                     </div>
                     <button onClick={() => navigate('/student/available-courses')} className="text-[#1E8A85] font-black text-sm tracking-widest uppercase hover:translate-x-2 transition-transform duration-300">View Catalog →</button>
@@ -445,12 +445,12 @@ const StudentDashboard = () => {
                                 <div
                                     key={cat.id || idx}
                                     onClick={() => cat.id && !cat.id.startsWith('fallback') ? navigate('/student/available-courses', { state: { categoryId: cat.id } }) : navigate('/student/available-courses')}
-                                    className={`bg-gradient-to-br ${gradients[idx % 3]} rounded-[50px] p-12 h-[380px] flex flex-col justify-between relative overflow-hidden group cursor-pointer shadow-2xl hover:-translate-y-4 transition-all duration-700 delay-${(idx + 1) * 100} text-left`}
+                                    className={`bg-gradient-to-br ${gradients[idx % 3]} rounded-3xl md:rounded-[50px] p-8 md:p-12 h-[300px] md:h-[380px] flex flex-col justify-between relative overflow-hidden group cursor-pointer shadow-2xl hover:-translate-y-4 transition-all duration-700 delay-${(idx + 1) * 100} text-left`}
                                 >
-                                    <h3 className="text-4xl font-black text-white leading-[0.9] tracking-tighter group-hover:translate-x-3 transition-transform duration-500">{cat.name}</h3>
-                                    <div className="z-10 bg-white/10 backdrop-blur-xl rounded-full p-3 px-6 flex items-center gap-4 border border-white/20 w-fit group-hover:bg-white group-hover:text-[#0F4C4A] transition-all duration-500">
-                                        <Users size={18} className="group-hover:text-[#0F4C4A] text-white" />
-                                        <span className="font-black text-sm tracking-widest text-white group-hover:text-[#0F4C4A] transition-colors">{randomCount}</span>
+                                    <h3 className="text-2xl md:text-4xl font-black text-white leading-[1] md:leading-[0.9] tracking-tighter group-hover:translate-x-3 transition-transform duration-500">{cat.name}</h3>
+                                    <div className="z-10 bg-white/10 backdrop-blur-xl rounded-full p-2.5 px-5 flex items-center gap-3 md:gap-4 border border-white/20 w-fit group-hover:bg-white group-hover:text-[#0F4C4A] transition-all duration-500">
+                                        <Users size={16} className="group-hover:text-[#0F4C4A] text-white" />
+                                        <span className="font-black text-[11px] md:text-sm tracking-widest text-white group-hover:text-[#0F4C4A] transition-colors">{randomCount}</span>
                                     </div>
                                     <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-[100px] group-hover:scale-150 transition-transform duration-1000" />
                                 </div>
@@ -472,8 +472,8 @@ const StudentDashboard = () => {
             {/* 5. SECONDARY HERO SECTION */}
             <section className="bg-white py-40 px-6 reveal-on-scroll">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-                    <div className="space-y-12">
-                        <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-[#0F172B] leading-[0.85]">
+                    <div className="space-y-8 md:space-y-12">
+                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-[#0F172B] leading-[0.9] md:leading-[0.85]">
                             elevate your <br />
                             <span className="text-[#1E8A85] italic font-serif relative">
                                 potential
@@ -485,14 +485,14 @@ const StudentDashboard = () => {
                         <p className="text-gray-400 text-xl leading-relaxed max-w-lg font-medium">
                             Step into the future of education. Personalized, expert-led training designed for the next generation of innovators.
                         </p>
-                        <div className="flex items-center gap-10">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
                             <button
                                 onClick={() => navigate('/student/available-courses')}
-                                className="bg-[#0F4C4A] text-white px-12 py-5 rounded-2xl font-black shadow-[0_20px_50px_rgba(15,76,74,0.3)] hover:bg-[#1E8A85] transition-all hover:scale-105"
+                                className="w-full sm:w-auto bg-[#0F4C4A] text-white px-10 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl font-black shadow-[0_20px_50px_rgba(15,76,74,0.3)] hover:bg-[#1E8A85] transition-all hover:scale-105"
                             >
                                 Start Learning
                             </button>
-                            <button className="text-[#0F4C4A] font-black text-sm tracking-[0.2em] uppercase border-b-2 border-transparent hover:border-[#1E8A85] transition-all">Curriculum</button>
+                            <button className="text-[#0F4C4A] font-black text-xs md:text-sm tracking-[0.2em] uppercase border-b-2 border-transparent hover:border-[#1E8A85] transition-all">Curriculum</button>
                         </div>
                         <div className="flex flex-wrap gap-16 pt-12 border-t border-gray-100 font-bold">
                             <div>
@@ -523,11 +523,11 @@ const StudentDashboard = () => {
             {/* 6. ELITE MENTORS SPOTLIGHT */}
             < section className="bg-white py-40 px-6 relative overflow-hidden" >
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="text-center mb-24 reveal-on-scroll">
-                        <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-[#0F172B] leading-none mb-6">
+                    <div className="text-center mb-16 md:mb-24 reveal-on-scroll">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#0F172B] leading-tight mb-6 uppercase">
                             Learn from the <span className="text-[#1E8A85]">Best</span>
                         </h2>
-                        <p className="text-gray-400 font-medium text-xl max-w-2xl mx-auto">
+                        <p className="text-gray-400 font-medium text-lg md:text-xl max-w-2xl mx-auto px-4">
                             Our mentors are industry leaders from top global companies, dedicated to your growth.
                         </p>
                     </div>
@@ -579,11 +579,11 @@ const StudentDashboard = () => {
             </section >
 
             {/* 7. REGAL CTA SECTION */}
-            < section className="py-40 px-6 bg-[#1A1A1A] relative overflow-hidden text-center" >
+            <section className="py-24 md:py-40 px-6 bg-[#1A1A1A] relative overflow-hidden text-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1E8A85,transparent_70%)] opacity-10 animate-pulse"></div>
-                <div className="max-w-4xl mx-auto space-y-12 relative z-10 reveal-on-scroll">
-                    <h2 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-none animate-shimmer-text">Ready for <br /> takeoff?</h2>
-                    <p className="text-white/40 text-xl max-w-2xl mx-auto font-medium leading-relaxed">Join 10,000+ pioneers transforming their lives through high-impact education.</p>
+                <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 relative z-10 reveal-on-scroll">
+                    <h2 className="text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-[0.9] md:leading-none animate-shimmer-text uppercase px-2">Ready for <br /> takeoff?</h2>
+                    <p className="text-white/40 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed px-4">Join 10,000+ pioneers transforming their lives through high-impact education.</p>
                     <div className="flex flex-wrap justify-center items-center pt-10">
                         <button
                             onClick={() => navigate('/student/available-courses')}
