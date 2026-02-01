@@ -9,6 +9,7 @@ import checkoutReducer from './Slices/Checkout/CheckoutSlice'
 import adminDashboardSlice from "./slices/AdminDashboard"
 import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
+import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
 import walletReducer from './walletSlice'
 import adminTeachersSlice from "./slices/AdminTeachers";
 import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";

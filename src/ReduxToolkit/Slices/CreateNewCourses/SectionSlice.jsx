@@ -1,29 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const BaseURL = "http://edunexa.runasp.net";
-
-
-const getAuthHeader = () => ({
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json',
-},
-});
-
+import api from "../../../services/api";
 
 // Add sections to course
 export const AddSection = createAsyncThunk(
   "section/Add",
-  async (formData, { rejectWithValue }) => {
+  async ({ courseId, sectionData }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BaseURL}/api/courses/88582b42-c8c6-444a-805e-08de4dcd3b53/sections`,
-        formData,
-        getAuthHeader(),
-      );
+      console.log("📡 POSTING SECTION TO BACKEND (API SERVICE):", {
+        url: `/courses/${courseId}/sections`,
+        data: sectionData
+      });
+
+      const response = await api.post(`/courses/${courseId}/sections`, sectionData);
+
+      console.log("✅ SECTION API SUCCESS:", response.data);
       return response.data;
     } catch (error) {
+      console.error("❌ SECTION API FAILURE:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data || error.message);
     }
   },
@@ -31,15 +24,14 @@ export const AddSection = createAsyncThunk(
 
 export const fetchSectionsByCourseId = createAsyncThunk(
   "section/fetchSectionsByCourseId",
-  async (cousreId, { rejectWithValue }) => {
+  async (courseId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BaseURL}/api/courses/${cousreId}/sections`,
-       
-        getAuthHeader(),
-      );
+      console.log("📡 FETCHING SECTIONS FOR COURSE (SYNC):", courseId);
+      const response = await api.get(`/courses/${courseId}/sections`);
+      console.log("✅ FETCH SECTIONS SUCCESS:", response.data);
       return response.data;
     } catch (error) {
+      console.error("❌ FETCH SECTIONS FAILURE:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data || error.message);
     }
   },

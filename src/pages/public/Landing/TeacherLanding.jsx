@@ -97,7 +97,7 @@ const TeacherLanding = () => {
 
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                 <button
-                                    onClick={() => navigate('/signup')}
+                                    onClick={() => navigate('/signup?role=Instructor')}
                                     className="group px-8 py-4 bg-[#A6E5E3] text-[#0F4C4A] rounded-xl font-bold text-lg hover:bg-white hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2"
                                 >
                                     Get Started Free
@@ -266,7 +266,7 @@ const TeacherLanding = () => {
 
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                 <button
-                                    onClick={() => navigate('/signup')}
+                                    onClick={() => navigate('/signup?role=Instructor')}
                                     className="group px-8 py-4 bg-[#A6E5E3] text-[#0F4C4A] rounded-xl font-bold text-lg hover:bg-white hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2"
                                 >
                                     Register Now
