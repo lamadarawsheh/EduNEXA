@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Calendar, Mail, Phone, User } from "lucide-react";
 import { getStudentProfile, updateStudentProfile } from "../../../services/personalInformationService";
+import { getStudentIdFromStorage } from "../../../utils/auth";
 import "./Profile.css";
 
 const PersonalInformation = () => {
-  const studentId = localStorage.getItem("studentId");
+  const studentId = getStudentIdFromStorage();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

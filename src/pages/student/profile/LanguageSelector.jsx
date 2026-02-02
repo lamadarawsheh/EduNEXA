@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Search, ArrowLeft } from 'lucide-react';
 import { getAvailableLanguages, updateLanguage } from '../../../services/settingService';
+import { getStudentIdFromStorage } from '../../../utils/auth';
 import "./Profile.css";
 
 const LanguageSelector = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const studentId = localStorage.getItem('studentId');
+  const studentId = getStudentIdFromStorage();
 
   const fallbackLanguages = useMemo(() => ([
     { code: 'ar', name: 'Arabic', flagCode: 'sa', nativeName: 'العربية' },
@@ -145,14 +146,21 @@ const LanguageSelector = () => {
         return null;
       }
 
-      const code = rawCode.toLowerCase();
-      const fallback = languageByCode[code];
-      const name = item.name || item.languageName || fallback?.name || code;
+      const trimmedCode = rawCode.trim();
+      const normalizedCode = trimmedCode.toLowerCase();
+      const fallback = languageByCode[normalizedCode];
+      const name = item.name || item.languageName || fallback?.name || trimmedCode;
       const nativeName = item.nativeName || item.native || fallback?.nativeName || name;
-      const fallbackFlagCode = fallback?.flagCode || code.split('-')[0];
+      const fallbackFlagCode = fallback?.flagCode || normalizedCode.split('-')[0];
       const flagCode = normalizeFlagCode(item.flagCode || item.flag, fallbackFlagCode);
 
-      return { code, name, nativeName, flagCode };
+      return {
+        code: trimmedCode,
+        normalizedCode,
+        name,
+        nativeName,
+        flagCode,
+      };
     };
 
     const loadLanguages = async () => {

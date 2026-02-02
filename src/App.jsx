@@ -36,8 +36,6 @@ import CourseForm from "./pages/teacher/create-newcourse/cousreForm";
 /* Dashboard Pages */
 import StudentLayout from "./layouts/StudentLayout";
 import StudentDashboard from "./pages/student/Dashboard";
-import StudentPaymentMethod from "./pages/student/profile/PaymentMethod";
-import StudentPaymentInfo from "./pages/student/profile/PaymentInfo";
 import StudentProfileLayout from "./pages/student/profile/ProfileLayout";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import TeacherSettings from "./pages/teacher/setting/teacherSetting";
@@ -125,8 +123,6 @@ function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="password" element={<ChangePassword />} />
             <Route path="language" element={<LanguageSelector />} />
-            <Route path="payment" element={<StudentPaymentMethod />} />
-            <Route path="payment/info" element={<StudentPaymentInfo />} />
           </Route>
         </Route>
 
