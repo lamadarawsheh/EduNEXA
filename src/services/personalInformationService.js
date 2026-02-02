@@ -1,32 +1,49 @@
 import api from "./api";
 import { getStudentIdCandidates } from "../utils/auth";
 
-const requestWithIdFallback = async (studentId, requestFn) => {
+const requestWithEndpointFallback = async (studentId, requestFns, options = {}) => {
   const candidates = getStudentIdCandidates(studentId);
-  if (!candidates.length) {
-    throw new Error("Missing student id.");
-  }
+  const retryOnStatuses = Array.isArray(options.retryOnStatuses)
+    ? options.retryOnStatuses
+    : [404, 405, 400];
 
+  const ids = candidates.length ? candidates : [null];
   let lastError = null;
-  for (const id of candidates) {
-    try {
-      return await requestFn(id);
-    } catch (error) {
-      const status = error?.response?.status;
-      if (status === 404) {
-        lastError = error;
+
+  for (const id of ids) {
+    for (const request of requestFns) {
+      if (request.requiresId && !id) {
         continue;
       }
-      throw error;
+      try {
+        return await request.run(id);
+      } catch (error) {
+        const status = error?.response?.status;
+        if (retryOnStatuses.includes(status)) {
+          lastError = error;
+          continue;
+        }
+        throw error;
+      }
     }
   }
+
   throw lastError;
 };
 
 export const getStudentProfile = (studentId) =>
-  requestWithIdFallback(studentId, (id) => api.get(`/PersonalInformation/${id}`));
+  requestWithEndpointFallback(
+    studentId,
+    [
+      { requiresId: true, run: (id) => api.get(`/PersonalInformation/${id}`) },
+      { requiresId: true, run: (id) => api.get(`/PersonalInformation`, { params: { studentId: id } }) },
+      { requiresId: true, run: (id) => api.get(`/PersonalInformation`, { params: { id } }) },
+      { requiresId: false, run: () => api.get(`/PersonalInformation`) },
+    ],
+    { retryOnStatuses: [404, 405, 400] }
+  );
 
-const buildProfileFormData = (profileData, fileKey, imageFile) => {
+const buildProfileFormData = (profileData, fileKey, imageFile, id) => {
   const formData = new FormData();
   const normalizedData = {
     firstName: profileData.firstName,
@@ -44,6 +61,12 @@ const buildProfileFormData = (profileData, fileKey, imageFile) => {
     }
   });
 
+  if (id) {
+    formData.append("studentId", id);
+    formData.append("StudentId", id);
+    formData.append("id", id);
+  }
+
   if (imageFile && fileKey) {
     formData.append(fileKey, imageFile);
   }
@@ -51,29 +74,43 @@ const buildProfileFormData = (profileData, fileKey, imageFile) => {
   return formData;
 };
 
+const buildProfilePayload = (profileData, id) => ({
+  ...profileData,
+  ...(id ? { studentId: id, id } : {}),
+});
+
 export const updateStudentProfile = (studentId, profileData, imageFile) =>
-  requestWithIdFallback(studentId, async (id) => {
-    if (!imageFile) {
-      return api.put(`/PersonalInformation/${id}`, profileData);
-    }
-
-    const fileKeys = ["image", "Image", "imageFile", "ImageFile", "file", "File"];
-    let lastError = null;
-
-    for (const key of fileKeys) {
-      try {
-        const formData = buildProfileFormData(profileData, key, imageFile);
-        return await api.put(`/PersonalInformation/${id}`, formData);
-      } catch (error) {
-        const status = error?.response?.status;
-        if (status === 400 || status === 415) {
-          lastError = error;
-          continue;
-        }
-        throw error;
-      }
-    }
-
-    throw lastError;
-  });
-
+  requestWithEndpointFallback(
+    studentId,
+    [
+      {
+        requiresId: true,
+        run: (id) => api.put(`/PersonalInformation/${id}`, buildProfilePayload(profileData, id)),
+      },
+      {
+        requiresId: true,
+        run: (id) => api.put(`/PersonalInformation`, buildProfilePayload(profileData, id)),
+      },
+      {
+        requiresId: false,
+        run: () => api.put(`/PersonalInformation`, profileData),
+      },
+      ...(imageFile
+        ? ["image", "Image", "imageFile", "ImageFile", "file", "File"].flatMap((key) => [
+          {
+            requiresId: true,
+            run: (id) => api.put(`/PersonalInformation/${id}`, buildProfileFormData(profileData, key, imageFile, id)),
+          },
+          {
+            requiresId: true,
+            run: (id) => api.put(`/PersonalInformation`, buildProfileFormData(profileData, key, imageFile, id)),
+          },
+          {
+            requiresId: false,
+            run: () => api.put(`/PersonalInformation`, buildProfileFormData(profileData, key, imageFile)),
+          },
+        ])
+        : []),
+    ],
+    { retryOnStatuses: [404, 405, 400, 415] }
+  );
