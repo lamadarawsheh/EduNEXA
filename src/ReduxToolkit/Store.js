@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sectionReducer from "./Slices/CreateNewCourses/SectionSlice";
-// Slices
 import teacherSettingReducer from "./Slices/TeacherSettingSlice";
+import CourseReducer from './Slices/CreateNewCourses/CourseSlice'
 import subCategoryReducer from './Slices/CreateNewCourses/SubCategorySlice'
 import categoryReducer from './Slices/CreateNewCourses/CategorySlice'
 import sectionReucer from './Slices/CreateNewCourses/SectionSlice'
@@ -11,7 +10,7 @@ import adminDashboardSlice from "./slices/AdminDashboard"
 import adminStudentSlice from "./slices/AdminStudents"
 import adminProfileSlice from "./slices/AdminProfile";
 import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
-import walletReducer from './Slices/walletSlice/walletSlice';
+import walletReducer from './walletSlice'
 import reviewReducer from './Slices/ReviewSlice'
 import adminTeachersSlice from "./slices/AdminTeachers";
 import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
@@ -19,7 +18,6 @@ import pendingCoursesSlice from "./slices/AdminPendingCourses";
 import reviewCourseReducer from "./slices/AdminCourseReview";
 import courseActionReducer from "./slices/AdminCoursesActions";
 import updateProfileReducer from "./slices/AdminUpdateProfile";
-import courseReducer from "./Slices/courseSlice/courseSlice";
 
 const noopReducer = (state = {}) => state;
 

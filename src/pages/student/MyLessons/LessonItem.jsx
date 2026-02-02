@@ -5,8 +5,15 @@ const LessonItem = ({ lesson }) => {
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-    navigate('/student/watchlesson', { state: { title: lesson.title || lesson.Title || lesson.name } });
-  };
+  navigate('/student/watchlesson', { 
+    state: { 
+      videoUrl: lesson.videoUrl, 
+      title: lesson.title,
+      description: lesson.description,
+      id: lesson.id
+    } 
+  });
+};
 
   const getDuration = () => {
     const duration = lesson.duration || lesson.Duration;

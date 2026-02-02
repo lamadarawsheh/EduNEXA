@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import WriteReviewModal from "../../WriteReviewModal"; 
 import { Star, X } from "lucide-react";
+import {formatRelativeDate} from '../../../../services/mylessonService'
 
 export default function LessonInfo({ 
   title, 
@@ -8,16 +9,15 @@ export default function LessonInfo({
   rating, 
   hasRated, 
   courseId,    
-  studentId   
+  studentId,
+  studentsCount,
+  lastUpdated   
 }) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const imgs = [
     { img: '../../../../image/A1.PNG' },
     { img: '../../../../image/A2.PNG' },
-    { img: '../../../../image/A3.PNG' },
-    { img: '../../../../image/A4.PNG' },
-    { img: '../../../../image/A5.PNG' },
   ];
 
   return (
@@ -36,9 +36,14 @@ export default function LessonInfo({
                   <img src={item.img} alt="User" className="w-full h-full object-cover" />
                 </div>
               ))}
+              {studentsCount > 3 && (
+                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-white bg-[#176D69] text-white flex items-center justify-center text-[10px] font-bold">
+                  +{studentsCount - 3}
+                </div>
+              )}
             </div>
-            <span className="text-[13px] md:text-sm">
-              <strong className="text-slate-800">512</strong> Students watching
+           <span className="text-[13px] md:text-sm">
+              <strong className="text-slate-800">{studentsCount}</strong> Students watching
             </span>
           </div>
 
@@ -65,7 +70,7 @@ export default function LessonInfo({
         <div className="flex flex-wrap items-center gap-4 md:gap-8">
           <div className="flex items-center gap-1">
             <span>Last updated:</span>
-            <span className="text-slate-800 font-semibold whitespace-nowrap">Oct 26, 2020</span>
+            <span className="text-slate-800 font-semibold whitespace-nowrap">{formatRelativeDate(lastUpdated)}</span>
           </div>
           <div className="flex items-center gap-1">
             <span>Comments:</span>

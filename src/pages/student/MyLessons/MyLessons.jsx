@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import VideoPage from "./VideoPage.jsx";
 import LessonCard from "./LessonCard.jsx";
-import { getCourseDetails, getCourseSections, getSectionLectures } from "../../../services/courseService";
+import { getCourseDetails, getCourseSections, getSectionLectures } from "../../../services/mylessonService";
+import emptyProduct from './Images/emptyProduct.gif'
+import { ArrowLeft } from 'lucide-react';
 
 export default function MyLessons() {
   const location = useLocation();
@@ -10,196 +12,90 @@ export default function MyLessons() {
   const [courseDetails, setCourseDetails] = useState(null);
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDetails = async () => {
-      if (!courseId) {
-        setLoading(false);
-        return;
-      }
+    const fetchAllData = async () => {
+      if (!courseId) return;
+      
       try {
-        console.log("🔍 Fetching course details for courseId:", courseId);
+        setLoading(true);
         
-        // Fetch course details first
-        const courseResponse = await getCourseDetails(courseId);
-        console.log("✅ Course Details Response:", courseResponse.data);
-        console.log("📦 Course sections in response:", courseResponse.data?.sections);
-        
-        setCourseDetails(courseResponse.data);
-        
-        // Try to get sections from multiple sources
-        let sectionsData = [];
-        
-        // 1. Try from courseResponse.data.sections (only if it has data)
-        const sectionsFromResponse = courseResponse.data?.sections;
-        const hasSections = sectionsFromResponse && Array.isArray(sectionsFromResponse) && sectionsFromResponse.length > 0;
-        
-        console.log("🔍 Checking sections:", {
-          exists: !!sectionsFromResponse,
-          isArray: Array.isArray(sectionsFromResponse),
-          length: sectionsFromResponse?.length,
-          hasSections: hasSections
-        });
-        
-        if (hasSections) {
-          sectionsData = sectionsFromResponse;
-          console.log("✅ Found sections in courseResponse.data.sections:", sectionsData);
-        } else {
-          // 2. Try from separate sections API
-          console.log("📡 Sections not found in courseResponse or empty, trying separate API...");
-          try {
-            const sectionsResponse = await getCourseSections(courseId);
-            console.log("✅ Sections API Response:", sectionsResponse);
-            console.log("📦 Sections Response Data:", sectionsResponse.data);
-            
-            const responseData = sectionsResponse.data;
-            if (Array.isArray(responseData)) {
-              sectionsData = responseData;
-            } else if (responseData?.data && Array.isArray(responseData.data)) {
-              sectionsData = responseData.data;
-            } else if (responseData?.$values && Array.isArray(responseData.$values)) {
-              sectionsData = responseData.$values;
+        const courseRes = await getCourseDetails(courseId);
+        setCourseDetails(courseRes.data);
+
+        const secRes = await getCourseSections(courseId);
+        const rawSections = secRes.data?.$values || secRes.data || [];
+
+        const hydratedSections = await Promise.all(
+          rawSections.map(async (sec) => {
+            try {
+              const lecRes = await getSectionLectures(sec.id);
+              return { 
+                ...sec, 
+                lectures: lecRes.data?.$values || lecRes.data || [] 
+              };
+            } catch (error) {
+              console.error(`Error loading lectures for section ${sec.id}`, error);
+              return { ...sec, lectures: [] };
             }
-            console.log("✅ Parsed sections from API:", sectionsData);
-          } catch (sectionsError) {
-            console.warn("⚠️ Error fetching sections from API:", sectionsError);
-            console.log("📋 Sections error details:", sectionsError.response?.data);
-          }
-        }
-        
-        console.log("🎯 Final sections to set:", sectionsData);
-        console.log("📊 Sections count:", sectionsData.length);
-        
-        // Fetch lectures for each section
-        if (sectionsData.length > 0) {
-          console.log("📝 First section example:", sectionsData[0]);
-          
-          // Fetch lectures for all sections in parallel
-          const sectionsWithLectures = await Promise.all(
-            sectionsData.map(async (section) => {
-              try {
-                console.log(`📚 Fetching lectures for section ${section.id}:`, section.title);
-                const lecturesResponse = await getSectionLectures(section.id);
-                console.log(`✅ Lectures for section ${section.id}:`, lecturesResponse.data);
-                
-                // Handle different response formats
-                let lectures = [];
-                const lecturesData = lecturesResponse.data;
-                if (Array.isArray(lecturesData)) {
-                  lectures = lecturesData;
-                } else if (lecturesData?.data && Array.isArray(lecturesData.data)) {
-                  lectures = lecturesData.data;
-                } else if (lecturesData?.$values && Array.isArray(lecturesData.$values)) {
-                  lectures = lecturesData.$values;
-                }
-                
-                return {
-                  ...section,
-                  lectures: lectures
-                };
-              } catch (error) {
-                console.warn(`⚠️ Error fetching lectures for section ${section.id}:`, error);
-                // Return section with empty lectures array if fetch fails
-                return {
-                  ...section,
-                  lectures: section.lectures || []
-                };
-              }
-            })
-          );
-          
-          console.log("✅ Sections with lectures:", sectionsWithLectures);
-          setSections(sectionsWithLectures);
-        } else {
-          // If no sections found, try to get lectures from all sections
-          // This is a fallback: try to get lectures even if sections API doesn't return sections
-          console.log("⚠️ No sections found, trying to get lectures from all possible sections...");
-          
-          // Try to get sections again and if they exist but were empty, try to get lectures
-          // Or create a default section with lectures if we can find them
-          try {
-            // First, try to get sections one more time to make sure
-            const sectionsResponse = await getCourseSections(courseId);
-            const responseData = sectionsResponse.data;
-            let finalSections = [];
-            
-            if (Array.isArray(responseData) && responseData.length > 0) {
-              finalSections = responseData;
-            } else if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
-              finalSections = responseData.data;
-            } else if (responseData?.$values && Array.isArray(responseData.$values) && responseData.$values.length > 0) {
-              finalSections = responseData.$values;
-            }
-            
-            if (finalSections.length > 0) {
-              // If we found sections now, fetch lectures for them
-              console.log("✅ Found sections on retry:", finalSections);
-              const sectionsWithLectures = await Promise.all(
-                finalSections.map(async (section) => {
-                  try {
-                    console.log(`📚 Fetching lectures for section ${section.id}:`, section.title);
-                    const lecturesResponse = await getSectionLectures(section.id);
-                    console.log(`✅ Lectures for section ${section.id}:`, lecturesResponse.data);
-                    
-                    let lectures = [];
-                    const lecturesData = lecturesResponse.data;
-                    if (Array.isArray(lecturesData)) {
-                      lectures = lecturesData;
-                    } else if (lecturesData?.data && Array.isArray(lecturesData.data)) {
-                      lectures = lecturesData.data;
-                    } else if (lecturesData?.$values && Array.isArray(lecturesData.$values)) {
-                      lectures = lecturesData.$values;
-                    }
-                    
-                    return {
-                      ...section,
-                      lectures: lectures
-                    };
-                  } catch (error) {
-                    console.warn(`⚠️ Error fetching lectures for section ${section.id}:`, error);
-                    return {
-                      ...section,
-                      lectures: section.lectures || []
-                    };
-                  }
-                })
-              );
-              
-              console.log("✅ Sections with lectures (retry):", sectionsWithLectures);
-              setSections(sectionsWithLectures);
-            } else {
-              console.log("📝 No sections available even after retry, setting empty array");
-              setSections([]);
-            }
-          } catch (error) {
-            console.warn("⚠️ Error in fallback:", error);
-            setSections([]);
-          }
-        }
-      } catch (error) {
-        console.error("❌ Error fetching details:", error);
-        console.error("Error details:", error.response?.data);
+          })
+        );
+
+        setSections(hydratedSections);
+      } catch (err) {
+        console.error("❌ Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchDetails();
+
+    fetchAllData();
   }, [courseId]);
 
-  if (loading) return <div className="text-center py-20 font-bold text-[#0F4C4A]">جاري تحميل الدروس...</div>;
-  if (!courseDetails) return <div className="text-center py-20 text-gray-500">لم يتم العثور على بيانات الكورس.</div>;
+  if (loading) return <div className="text-center py-20 font-bold text-[#0F4C4A]">Loading Classroom...</div>;
+  
+  if (!courseDetails && !loading) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center animate-fade-in">
+     
+      <div className="w-64 h-64 mb-6 opacity-80">
+        <img 
+          src={emptyProduct} 
+          alt="No Data" 
+          className="w-full h-full object-contain"
+        />
+      </div>
 
-  console.log("🎨 MyLessons render - sections:", sections);
-  console.log("🎨 MyLessons render - sections length:", sections?.length);
+      <h2 className="text-2xl md:text-3xl font-bold text-[#08332e] mb-2">
+        Oops! Content Unavailable
+      </h2>
+      <p className="text-gray-500 text-lg max-w-md leading-relaxed">
+        We couldn't find any data for this course at the moment. Please try again later or contact support.
+      </p>
 
+      <button 
+        onClick={() => navigate(-1)}
+        className="mt-8 px-8 py-3 bg-[#176D69] text-white rounded-full font-semibold hover:bg-[#08332e] transition-all shadow-lg hover:shadow-xl"
+      >
+        Go Back
+      </button>
+    </div>
+  );
+}
   return (
     <div className="max-w-[1440px] mx-auto">
-      <div>
-        <VideoPage course={courseDetails} />
-      </div>
-      <div>
-        <LessonCard sections={sections} />
-      </div>
+       <div className="px-8 py-3 lg:px-8 lg:pb-6 flex items-center">
+            <button 
+              onClick={() => navigate(-1)}
+              className=" flex items-center gap-2 text-[#176D69] font-bold hover:opacity-70 transition-all cursor-pointer group"
+            >
+              <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm">Back to My Courses </span>
+            </button>
+          </div>
+      <VideoPage course={courseDetails} />
+      <LessonCard sections={sections} />
     </div>
   );
 }
