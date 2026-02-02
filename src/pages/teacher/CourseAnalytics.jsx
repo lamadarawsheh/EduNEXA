@@ -54,9 +54,28 @@ const CourseAnalytics = () => {
         (state) => state.profile.earnings
     );
 
+
     useEffect(() => {
         dispatch(fetchEarnings());
     }, [dispatch]);
+    
+    const getCourseImage = (course) => {
+  if (!course) return "/course_placeholder.png";
+
+  const imagePath =
+    course.image ||
+    course.thumbnailUrl ||
+    course.imagePath ||
+    course.ThumbnailUrl;
+
+  if (!imagePath || !isWorkingUrl(imagePath)) {
+    return "/course_placeholder.png";
+  }
+
+  return imagePath.startsWith("http")
+    ? imagePath
+    : `http://edunexa.runasp.net/${imagePath.replace(/^\//, "")}`;
+};
 
     // Fetch course data if not provided via location.state
     useEffect(() => {
@@ -127,8 +146,8 @@ const CourseAnalytics = () => {
                     {/* Image Section */}
                     <div className="lg:col-span-1 h-56 bg-gray-100 overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            <img  src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `http://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"} 
-                            alt="" className="w-full h-auto" />
+                            <img  src={getCourseImage(course)} 
+                            alt={course.title} className="w-full h-auto" />
                         </div>
                     </div>
 
