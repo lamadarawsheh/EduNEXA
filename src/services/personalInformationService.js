@@ -26,9 +26,54 @@ const requestWithIdFallback = async (studentId, requestFn) => {
 export const getStudentProfile = (studentId) =>
   requestWithIdFallback(studentId, (id) => api.get(`/PersonalInformation/${id}`));
 
-export const updateStudentProfile = (studentId, profileData) =>
-  requestWithIdFallback(studentId, (id) =>
-    api.put(`/PersonalInformation/${id}`, profileData)
-  );
+const buildProfileFormData = (profileData, fileKey, imageFile) => {
+  const formData = new FormData();
+  const normalizedData = {
+    firstName: profileData.firstName,
+    lastName: profileData.lastName,
+    userName: profileData.userName,
+    email: profileData.email,
+    phoneNumber: profileData.phoneNumber,
+    birthDate: profileData.birthDate,
+    imageUrl: profileData.imageUrl,
+  };
 
+  Object.entries(normalizedData).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      formData.append(key, value);
+    }
+  });
+
+  if (imageFile && fileKey) {
+    formData.append(fileKey, imageFile);
+  }
+
+  return formData;
+};
+
+export const updateStudentProfile = (studentId, profileData, imageFile) =>
+  requestWithIdFallback(studentId, async (id) => {
+    if (!imageFile) {
+      return api.put(`/PersonalInformation/${id}`, profileData);
+    }
+
+    const fileKeys = ["image", "Image", "imageFile", "ImageFile", "file", "File"];
+    let lastError = null;
+
+    for (const key of fileKeys) {
+      try {
+        const formData = buildProfileFormData(profileData, key, imageFile);
+        return await api.put(`/PersonalInformation/${id}`, formData);
+      } catch (error) {
+        const status = error?.response?.status;
+        if (status === 400 || status === 415) {
+          lastError = error;
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    throw lastError;
+  });
 

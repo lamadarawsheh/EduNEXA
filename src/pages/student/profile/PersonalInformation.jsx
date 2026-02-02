@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Mail, Phone, User } from "lucide-react";
+import { Calendar, Mail, Phone, Upload, User } from "lucide-react";
+import api from "../../../services/api";
 import { getStudentProfile, updateStudentProfile } from "../../../services/personalInformationService";
 import { getStudentIdFromStorage } from "../../../utils/auth";
 import "./Profile.css";
 
 const PersonalInformation = () => {
+  const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, "") || "";
   const studentId = getStudentIdFromStorage();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -15,8 +17,38 @@ const PersonalInformation = () => {
     phoneNumber: "",
     birthDate: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [serverImageUrl, setServerImageUrl] = useState("");
+  const [localPreviewUrl, setLocalPreviewUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    return () => {
+      if (localPreviewUrl) {
+        URL.revokeObjectURL(localPreviewUrl);
+      }
+    };
+  }, [localPreviewUrl]);
+
+  const resolveImageUrl = (value) => {
+    if (!value || typeof value !== "string") {
+      return "";
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return "";
+    }
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return trimmed;
+    }
+    if (!apiRoot) {
+      return trimmed;
+    }
+    return `${apiRoot}/${trimmed.replace(/^\//, "")}`;
+  };
 
   useEffect(() => {
     if (!studentId) {
@@ -54,11 +86,15 @@ const PersonalInformation = () => {
           return;
         }
 
+        const rawImageUrl =
+          data.imageUrl ?? data.imageURL ?? data.avatarUrl ?? data.profileImage ?? "";
+        const resolvedImage = resolveImageUrl(rawImageUrl);
+
         setFormData((prev) => ({
           ...prev,
           firstName: data.firstName ?? data.first_name ?? data.firstname ?? prev.firstName,
           lastName: data.lastName ?? data.last_name ?? data.lastname ?? prev.lastName,
-          imageUrl: data.imageUrl ?? data.imageURL ?? data.avatarUrl ?? data.profileImage ?? prev.imageUrl,
+          imageUrl: rawImageUrl || prev.imageUrl,
           userName: data.userName ?? data.user_name ?? data.username ?? prev.userName,
           email: data.email ?? prev.email,
           phoneNumber: data.phoneNumber ?? data.phone ?? data.phoneNo ?? prev.phoneNumber,
@@ -66,6 +102,15 @@ const PersonalInformation = () => {
             data.birthDate ?? data.dateOfBirth ?? data.dob ?? prev.birthDate
           ),
         }));
+
+        if (resolvedImage) {
+          if (localPreviewUrl) {
+            URL.revokeObjectURL(localPreviewUrl);
+            setLocalPreviewUrl("");
+          }
+          setServerImageUrl(resolvedImage);
+          setImagePreview(resolvedImage);
+        }
       } catch (error) {
         if (isActive) {
           console.error("Failed to load student profile:", error);
@@ -92,6 +137,69 @@ const PersonalInformation = () => {
     }));
   };
 
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      event.target.value = "";
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("Image is too large. Please choose a file under 5MB.");
+      event.target.value = "";
+      return;
+    }
+
+    if (!studentId) {
+      alert("Missing student id. Please sign in again.");
+      event.target.value = "";
+      return;
+    }
+
+    if (isLoading) {
+      alert("Please wait for profile data to load, then try again.");
+      event.target.value = "";
+      return;
+    }
+
+    if (localPreviewUrl) {
+      URL.revokeObjectURL(localPreviewUrl);
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setLocalPreviewUrl(previewUrl);
+    setImagePreview(previewUrl);
+    setImageFile(file);
+
+    try {
+      setIsUploadingImage(true);
+      await updateStudentProfile(studentId, formData, file);
+      setImageFile(null);
+    } catch (error) {
+      console.error("Failed to update profile image:", error);
+      alert("Failed to update profile image. Please try again.");
+      setImagePreview(serverImageUrl || "");
+      setImageFile(null);
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    if (localPreviewUrl) {
+      URL.revokeObjectURL(localPreviewUrl);
+      setLocalPreviewUrl("");
+    }
+    setImageFile(null);
+    setImagePreview(serverImageUrl || "");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!studentId) {
@@ -101,7 +209,7 @@ const PersonalInformation = () => {
 
     try {
       setIsSaving(true);
-      await updateStudentProfile(studentId, formData);
+      await updateStudentProfile(studentId, formData, imageFile);
       alert("Profile updated successfully.");
     } catch (error) {
       console.error("Failed to update student profile:", error);
@@ -150,15 +258,49 @@ const PersonalInformation = () => {
         <div className="form-group">
           <label>
             <User className="profile-icon" aria-hidden="true" />
-            Image URL
+            Profile Photo
           </label>
-          <input
-            type="url"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleInputChange}
-            placeholder="https://example.com/image.jpg"
-          />
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-gray-50">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Profile preview"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <User className="h-6 w-6 text-gray-400" aria-hidden="true" />
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label
+                className={`inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-teal-600 hover:text-teal-700 ${
+                  isUploadingImage ? "cursor-not-allowed opacity-60" : ""
+                }`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                  disabled={isUploadingImage}
+                />
+                <Upload className="h-4 w-4" />
+                {isUploadingImage ? "Uploading..." : "Upload Photo"}
+              </label>
+              {imageFile ? (
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="w-fit text-xs font-semibold text-gray-500 hover:text-gray-700"
+                >
+                  Remove
+                </button>
+              ) : (
+                <span className="text-xs text-gray-400">PNG or JPG, up to 5MB.</span>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="form-group">
@@ -218,7 +360,7 @@ const PersonalInformation = () => {
         <button
           type="submit"
           className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-70"
-          disabled={isSaving || isLoading}
+          disabled={isSaving || isLoading || isUploadingImage}
         >
           {isLoading ? "Loading..." : isSaving ? "Saving..." : "Save Changes"}
         </button>
