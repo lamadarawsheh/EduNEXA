@@ -7,8 +7,8 @@ import CourseContent from "./CourseContent.jsx";
 import { ArrowLeft } from "lucide-react";
 
 const initialComments = [
-  { id: 1, user: "Ronald Richards", time: "1 week ago", avatar: "/image/A1.PNG", text: "Maecenas risus tortor, tincidunt nec purus eu, gravida suscipit tortor.", replies: [] },
-  { id: 2, user: "Guy Hawkins", time: "2 weeks ago", avatar: "/image/A1.PNG", text: "Thank you for your helpful video.", replies: [] },
+  { id: 1, user: "Ronald Richards", time: "1 section ago", avatar: "/image/A1.PNG", text: "Maecenas risus tortor, tincidunt nec purus eu, gravida suscipit tortor.", replies: [] },
+  { id: 2, user: "Guy Hawkins", time: "2 sections ago", avatar: "/image/A1.PNG", text: "Thank you for your helpful video.", replies: [] },
 ];
 
 export default function WatchLesson() {
@@ -70,7 +70,7 @@ export default function WatchLesson() {
 
   const courseData = [
     {
-      week: 1,
+      section: 1,
       title: "Introduction to UI/UX Design",
       lessons: [
         { id: "01", title: "Understanding UI/UX Design Principles", duration: "45 Minutes" },
@@ -79,7 +79,7 @@ export default function WatchLesson() {
       ]
     },
      {
-      week: 2,
+      section: 2,
       title: "User Research and Analysis",
       lessons: [
         { id: "01", title: "Conducting User Research and Interviews", duration: "1 Hour" },
@@ -88,7 +88,7 @@ export default function WatchLesson() {
       ]
     },
     {
-      week: 3,
+      section: 3,
       title: "Wireframing and Prototyping",
       lessons: [
         { id: "01", title: "Introduction to Wireframing Tools and Techniques", duration: "1 Hour" },
@@ -97,7 +97,7 @@ export default function WatchLesson() {
       ]
     },
     {
-      week: 4,
+      section: 4,
       title: "Visual Design and Branding",
       lessons: [
         { id: "01", title: "Color Theory and Typography in UI Design", duration: "1 Hour" },
@@ -106,7 +106,7 @@ export default function WatchLesson() {
       ]
     },
     {
-      week: 5,
+      section: 5,
       title: "Usability Testing and Iteration",
       lessons: [
         { id: "01", title: "Usability Testing Methods and Techniques", duration: "1 Hour" },
