@@ -78,9 +78,7 @@ export default function Course({ acceptedCourses, pendingCourses, search }) {
                                         <h4 className="text-sm text-gray-600 mb-4">{course.instructorName}</h4>
                                         <div className="flex gap-4">
                                             <div className="me-2 flex gap-2">
-                                                {course.status === "Approved" ? (
-                                                    <FiUsers />
-                                                ) : () => "null"}
+                                               {course.status === "Approved" ? <FiUsers /> : null}
                                                 <span className="text-sm text-gray-600">
                                                     {course.studentsCount ? `${course.studentsCount} Students` : '-'}
                                                 </span>
