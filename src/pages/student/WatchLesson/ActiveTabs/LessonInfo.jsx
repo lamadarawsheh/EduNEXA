@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from "react";
-import DynamicReviewSection from "../../WriteReviewModal"; 
+import React, { useState } from "react";
+import WriteReviewModal from "../../WriteReviewModal"; 
 import { Star, X } from "lucide-react";
 
-export default function LessonInfo({ title, commentCount, rating, onNewReview, hasRated, students = [] }) {
+export default function LessonInfo({ 
+  title, 
+  commentCount, 
+  rating, 
+  hasRated, 
+  courseId,    
+  studentId   
+}) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [imgs, setImgs] = useState([]);
 
-  useEffect(() => {
-    const studentImgs = (students || []).map((s, index) => ({
-      img: s.avatar || require(`../../../../image/A${(index % 5) + 1}.PNG`)
-    }));
-    setImgs(studentImgs);
-  }, [students]);
+  const imgs = [
+    { img: '../../../../image/A1.PNG' },
+    { img: '../../../../image/A2.PNG' },
+    { img: '../../../../image/A3.PNG' },
+    { img: '../../../../image/A4.PNG' },
+    { img: '../../../../image/A5.PNG' },
+  ];
 
   return (
     <div className="w-full max-w-[1012px] mb-6 relative font-sans">
@@ -20,6 +27,7 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
       </h1>
 
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-sm text-gray-500 border-b border-gray-100 pb-6">
+        
         <div className="flex flex-wrap items-center gap-4 md:gap-6">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2 shrink-0">
@@ -30,7 +38,7 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
               ))}
             </div>
             <span className="text-[13px] md:text-sm">
-              <strong className="text-slate-800">{students.length}</strong> Students watching
+              <strong className="text-slate-800">512</strong> Students watching
             </span>
           </div>
 
@@ -68,21 +76,13 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
 
       {isReviewOpen && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl animate-scale-in">
-            <button 
-              onClick={() => setIsReviewOpen(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-gray-50 rounded-full text-gray-400 hover:text-red-500 transition-colors"
-            >
-              <X size={20} />
-            </button>
-            
-            <DynamicReviewSection 
-               onSubmitReview={onNewReview} 
-               hasRated={hasRated}
-               onClose={() => setIsReviewOpen(false)}
+            <WriteReviewModal
+                courseId={courseId}
+                studentId={studentId}
+                hasRated={hasRated}
+                onClose={() => setIsReviewOpen(false)}
             />
           </div>
-        </div>
       )}
     </div>
   );
