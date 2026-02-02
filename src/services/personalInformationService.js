@@ -1,116 +1,79 @@
 import api from "./api";
 import { getStudentIdCandidates } from "../utils/auth";
 
-const requestWithEndpointFallback = async (studentId, requestFns, options = {}) => {
-  const candidates = getStudentIdCandidates(studentId);
-  const retryOnStatuses = Array.isArray(options.retryOnStatuses)
-    ? options.retryOnStatuses
-    : [404, 405, 400];
-
-  const ids = candidates.length ? candidates : [null];
-  let lastError = null;
-
-  for (const id of ids) {
-    for (const request of requestFns) {
-      if (request.requiresId && !id) {
-        continue;
-      }
-      try {
-        return await request.run(id);
-      } catch (error) {
-        const status = error?.response?.status;
-        if (retryOnStatuses.includes(status)) {
-          lastError = error;
-          continue;
-        }
-        throw error;
-      }
-    }
-  }
-
-  throw lastError;
-};
-
-export const getStudentProfile = (studentId) =>
-  requestWithEndpointFallback(
-    studentId,
-    [
-      { requiresId: true, run: (id) => api.get(`/PersonalInformation/${id}`) },
-      { requiresId: true, run: (id) => api.get(`/PersonalInformation`, { params: { studentId: id } }) },
-      { requiresId: true, run: (id) => api.get(`/PersonalInformation`, { params: { id } }) },
-      { requiresId: false, run: () => api.get(`/PersonalInformation`) },
-    ],
-    { retryOnStatuses: [404, 405, 400] }
-  );
-
-const buildProfileFormData = (profileData, fileKey, imageFile, id) => {
+const createProfileFormData = (payload, imageFile) => {
   const formData = new FormData();
-  const normalizedData = {
-    firstName: profileData.firstName,
-    lastName: profileData.lastName,
-    userName: profileData.userName,
-    email: profileData.email,
-    phoneNumber: profileData.phoneNumber,
-    birthDate: profileData.birthDate,
-    imageUrl: profileData.imageUrl,
-  };
+  formData.append("firstName", payload?.firstName ?? "");
+  formData.append("lastName", payload?.lastName ?? "");
+  formData.append("email", payload?.email ?? "");
+  formData.append("userName", payload?.userName ?? "");
+  formData.append("phoneNumber", payload?.phoneNumber ?? "");
+  formData.append("birthDate", payload?.birthDate ?? "");
 
-  Object.entries(normalizedData).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      formData.append(key, value);
-    }
-  });
-
-  if (id) {
-    formData.append("studentId", id);
-    formData.append("StudentId", id);
-    formData.append("id", id);
-  }
-
-  if (imageFile && fileKey) {
-    formData.append(fileKey, imageFile);
+  if (imageFile) {
+    formData.append("ImageUrl", imageFile);
   }
 
   return formData;
 };
 
-const buildProfilePayload = (profileData, id) => ({
-  ...profileData,
-  ...(id ? { studentId: id, id } : {}),
-});
+const putProfile = (endpoint, payload, imageFile) =>
+  api.put(endpoint, createProfileFormData(payload, imageFile), {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
-export const updateStudentProfile = (studentId, profileData, imageFile) =>
-  requestWithEndpointFallback(
-    studentId,
-    [
-      {
-        requiresId: true,
-        run: (id) => api.put(`/PersonalInformation/${id}`, buildProfilePayload(profileData, id)),
-      },
-      {
-        requiresId: true,
-        run: (id) => api.put(`/PersonalInformation`, buildProfilePayload(profileData, id)),
-      },
-      {
-        requiresId: false,
-        run: () => api.put(`/PersonalInformation`, profileData),
-      },
-      ...(imageFile
-        ? ["image", "Image", "imageFile", "ImageFile", "file", "File"].flatMap((key) => [
-          {
-            requiresId: true,
-            run: (id) => api.put(`/PersonalInformation/${id}`, buildProfileFormData(profileData, key, imageFile, id)),
-          },
-          {
-            requiresId: true,
-            run: (id) => api.put(`/PersonalInformation`, buildProfileFormData(profileData, key, imageFile, id)),
-          },
-          {
-            requiresId: false,
-            run: () => api.put(`/PersonalInformation`, buildProfileFormData(profileData, key, imageFile)),
-          },
-        ])
-        : []),
-    ],
-    { retryOnStatuses: [404, 405, 400, 415] }
-  );
+export const getStudentProfile = async (profileId) => {
+  try {
+    return await api.get("/PersonalInformation");
+  } catch (error) {
+    if (error?.response?.status !== 404) {
+      throw error;
+    }
+  }
+
+  const candidates = getStudentIdCandidates(profileId);
+  if (!candidates.length) {
+    throw new Error("Missing profile id.");
+  }
+
+  let lastError = null;
+  for (const id of candidates) {
+    try {
+      return await api.get(`/PersonalInformation/${id}`);
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        lastError = error;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw lastError || new Error("Failed to load student profile.");
+};
+
+export const updateStudentProfile = async (profileId, payload, imageFile) => {
+  const candidates = getStudentIdCandidates(profileId);
+
+  let lastError = null;
+  for (const id of candidates) {
+    try {
+      return await putProfile(`/PersonalInformation/${id}`, payload, imageFile);
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        lastError = error;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  try {
+    return await putProfile("/PersonalInformation", payload, imageFile);
+  } catch (error) {
+    if (lastError) {
+      throw lastError;
+    }
+    throw error;
+  }
+};

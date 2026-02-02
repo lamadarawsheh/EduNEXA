@@ -47,6 +47,11 @@ export const getStudentIdCandidates = (primaryId) => {
 
   pushId(primaryId);
 
+  const payload = decodeJwtPayload(localStorage.getItem("token"));
+  pushId(payload?.sub);
+  pushId(payload?.id);
+  pushId(payload?.studentId);
+
   const storedUser = safeParseJson(localStorage.getItem("user"));
   pushId(storedUser?.id);
   pushId(storedUser?.studentId);
@@ -54,11 +59,6 @@ export const getStudentIdCandidates = (primaryId) => {
   pushId(storedUser?.user?.id);
   pushId(storedUser?.user?.studentId);
   pushId(storedUser?.user?.sub);
-
-  const payload = decodeJwtPayload(localStorage.getItem("token"));
-  pushId(payload?.sub);
-  pushId(payload?.id);
-  pushId(payload?.studentId);
 
   return Array.from(new Set(ids));
 };

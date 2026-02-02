@@ -26,93 +26,52 @@ const requestWithIdFallback = async (studentId, requestFn, options = {}) => {
   throw lastError;
 };
 
-export const getStudentSettings = (studentId) =>
-  requestWithIdFallback(studentId, (id) => api.get(`/Setting/${id}`));
+const patchWithContentTypeFallback = async (url, jsonPayload, textPayload) => {
+  try {
+    return await api.patch(url, jsonPayload, {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    const status = error?.response?.status;
+    if (status !== 400 && status !== 415) {
+      throw error;
+    }
+  }
+
+  return api.patch(url, textPayload, {
+    headers: { "Content-Type": "text/plain" },
+  });
+};
+
+export const getStudentSettings = async (studentId) => {
+  try {
+    return await requestWithIdFallback(studentId, (id) => api.get(`/Setting/${id}`));
+  } catch (error) {
+    if (error?.response?.status !== 404) {
+      throw error;
+    }
+  }
+
+  return api.get("/Setting");
+};
 
 export const getAvailableLanguages = () =>
   api.get("/Setting/available-languages");
 
-const patchWithPayloads = async (url, payloads) => {
-  let lastError = null;
-  for (const payload of payloads) {
-    try {
-      const config = payload.config || (payload.headers ? { headers: payload.headers } : undefined);
-      return await api.patch(url, payload.data, config);
-    } catch (error) {
-      const status = error?.response?.status;
-      if (status === 400 || status === 415) {
-        lastError = error;
-        continue;
-      }
-      throw error;
-    }
-  }
-  throw lastError;
-};
-
 export const updateLanguage = async (studentId, languageCode) =>
-  requestWithIdFallback(
-    studentId,
-    (id) => {
-      const normalized = String(languageCode || "").trim();
-    const url = `/Setting/${id}/language`;
-    return patchWithPayloads(url, [
-      { data: { languageCode: normalized }, headers: { "Content-Type": "application/json" } },
-      { data: { language: normalized }, headers: { "Content-Type": "application/json" } },
-      { data: { code: normalized }, headers: { "Content-Type": "application/json" } },
-      { data: JSON.stringify(normalized), headers: { "Content-Type": "application/json" } },
-      { data: normalized, headers: { "Content-Type": "text/plain" } },
-      {
-        data: new URLSearchParams({ languageCode: normalized }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      {
-        data: new URLSearchParams({ language: normalized }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      {
-        data: new URLSearchParams({ code: normalized }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      { data: null, config: { params: { languageCode: normalized } } },
-      { data: null, config: { params: { language: normalized } } },
-      { data: null, config: { params: { code: normalized } } },
-      { data: null, config: { params: { LanguageCode: normalized } } },
-      { data: null, config: { params: { Language: normalized } } },
-    ]);
-  },
-    { retryOnStatuses: [404, 400] }
+  requestWithIdFallback(studentId, (id) =>
+    patchWithContentTypeFallback(
+      `/Setting/${id}/language`,
+      JSON.stringify(languageCode),
+      String(languageCode)
+    )
   );
 
 export const updateNotifications = async (studentId, enabled) =>
-  requestWithIdFallback(
-    studentId,
-    (id) => {
-      const normalized = Boolean(enabled);
-    const url = `/Setting/${id}/notifications`;
-    return patchWithPayloads(url, [
-      { data: { notificationsEnabled: normalized }, headers: { "Content-Type": "application/json" } },
-      { data: { enabled: normalized }, headers: { "Content-Type": "application/json" } },
-      { data: JSON.stringify(normalized), headers: { "Content-Type": "application/json" } },
-      { data: String(normalized), headers: { "Content-Type": "text/plain" } },
-      {
-        data: new URLSearchParams({ notificationsEnabled: String(normalized) }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      {
-        data: new URLSearchParams({ enabled: String(normalized) }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      {
-        data: new URLSearchParams({ value: String(normalized) }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-      { data: null, config: { params: { notificationsEnabled: normalized } } },
-      { data: null, config: { params: { enabled: normalized } } },
-      { data: null, config: { params: { value: normalized } } },
-      { data: null, config: { params: { NotificationsEnabled: normalized } } },
-      { data: null, config: { params: { Enabled: normalized } } },
-    ]);
-  },
-    { retryOnStatuses: [404, 400] }
+  requestWithIdFallback(studentId, (id) =>
+    patchWithContentTypeFallback(
+      `/Setting/${id}/notifications`,
+      JSON.stringify(Boolean(enabled)),
+      Boolean(enabled) ? "true" : "false"
+    )
   );

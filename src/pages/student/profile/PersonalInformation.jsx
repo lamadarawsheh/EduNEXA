@@ -7,7 +7,6 @@ import "./Profile.css";
 
 const PersonalInformation = () => {
   const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, "") || "";
-  const studentId = getStudentIdFromStorage();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,6 +20,7 @@ const PersonalInformation = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [serverImageUrl, setServerImageUrl] = useState("");
   const [localPreviewUrl, setLocalPreviewUrl] = useState("");
+  const [profileId, setProfileId] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,11 +51,6 @@ const PersonalInformation = () => {
   };
 
   useEffect(() => {
-    if (!studentId) {
-      setIsLoading(false);
-      return;
-    }
-
     let isActive = true;
 
     const normalizeDate = (value) => {
@@ -74,16 +69,80 @@ const PersonalInformation = () => {
       return "";
     };
 
+    const pickProfileData = (raw) => {
+      if (!raw) {
+        return null;
+      }
+      if (Array.isArray(raw)) {
+        return raw[0] || null;
+      }
+      if (raw.$values && Array.isArray(raw.$values)) {
+        return raw.$values[0] || null;
+      }
+      if (Array.isArray(raw.data)) {
+        return raw.data[0] || null;
+      }
+      if (raw.data && raw.data.$values && Array.isArray(raw.data.$values)) {
+        return raw.data.$values[0] || null;
+      }
+      if (raw.result && typeof raw.result === "object") {
+        return raw.result;
+      }
+      if (raw.data && typeof raw.data === "object") {
+        return raw.data;
+      }
+      return raw;
+    };
+
+    const extractProfileId = (profile) => {
+      if (!profile || typeof profile !== "object") {
+        return "";
+      }
+      return (
+        profile.personalInformationId ||
+        profile.personalInformationID ||
+        profile.PersonalInformationId ||
+        profile.PersonalInformationID ||
+        profile.personalInfoId ||
+        profile.personalInfoID ||
+        profile.profileId ||
+        profile.profileID ||
+        profile.id ||
+        profile.personalInformation?.id ||
+        profile.personalInformation?.personalInformationId ||
+        profile.personalInformation?.personalInformationID ||
+        profile.personalInfo?.id ||
+        profile.applicationUserId ||
+        profile.studentId ||
+        profile.userId ||
+        profile.applicationUser?.id ||
+        profile.applicationUser?.userId ||
+        profile.applicationUser?.studentId ||
+        profile.user?.id ||
+        profile.user?.userId ||
+        profile.user?.studentId ||
+        ""
+      );
+    };
+
     const loadProfile = async () => {
       try {
-        const response = await getStudentProfile(studentId);
+        const response = await getStudentProfile(getStudentIdFromStorage());
         if (!isActive) {
           return;
         }
 
-        const data = response?.data;
+        const data = pickProfileData(response?.data);
         if (!data || typeof data !== "object") {
+          setIsLoading(false);
           return;
+        }
+
+        const resolvedProfileId = extractProfileId(data);
+        if (resolvedProfileId) {
+          setProfileId(resolvedProfileId);
+        } else {
+          console.warn("PersonalInformation id was not found in the profile response.");
         }
 
         const rawImageUrl =
@@ -129,7 +188,7 @@ const PersonalInformation = () => {
     return () => {
       isActive = false;
     };
-  }, [studentId]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -158,12 +217,6 @@ const PersonalInformation = () => {
       return;
     }
 
-    if (!studentId) {
-      alert("Missing student id. Please sign in again.");
-      event.target.value = "";
-      return;
-    }
-
     if (isLoading) {
       alert("Please wait for profile data to load, then try again.");
       event.target.value = "";
@@ -181,7 +234,7 @@ const PersonalInformation = () => {
 
     try {
       setIsUploadingImage(true);
-      await updateStudentProfile(studentId, formData, file);
+      await updateStudentProfile(profileId, formData, file);
       window.dispatchEvent(new CustomEvent("profile-image-updated", { detail: { url: previewUrl } }));
       if (!previewUrl.startsWith("blob:")) {
         localStorage.setItem("profileImageUrl", previewUrl);
@@ -212,14 +265,9 @@ const PersonalInformation = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!studentId) {
-      alert("Missing student id. Please sign in again.");
-      return;
-    }
-
     try {
       setIsSaving(true);
-      await updateStudentProfile(studentId, formData, imageFile);
+      await updateStudentProfile(profileId, formData, imageFile);
       alert("Profile updated successfully.");
     } catch (error) {
       console.error("Failed to update student profile:", error);
