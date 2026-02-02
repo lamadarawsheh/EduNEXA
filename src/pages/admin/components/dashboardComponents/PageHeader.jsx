@@ -6,7 +6,7 @@ import MobileAdminMenu from '../../../../layouts/MobileAdminMenu';
 import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
 
 
-export default function PageHeader({pageName, input, onChange, placeholder,admin}) {
+export default function PageHeader({pageName, input, onChange, placeholder,admin, isSearch}) {
         const [openPopup, setOpenPopup] = useState(false); 
 
 return (
@@ -30,7 +30,7 @@ return (
         <div className= "px-2 py-4 md:px-4 rounded-2xl shadow-md  min-h-[40px] flex-col items-between bg-[#176D69]">
         <div className="flex justify-between items-center w-full">
             <h2 className='font-bold text-white text-lg md:text-2xl'> {pageName} </h2>
-        <div className="relative w-[60%] md:w-[50%] mx-auto">
+        <div className={`relative w-[60%] md:w-[50%] mx-auto ${isSearch}`}>
         {!input && (
         <div className="pointer-events-none absolute w-full left-3 top-1/2 flex -translate-y-1/2 items-center gap-2 text-gray-400">
         <FiSearch size={18} />
@@ -45,10 +45,10 @@ return (
         className="w-full rounded-3xl border border-gray-300 bg-white py-3 pr-10 pl-4 text-sm
                 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"/>
         </div>
+        <div className="hidden md:flex gap-4 w-35 h-12 me-4">
         <button className="hidden md:block p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
         <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)} />   
         </button>
-        <div className="hidden md:block w-12 h-12 me-4">
         <Avatar 
         src={admin?.imageUrl}  
         name={admin?.fullName}  

@@ -81,6 +81,7 @@ const [popupMessage, setPopupMessage] = useState("");
   const actionLoading = approve.loading || reject.loading;
 
   if (!course) return <p>No course data</p>;
+  
   return (
     <>
       <div className="p-2 md:p-8 flex-col">
