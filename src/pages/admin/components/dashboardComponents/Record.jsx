@@ -3,7 +3,8 @@ import Avatar from '../Avatar';
 
 export default function Record({ record, pageName }) {
   return (
-    <tr className="hover:bg-gray-50 text-xs xl:text-[14px]">
+    <>
+    <tr className="hidden md:table-row hover:bg-gray-50 text-xs xl:text-[14px]">
       <td className="p-2 xl:p-4 text-left ">
         <div className="flex items-center gap-3">
           <input
@@ -24,5 +25,8 @@ export default function Record({ record, pageName }) {
       <td className="pe-2 md:p-4 text-left  text-gray-700">{pageName === "Students Records" ? record.birthDate : record.rating}</td>
       <td className=" md:p-4 text-left md:text-center text-gray-700">{record.coursesCount}</td>
     </tr>
+
+ 
+    </>
   );
 }

@@ -74,6 +74,7 @@ useEffect(() => {
   reset(); 
 }, [search, sortBy]); 
 
+console.log(processedRecords)
     if (isLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
     if (error) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof error === "string" ? error : "Failed"}</p></div>;
 

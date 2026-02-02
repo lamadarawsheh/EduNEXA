@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Record from './Record'
 import { FiEdit, FiTrash, FiArrowUp, FiArrowDown } from 'react-icons/fi'
 import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
+import RecordMobile from './RecordMobile';
 
 export default function Table({ records, columns, noOfCourses,pageName , sortBy, onSortChange, filters, onFiltersChange, isFilter, sortKey}) {
         const handleSortByName = () => {
@@ -39,7 +40,7 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
             <div className="bg-white rounded-3xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                        <thead className="bg-gray-50 text-[#093332]">
+                        <thead className="bg-gray-50 text-[#093332] hidden md:table-header-group">
                             <tr>
                                 <th className="text-left text-sm md:text-xl font-semibold p-2 md:p-4">
                                     <div className="flex items-center gap-3">
@@ -77,6 +78,16 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
         isOpen={openPopup}
         onClose={() => setOpenPopup(false)}
         />
+
+         <div className="md:hidden p-3 space-y-3">
+    {records.map((record) => (
+      <RecordMobile key={record.id} record={record} pageName={pageName} />
+    ))}
+
+    {records.length === 0 && (
+      <div className="text-center py-6 text-gray-500">No Records To Display</div>
+    )}
+  </div>
         </>
     )
 }
