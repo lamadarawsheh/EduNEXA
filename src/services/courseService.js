@@ -1,12 +1,18 @@
+// src/services/courseService.js
 import api from "./api";
 
+// =====================
+// Base URL
+// =====================
 export const BaseURL = "http://edunexa.runasp.net";
 
+// =====================
+// Helpers
+// =====================
 export const isWorkingUrl = (url) => {
     if (!url) return false;
     const lowerUrl = url.toLowerCase();
 
-    // 1. Allow relative paths that follow the storage structure
     if (
         lowerUrl.includes('thumbnails/') ||
         lowerUrl.includes('trailers/') ||
@@ -16,26 +22,21 @@ export const isWorkingUrl = (url) => {
         return true;
     }
 
-    // 2. Allow absolute URLs that aren't from dummy domains (like example.com)
     if (url.startsWith('http') && !lowerUrl.includes('example.com')) {
-        // Still filter out "test" files even if they are absolute
         if (lowerUrl.includes('test.png') || lowerUrl.includes('test.mp4')) return false;
         return true;
     }
 
-    // 3. Reject everything else (old test data, missing folders, etc.)
     return false;
 };
 
 export const formatDuration = (duration) => {
     if (!duration) return "0 hrs";
 
-    // If it's already formatted
     if (typeof duration === 'string' && (duration.includes('hrs') || duration.includes('mins'))) {
         return duration;
     }
 
-    // If it's in HH:MM:SS format
     if (typeof duration === 'string' && duration.includes(':')) {
         const parts = duration.split(':');
         const hours = parseInt(parts[0]);
@@ -47,82 +48,41 @@ export const formatDuration = (duration) => {
         return "0 hrs";
     }
 
-    // If it's just a number
     return `${duration} hrs`;
 };
 
-/**
- * Course Service
- * Handles all API calls related to courses.
- */
+/* ===================== Courses API ===================== */
+export const getCourses = async () => api.get("/courses");
+export const getApprovedCourses = () => api.get("/courses/approved");
+export const getNewestCourses = () => api.get("/courses/newest");
+export const getPopularCourses = () => api.get("/courses/popular");
 
-/* ================= Get All Courses ================= */
-export const getCourses = async () => {
-    return api.get("/courses");
-};
+/* ===================== Categories API ===================== */
+export const getCategoriesWithSubcategories = () => api.get("/Courses/categories");
+export const getCategoryById = (id) => api.get(`/Category/${id}`);
+export const getAllSubCategories = () => api.get("/SubCategory");
 
-/* ================= Get Approved Courses ================= */
-export const getApprovedCourses = () => {
-    return api.get("/courses/approved");
-};
+/* ===================== Favorites API ===================== */
+export const toggleCourseFavorite = (courseId) => api.post(`/favorite/toggle-course?courseId=${courseId}`);
+export const toggleInstructorFavorite = (instructorId) => api.post(`/favorite/toggle-instructor?instructorId=${instructorId}`);
+export const getFavoriteCourses = () => api.get("/favorite/courses");
+export const getFavoriteInstructors = () => api.get("/favorite/instructors");
+export const isCourseFavorite = (courseId) => api.get(`/favorite/is-course-favorite?courseId=${courseId}`);
+export const isInstructorFavorite = (instructorId) => api.get(`/favorite/is-instructor-favorite?instructorId=${instructorId}`);
 
-/* ================= Get Newest Courses ================= */
-export const getNewestCourses = () => {
-    return api.get("/courses/newest");
-};
+/* ===================== Course Management ===================== */
+export const createCourse = async (courseData) => api.post("/courses", courseData);
+export const isStudentEnrolled = (courseId) => api.get(`/courses/${courseId}/is-enrolled`);
 
-/* ================= Get Popular Courses ================= */
-export const getPopularCourses = () => {
-    return api.get("/courses/popular");
-};
+/* ===================== New: Open Courses Directly ===================== */
+// Get full details of a single course
+export const getCourseDetails = (courseId) => api.get(`/courses/${courseId}`);
 
-/* ================= Get Categories & Subcategories ================= */
-export const getCategoriesWithSubcategories = () => {
-    // This endpoint returns categories with their subcategories
-    return api.get("/Courses/categories");
-};
+// Get a specific lesson/video by courseId and lessonId
+export const getLessonVideo = (courseId, lessonId) => api.get(`/courses/${courseId}/lessons/${lessonId}`);
 
-/* ================= Get Single Category ================= */
-export const getCategoryById = (id) => {
-    return api.get(`/Category/${id}`);
-};
+// Get sections for a course
+export const getCourseSections = (courseId) => api.get(`/courses/${courseId}/sections`);
 
-/* ================= Get All SubCategories ================= */
-export const getAllSubCategories = () => {
-    return api.get("/SubCategory");
-};
-
-/* ================= Favorites ================= */
-export const toggleCourseFavorite = (courseId) => {
-    return api.post(`/favorite/toggle-course?courseId=${courseId}`);
-};
-
-export const toggleInstructorFavorite = (instructorId) => {
-    return api.post(`/favorite/toggle-instructor?instructorId=${instructorId}`);
-};
-
-export const getFavoriteCourses = () => {
-    return api.get("/favorite/courses");
-};
-
-export const getFavoriteInstructors = () => {
-    return api.get("/favorite/instructors");
-};
-
-export const isCourseFavorite = (courseId) => {
-    return api.get(`/favorite/is-course-favorite?courseId=${courseId}`);
-};
-
-export const isInstructorFavorite = (instructorId) => {
-    return api.get(`/favorite/is-instructor-favorite?instructorId=${instructorId}`);
-};
-
-/* ================= Create Course ================= */
-export const createCourse = async (courseData) => {
-    return api.post("/courses", courseData);
-};
-
-/* ================= Check Enrollment Status ================= */
-export const isStudentEnrolled = (courseId) => {
-    return api.get(`/courses/${courseId}/is-enrolled`);
-};
+// Get lectures for a section
+export const getSectionLectures = (sectionId) => api.get(`/courses/sections/${sectionId}/lectures`);
