@@ -9,6 +9,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdArrowOutward } from "react-icons/md";
 import Avatar from './Avatar';
 import MobileAdminMenu from "../../../layouts/MobileAdminMenu"
+import UnderDevelopmentPopup from '../../../components/common/UnderDevelopmentPopup';
 const items = [
   { title: "Students", field: "studentsCount", bgColor: "#D8DDE9", icon: FaUserGraduate },
   { title: "Teachers", field: "instructorsCount", bgColor: "#D1DFCC", icon: GiTeacher },
@@ -18,9 +19,14 @@ const items = [
 
 export default function Header({ header, admin }) {
   const [search, setSearch] = useState("");
+  const [openPopup, setOpenPopup] = useState(false); 
 
   return (
     <>
+       <UnderDevelopmentPopup
+        isOpen={openPopup}
+        onClose={() => setOpenPopup(false)}
+        />
       <div className="p-6 bg-white rounded-2xl shadow-md  min-h-[200px] hidden lg:flex flex-col items-between bg-[url('/adminDashboardbgjpeg.jpeg')] bg-cover bg-center bg-no-repeat mb-8">
         <div className="flex justify-end w-full mb-8 ">
           <div className="relative w-[50%] mx-auto">
@@ -40,7 +46,7 @@ export default function Header({ header, admin }) {
           </div>
           <div className="flex justify-end mt-4"></div>
           <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />
+            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)}/>
           </button>
           <Avatar
             src={admin?.imageUrl}
@@ -83,7 +89,7 @@ export default function Header({ header, admin }) {
             size={45} />
             <div className='flex items-center'>
           <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />
+            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)}/>
           </button>
           <MobileAdminMenu /> 
           </div>

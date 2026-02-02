@@ -9,9 +9,6 @@ export const getAuthHeader = () => ({
   },
 });
 
-/* ======================
-   Default (Fallback Data)
-====================== */
 const defaultProfile = {
   name: "Ali Ahmed",
   title: "Ui Ux Designer & Web Designer",
@@ -25,19 +22,6 @@ const defaultProfile = {
     whatsapp: "",
   },
 };
-
-const initialState = {
-  earnings: {
-    totalRevenue: 0,
-    todayRevenue: 0,
-    totalWithdrawals: 0,
-    balance: 0,
-    withdrawals: [],
-  },
-  loading: false,
-  error: null,
-};
-
 /* ======================
    Thunks
 ====================== */
@@ -112,10 +96,16 @@ const profileSlice = createSlice({
   initialState: {
     data: defaultProfile,
     courses: [],
+    reviews: [],
     loadingProfile: false,
     loadingCourses: false,
+    loadingReviews: false,
+    loadingEarnings: false,
     errorProfile: null,
     errorCourses: null,
+    errorReviews: null,
+    errorEarnings: null,
+    earnings: [],
   },
 
   reducers: {},

@@ -18,30 +18,27 @@ import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
 import pendingCoursesSlice from "./slices/AdminPendingCourses";
 import reviewCourseReducer from "./slices/AdminCourseReview";
 import courseActionReducer from "./slices/AdminCoursesActions";
+import updateProfileReducer from "./slices/AdminUpdateProfile";
 import courseReducer from "./Slices/courseSlice/courseSlice";
 
-// noop reducer
 const noopReducer = (state = {}) => state;
 
-// Configure store
 export const Store = configureStore({
   reducer: {
     teacherSetting: teacherSettingReducer,
-    Course: courseReducer,          // صح الاسم
+    Course: CourseReducer,
     subCategory: subCategoryReducer,
-    category:categoryReducer,
-    section:sectionReucer,
-    lecture:lectureReducer,
-        app: noopReducer,
-        checkout: checkoutReducer,
-        reviews: reviewReducer,
- 
-
     category: categoryReducer,
-    section: sectionReducer,        // صح الاسم
+    section: sectionReucer,
     lecture: lectureReducer,
     app: noopReducer,
     checkout: checkoutReducer,
+    reviews: reviewReducer,
+
+
+    app: noopReducer,
+    checkout: checkoutReducer,
+    profile: profileReducer,
     adminDashboard: adminDashboardSlice,
     adminStudents: adminStudentSlice,
     adminProfile: adminProfileSlice,
@@ -51,8 +48,6 @@ export const Store = configureStore({
     pendingCoursesData: pendingCoursesSlice,
     courseReview: reviewCourseReducer,
     courseAction: courseActionReducer,
-    course: courseReducer,
+    updateProfile: updateProfileReducer,
   },
 });
-
-export default Store;
