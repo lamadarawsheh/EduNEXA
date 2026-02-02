@@ -7,8 +7,9 @@ export default function AccountSettings() {
   const {
     register,
     formState: { errors },
+    watch
   } = useFormContext();
-
+   const profileImage = watch("profileImage");
   
   return (
     <>
@@ -43,7 +44,8 @@ export default function AccountSettings() {
             )}
           </div>
           <div className="border border-8-[#F5F7FA] col-span-4 md:order-2 order-1">
-            <img src={image} alt="Profile Picture" className="object-cover" />
+            <img src={profileImage||image} 
+            alt="Profile Picture" className="object-cover" />
           </div>
         </div>
         {/* Phone */}
