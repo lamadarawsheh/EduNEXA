@@ -200,7 +200,7 @@ const CourseAnalytics = () => {
                             {/* Earnings */}
                             <div className="flex items-center">
                                 <div className="border-r border-gray-200 pr-4 md:pr-6">
-                                    <p className="text-xl md:text-2xl text-gray-900">${course.price}</p>
+                                    <p className="text-xl md:text-2xl text-gray-900">{course.price}</p>
                                     <p className="text-xs md:text-sm text-[#1E8A85]">Course prices</p>
                                 </div>
 
