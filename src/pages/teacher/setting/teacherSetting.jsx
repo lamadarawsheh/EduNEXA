@@ -124,7 +124,7 @@ export default function TeacherSettings() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#093332] text-[white] px-4 py-4 mt-4 cursor-pointer"
+            className="bg-[#093332] text-[white] px-4 py-4 mt-4 cursor-pointer rounded-3xl"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

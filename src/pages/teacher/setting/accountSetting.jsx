@@ -23,12 +23,12 @@ export default function AccountSettings() {
               <input
                 {...register("firstName")}
                 placeholder="First name"
-                className=" text-[#176D69] w-full p-2 border border-[#176D69]"
+                className=" text-[#176D69] w-full p-2 border border-[#176D69] rounded-2xl"
               />
               <input
                 {...register("lastName")}
                 placeholder="Last name"
-                className=" text-[#176D69] w-full p-2 border border-[#176D69]"
+                className=" text-[#176D69] w-full p-2 border border-[#176D69] rounded-2xl"
               />
             </div>
 
@@ -37,7 +37,7 @@ export default function AccountSettings() {
             <input
               {...register("username", { required: "Username is required" })}
               placeholder="Enter your username"
-              className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+              className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2 rounded-2xl"
             />
             {errors.username && (
               <p className="error">{errors.username.message}</p>
@@ -53,7 +53,7 @@ export default function AccountSettings() {
         <input
           {...register("phone")}
           placeholder="+880 Your phone number"
-          className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+          className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2 rounded-2xl"
         />
 
         {/* Title */}
@@ -62,7 +62,7 @@ export default function AccountSettings() {
           <input
             {...register("title", { maxLength: 50 })}
             placeholder="Your title, profession or small biography"
-            className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+            className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2 rounded-2xl"
           />
           {/* <small>{titleValue.length}/50</small> */}
         </div>
@@ -72,7 +72,7 @@ export default function AccountSettings() {
         <textarea
           {...register("bio")}
           placeholder="Your title, profession or small biography"
-          className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2"
+          className=" text-[#176D69] w-full p-2 border border-[#176D69] mb-4 mt-2 rounded-2xl"
         />
 
     </>

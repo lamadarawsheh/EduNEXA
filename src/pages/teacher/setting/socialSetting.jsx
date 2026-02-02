@@ -24,7 +24,7 @@ export default function SocialSettings() {
           <input
             {...register("website")}
             placeholder="Personal website or portfolio url"
-            className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+            className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
           />
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -39,7 +39,7 @@ export default function SocialSettings() {
               <input
                 {...register("facebook")}
                 placeholder="Facebook username"
-                className=" text-[#176D69] w-full  p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full  p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function SocialSettings() {
               <input
                 {...register("instagram")}
                 placeholder="Instagram username"
-                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function SocialSettings() {
               <input
                 {...register("linkedin")}
                 placeholder="LinkedIn username"
-                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function SocialSettings() {
               <input
                 {...register("twitter")}
                 placeholder="Twitter username"
-                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function SocialSettings() {
               <input
                 {...register("whatsapp")}
                 placeholder="Whatsapp number"
-                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function SocialSettings() {
               <input
                 {...register("youtube")}
                 placeholder="Youtube username"
-                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2"
+                className=" text-[#176D69] w-full p-2 pl-10 border border-[#176D69] mb-4 mt-2 rounded-2xl"
               />
             </div>
           </div>
