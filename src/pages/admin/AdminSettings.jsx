@@ -18,7 +18,7 @@ export default function AdminSettings() {
     return (
     <>
       <div className="p-2 md:p-8 flex-col">
-        <PageHeader pageName="Settings" admin={profileData} />
+        <PageHeader pageName="Settings" admin={profileData} isSearch={"hidden"} />
         <div className="rounded-xl border border-gray-200 bg-white my-6 p-4 w-[100%] ">
           <Settings admin={profileData}/>
         </div>

@@ -18,12 +18,18 @@ const data = [
   { name: "Jun", value: 4.2 },
   { name: "Jul", value: 3.7 },
 ];
-const bestPerformance = [
-  { name: "Faris Ali", course:"Engineering" },
-  { name: "Ahmed Hassan", course:"Computer Science" },
-  { name: "Omar Khalil", course:"Buisness"},
-]
-export default function Performance() {
+
+export default function Performance({courses}) {
+  const top3Courses = [...courses]
+  .sort((a, b) => (b.studentsCount || 0) - (a.studentsCount || 0))
+  .slice(0, 3);
+  const chartData = [...courses]
+  .sort((a, b) => (b.studentsCount || 0) - (a.studentsCount || 0))
+  .slice(0, 5)
+  .map(c => ({
+    name: c.title,
+    value: c.studentsCount
+  }));
   return (
     <div className="flex flex-wrap gap-3 justify-between">
     <div className="rounded-xl border border-gray-200 bg-white  p-4 w-[100%] lg:w-[78%]">
@@ -34,7 +40,7 @@ export default function Performance() {
 
       <div className="h-56 w-full">
       <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               <linearGradient id="fillTeal" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#176D69" stopOpacity={0.25} />
@@ -42,7 +48,7 @@ export default function Performance() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="4 4" vertical={false} />
-            <XAxis dataKey="name" tickLine={false} axisLine={false} />
+            <XAxis dataKey="name" className="text-[12px]" tickLine={false} axisLine={false} />
             <YAxis tickLine={false} axisLine={false} />
             <Tooltip />
             <Area
@@ -62,19 +68,18 @@ export default function Performance() {
       <div className="rounded-xl border border-gray-200 bg-white p-4 w-[100%] lg:w-[20%]">
         <div className="mb-3 ">
         <p className="text-sm font-semibold text-gray-800">Top Performerce</p>
-        {bestPerformance.map((user, index) => (
+        {top3Courses.map((instructor, index) => (
         <div
         key={index}
         className="flex justify-between items-center mt-8" >
       <div className="flex gap-4 items-center">
         <Avatar
-        name={user.name}
+        name={instructor.instructorName}
         size={40}
-        // src={user.avatar}  
         />
       <div className="flex flex-col">
-        <p className="text-[14px] text-gray-800">{user.name}</p>
-        <p className="text-[12px] text-gray-500">{user.course}</p>
+        <p className="text-[14px] text-gray-800">{instructor.instructorName}</p>
+        <p className="text-[12px] text-gray-500">{instructor.title}</p>
       </div>
     </div>
         <p className="bg-gray-200 rounded-md p-1 text-[12px]">
