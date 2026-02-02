@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/walletSlice";
+import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/Slices/walletSlice/walletSlice";
 import { CheckCircle2, ChevronDown, Copy, ArrowRight, ArrowLeft } from "lucide-react";
 import Swal from "sweetalert2";
 

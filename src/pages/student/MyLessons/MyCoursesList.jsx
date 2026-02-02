@@ -6,10 +6,13 @@ import { getApprovedCourses, isStudentEnrolled, BaseURL, isWorkingUrl, formatDur
 const EnrolledCourseCard = ({ course }) => {
     const navigate = useNavigate();
 
+    // تعديل لجلب الصورة بناءً على الحقول الموجودة في الـ API (الصورة المرفقة تستخدم thumbnailUrl)
     const imageUrl = course.thumbnailUrl || course.image || course.imagePath || course.imageUrl;
-    const safeImageUrl = imageUrl && isWorkingUrl(imageUrl)
-        ? (imageUrl.startsWith('http') ? imageUrl : `${BaseURL}/${imageUrl.replace(/^\//, '')}`)
-        : "/course_placeholder.png";
+    
+    // التحقق ما إذا كان الرابط كاملاً (مثل رابط ibb.co في الصورة) أو يحتاج BaseURL
+    const safeImageUrl = imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))
+        ? imageUrl
+        : (imageUrl ? `${BaseURL}/${imageUrl.replace(/^\//, '')}` : "/course_placeholder.png");
 
     return (
         <div
@@ -30,6 +33,7 @@ const EnrolledCourseCard = ({ course }) => {
                 </div>
                 <div className="absolute top-4 left-4">
                     <span className="bg-[#4AA59B] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">
+                        {/* استخدام categoryName أو عرض 'C#' إذا كان الـ ID معروفاً، أو افتراضياً Course */}
                         {course.categoryName || course.category || 'Course'}
                     </span>
                 </div>
@@ -37,10 +41,13 @@ const EnrolledCourseCard = ({ course }) => {
 
             <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
+                    {/* عرض أول حرف من اسم المحاضر الموجود في الـ API */}
                     <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-400">
-                        {(course.instructorName || 'Instructor')[0]}
+                        {(course.instructorName || 'I')[0]}
                     </div>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{course.instructorName || 'Expert Instructor'}</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        {course.instructorName || 'Expert Instructor'}
+                    </span>
                 </div>
 
                 <h3 className="text-base font-black text-[#0F172B] mb-4 line-clamp-2 min-h-[3rem] group-hover:text-[#4AA59B] transition-colors leading-tight">
@@ -68,7 +75,13 @@ const EnrolledCourseCard = ({ course }) => {
                         </div>
                         <div className="flex items-center gap-1">
                             <Clock size={12} className="text-[#4AA59B]" />
-                            <span>{course.estimatedDuration ? formatDuration(course.estimatedDuration) : '0 hrs'}</span>
+                            <span>
+                                {course.estimatedDuration 
+                                    ? (typeof course.estimatedDuration === 'string' && course.estimatedDuration.includes(':') 
+                                        ? `${course.estimatedDuration.split(':')[0]} hrs` 
+                                        : formatDuration(course.estimatedDuration)) 
+                                    : '0 hrs'}
+                            </span>
                         </div>
                     </div>
                     <div className="text-[#0F4C4A] group-hover:translate-x-1 transition-transform duration-300">
@@ -90,34 +103,33 @@ export default function MyCoursesList() {
             try {
                 setIsLoading(true);
 
-                // 1. Fetch all approved courses
+                // 1. جلب الكورسات المعتمدة
                 const coursesResponse = await getApprovedCourses();
                 const allCourses = coursesResponse.data || [];
 
-                // 2. Check enrollment status for each course
+                // 2. التحقق من حالة التسجيل لكل كورس
                 const enrollmentChecks = await Promise.all(
                     allCourses.map(async (course) => {
                         try {
                             const enrollmentResponse = await isStudentEnrolled(course.id);
-                            return {
-                                course,
-                                isEnrolled: enrollmentResponse.data === true || enrollmentResponse.data?.isEnrolled === true
-                            };
+                            // التحقق من صحة القيمة الراجعة بناءً على هيكلة الـ API الخاص بك
+                            const isEnrolled = enrollmentResponse.data === true || enrollmentResponse.data?.isEnrolled === true;
+                            return { course, isEnrolled };
                         } catch (error) {
-                            // If the API call fails, assume not enrolled
                             return { course, isEnrolled: false };
                         }
                     })
                 );
 
-                // 3. Filter only enrolled courses
+                // 3. فلترة الكورسات ودمج بيانات الـ Progress
                 const enrolled = enrollmentChecks
                     .filter(item => item.isEnrolled)
                     .map(item => ({
                         ...item.course,
-                        progress: 0, // TODO: Get actual progress from API
-                        lessonsCompleted: 0, // TODO: Get from API
-                        totalLessons: 0 // TODO: Get from API
+                        // القيم الافتراضية إذا لم تكن موجودة في الـ API بعد
+                        progress: item.course.progress || 0,
+                        lessonsCompleted: item.course.lessonsCompleted || 0,
+                        totalLessons: item.course.totalLessons || 0
                     }));
 
                 setEnrolledCourses(enrolled);

@@ -36,7 +36,7 @@ export default function LessonCard() {
 
   const courseData = [
     {
-      week: 1,
+      section: 1,
       title: "Introduction to UI/UX Design",
       lessons: [
         { id: "01", title: "Understanding UI/UX Design Principles", duration: "45 Minutes" },
@@ -45,7 +45,7 @@ export default function LessonCard() {
       ]
     },
     {
-      week: 2,
+      section: 2,
       title: "User Research and Analysis",
       lessons: [
         { id: "01", title: "Conducting User Research and Interviews", duration: "1 Hour" },
@@ -54,7 +54,7 @@ export default function LessonCard() {
       ]
     },
     {
-      week: 3,
+      section: 3,
       title: "Wireframing and Prototyping",
       lessons: [
         { id: "01", title: "Introduction to Wireframing Tools and Techniques", duration: "1 Hour" },
@@ -63,7 +63,7 @@ export default function LessonCard() {
       ]
     },
     {
-      week: 4,
+      section: 4,
       title: "Visual Design and Branding",
       lessons: [
         { id: "01", title: "Color Theory and Typography in UI Design", duration: "1 Hour" },
@@ -72,7 +72,7 @@ export default function LessonCard() {
       ]
     },
     {
-      week: 5,
+      section: 5,
       title: "Usability Testing and Iteration",
       lessons: [
         { id: "01", title: "Usability Testing Methods and Techniques", duration: "1 Hour" },
@@ -88,7 +88,7 @@ export default function LessonCard() {
         <div key={index} className="relative group flex flex-col items-center w-full max-w-[600px]">
           
           <div className="absolute text-center -top-18 w-[600px] max-w-full h-[53px] bg-[#1b5e54] text-white flex items-center justify-center rounded-lg font-bold tracking-wide shadow-lg border-2 border-[#1b5e54] z-10">
-            Week {item.week}
+            section {item.section}
           </div>
           <div className="p-8 w-[600px] max-w-full min-h-[367px] h-auto gap-4 bg-white border-x border-b border-gray-100 rounded-b-2xl shadow-sm relative pt-12">
             <h3 className="text-xl font-bold text-[#093332] mb-6 px-4">
