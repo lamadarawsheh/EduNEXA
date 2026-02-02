@@ -49,8 +49,6 @@ export default function AdminStudents() {
           phone.includes(q)
         );
       });
-
-
     const { key, direction } = sortBy || {};
     const dir = direction === "desc" ? -1 : 1;
 
@@ -84,7 +82,7 @@ useEffect(() => {
       <PageHeader pageName="Students Records" input={search} 
         onChange={setSearch} admin={profileData}
         placeholder="Search by Name, Email or Number" />
-      <Table records={currentItems} columns={["Student Name", "Email", "Phone", "Date of Birth"]} isFilter={"hidden"} sortBy={sortBy}
+      <Table records={currentItems} columns={["Student Name", "Email", "Phone", "Date of Birth"]} sortBy={sortBy}
         onSortChange={setSortBy} sortKey="userName" pageName="Students Records" />
       <Pagination page={page} totalPages={totalPages} onPageChange={goTo} />
     </div>
