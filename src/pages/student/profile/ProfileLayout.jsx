@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Outlet, Link } from "react-router-dom";
 import { CreditCard, Globe, Settings, UserRound, ArrowLeft } from "lucide-react";
+import api from "../../../services/api";
 
 const navItems = [
     { to: "personal", label: "Personal info", icon: UserRound },
@@ -8,6 +9,84 @@ const navItems = [
 ];
 
 const StudentProfileLayout = () => {
+    const [profileImage, setProfileImage] = useState("");
+    const [displayName, setDisplayName] = useState("Student Name");
+    const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, "") || "";
+
+    const resolveImageUrl = (value) => {
+        if (!value || typeof value !== "string") return "";
+        const trimmed = value.trim();
+        if (!trimmed) return "";
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("blob:")) {
+            return trimmed;
+        }
+        if (!apiRoot) return trimmed;
+        return `${apiRoot}/${trimmed.replace(/^\//, "")}`;
+    };
+
+    const getStoredProfileImage = () => {
+        const stored = localStorage.getItem("profileImageUrl");
+        if (stored) return stored;
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        return (
+            user.imageUrl ||
+            user.imageURL ||
+            user.avatarUrl ||
+            user.profileImage ||
+            user.profileImageUrl ||
+            user.image ||
+            user.user?.imageUrl ||
+            user.user?.imageURL ||
+            user.user?.avatarUrl ||
+            user.user?.profileImage ||
+            user.user?.profileImageUrl ||
+            ""
+        );
+    };
+
+    const getDisplayName = () => {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        return (
+            user.fullName ||
+            user.name ||
+            user.userName ||
+            user.username ||
+            user.user?.fullName ||
+            user.user?.name ||
+            user.user?.userName ||
+            user.user?.username ||
+            "Student Name"
+        );
+    };
+
+    useEffect(() => {
+        const updateProfile = (imageValue) => {
+            setProfileImage(resolveImageUrl(imageValue || getStoredProfileImage()));
+            setDisplayName(getDisplayName());
+        };
+
+        updateProfile();
+
+        const handleStorage = (event) => {
+            if (event.key === "profileImageUrl" || event.key === "user") {
+                updateProfile();
+            }
+        };
+
+        const handleProfileUpdate = (event) => {
+            if (event?.detail?.url) {
+                updateProfile(event.detail.url);
+            }
+        };
+
+        window.addEventListener("storage", handleStorage);
+        window.addEventListener("profile-image-updated", handleProfileUpdate);
+        return () => {
+            window.removeEventListener("storage", handleStorage);
+            window.removeEventListener("profile-image-updated", handleProfileUpdate);
+        };
+    }, [apiRoot]);
+
     return (
         <div className="flex min-h-[calc(100vh-64px)] w-full items-center justify-center bg-linear-to-br from-teal-700 via-teal-600 to-emerald-500 p-4 md:p-6">
             <div className="flex w-full max-w-5xl flex-col gap-6 md:flex-row md:items-start">
@@ -16,10 +95,19 @@ const StudentProfileLayout = () => {
                 <aside className="w-full shrink-0 rounded-2xl bg-white p-6 shadow-xl md:w-64">
 
                     <div className="mb-8 flex flex-col items-center">
-                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-teal-100 text-teal-600 shadow-sm">
-                            <UserRound size={40} />
+                        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-teal-100 text-teal-600 shadow-sm">
+                            {profileImage ? (
+                                <img
+                                    src={profileImage}
+                                    alt="Student profile"
+                                    className="h-full w-full object-cover"
+                                    onError={() => setProfileImage("")}
+                                />
+                            ) : (
+                                <UserRound size={40} />
+                            )}
                         </div>
-                        <h2 className="mt-4 text-xl font-bold text-gray-800">Student Name</h2>
+                        <h2 className="mt-4 text-xl font-bold text-gray-800">{displayName}</h2>
                         <p className="text-xs text-gray-500">Student Account</p>
                     </div>
 

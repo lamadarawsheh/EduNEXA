@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Bell,
@@ -8,12 +8,15 @@ import {
     LogOut
 } from 'lucide-react';
 import { logout } from '../../services/authService';
+import api from '../../services/api';
 
 const DashboardNavbar = ({ role = 'student' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
+    const [profileImage, setProfileImage] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
+    const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, '') || '';
 
     const handleLogout = () => {
         logout();
@@ -36,6 +39,65 @@ const DashboardNavbar = ({ role = 'student' }) => {
     ];
 
     const links = role === 'teacher' ? teacherLinks : studentLinks;
+
+    const resolveImageUrl = (value) => {
+        if (!value || typeof value !== 'string') return '';
+        const trimmed = value.trim();
+        if (!trimmed) return '';
+        if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('blob:')) {
+            return trimmed;
+        }
+        if (!apiRoot) return trimmed;
+        return `${apiRoot}/${trimmed.replace(/^\//, '')}`;
+    };
+
+    const getStoredProfileImage = () => {
+        const stored = localStorage.getItem('profileImageUrl');
+        if (stored) return stored;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        return (
+            user.imageUrl ||
+            user.imageURL ||
+            user.avatarUrl ||
+            user.profileImage ||
+            user.profileImageUrl ||
+            user.image ||
+            user.user?.imageUrl ||
+            user.user?.imageURL ||
+            user.user?.avatarUrl ||
+            user.user?.profileImage ||
+            user.user?.profileImageUrl ||
+            ''
+        );
+    };
+
+    useEffect(() => {
+        const updateImage = (value) => {
+            const resolved = resolveImageUrl(value || getStoredProfileImage());
+            setProfileImage(resolved);
+        };
+
+        updateImage();
+
+        const handleStorage = (event) => {
+            if (event.key === 'profileImageUrl' || event.key === 'user') {
+                updateImage();
+            }
+        };
+
+        const handleProfileUpdate = (event) => {
+            if (event?.detail?.url) {
+                updateImage(event.detail.url);
+            }
+        };
+
+        window.addEventListener('storage', handleStorage);
+        window.addEventListener('profile-image-updated', handleProfileUpdate);
+        return () => {
+            window.removeEventListener('storage', handleStorage);
+            window.removeEventListener('profile-image-updated', handleProfileUpdate);
+        };
+    }, [apiRoot]);
 
     return (
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between">
@@ -80,7 +142,16 @@ const DashboardNavbar = ({ role = 'student' }) => {
                             className="flex items-center gap-2 group focus:outline-none"
                         >
                             <div className="w-10 h-10 rounded-full border-2 border-teal-100 overflow-hidden bg-teal-50 flex items-center justify-center text-[#0F4C4A] transition-all group-hover:bg-[#0F4C4A] group-hover:text-white group-hover:border-[#0F4C4A]">
-                                <User size={20} />
+                                {profileImage ? (
+                                    <img
+                                        src={profileImage}
+                                        alt="Profile"
+                                        className="h-full w-full object-cover"
+                                        onError={() => setProfileImage('')}
+                                    />
+                                ) : (
+                                    <User size={20} />
+                                )}
                             </div>
                             <ChevronDown size={14} className={`text-[#45556C] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
                         </button>

@@ -110,6 +110,8 @@ const PersonalInformation = () => {
           }
           setServerImageUrl(resolvedImage);
           setImagePreview(resolvedImage);
+          localStorage.setItem("profileImageUrl", resolvedImage);
+          window.dispatchEvent(new CustomEvent("profile-image-updated", { detail: { url: resolvedImage } }));
         }
       } catch (error) {
         if (isActive) {
@@ -180,6 +182,10 @@ const PersonalInformation = () => {
     try {
       setIsUploadingImage(true);
       await updateStudentProfile(studentId, formData, file);
+      window.dispatchEvent(new CustomEvent("profile-image-updated", { detail: { url: previewUrl } }));
+      if (!previewUrl.startsWith("blob:")) {
+        localStorage.setItem("profileImageUrl", previewUrl);
+      }
       setImageFile(null);
     } catch (error) {
       console.error("Failed to update profile image:", error);
@@ -198,6 +204,10 @@ const PersonalInformation = () => {
     }
     setImageFile(null);
     setImagePreview(serverImageUrl || "");
+    if (serverImageUrl) {
+      window.dispatchEvent(new CustomEvent("profile-image-updated", { detail: { url: serverImageUrl } }));
+      localStorage.setItem("profileImageUrl", serverImageUrl);
+    }
   };
 
   const handleSubmit = async (event) => {
