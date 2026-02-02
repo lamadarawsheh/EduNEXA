@@ -3,16 +3,22 @@ import { FiSearch } from "react-icons/fi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import Avatar from '../Avatar';
 import MobileAdminMenu from '../../../../layouts/MobileAdminMenu';
+import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
 
 
 export default function PageHeader({pageName, input, onChange, placeholder,admin}) {
- 
+        const [openPopup, setOpenPopup] = useState(false); 
+
 return (
     <>
+        <UnderDevelopmentPopup
+        isOpen={openPopup}
+        onClose={() => setOpenPopup(false)}
+        />
         <div className="flex items-center justify-between md:hidden">
             <img src="/Heading1.png" alt="Admin NEXA" className="w-28" />
             <div className="flex items-center gap-2 px-3 py-2">
-                <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+                <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200" onClick={() => setOpenPopup(true)}>
                 <IoNotificationsOutline size={24} className="text-[#176D69]" />
                 </button>
             <div className="w-10 h-10">
@@ -40,7 +46,7 @@ return (
                 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"/>
         </div>
         <button className="hidden md:block p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-        <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" />   
+        <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)} />   
         </button>
         <div className="hidden md:block w-12 h-12 me-4">
         <Avatar 

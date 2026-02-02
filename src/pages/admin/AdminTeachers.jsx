@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminTeachers } from '../../ReduxToolkit/slices/AdminTeachers';
 import { SpinnerCustom } from '../../utils/Spinner';
 import { fetchAdminProfile } from '../../ReduxToolkit/slices/AdminProfile';
+import UsePagination from './components/dashboardComponents/UsePagination';
+import Pagination from './components/dashboardComponents/Pagination';
 
 export default function AdminTeachers() {
   const [search, setSearch] = useState("");
@@ -55,7 +57,11 @@ export default function AdminTeachers() {
     });
     return result;
   }, [teachersData, search, sortBy]);
+const { page, totalPages, currentItems, goTo, reset } = UsePagination(processedRecords, 12);
 
+useEffect(() => {
+  reset();
+}, [search, sortBy]);
     if (isLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
     if (error) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>Error: {typeof error === "string" ? error : "Failed"}</p></div>;
 
@@ -64,8 +70,9 @@ export default function AdminTeachers() {
       <PageHeader pageName="Teachers Records" input={search}
         onChange={setSearch}  admin={profileData}
         placeholder="Search by Name, Email or Course"/>
-      <Table records={processedRecords} columns={["Teacher Name", "Email", "Specialization", "Rate", "No of Courses"]} noOfCourses={"Courses"} pageName="Teachers Records" sortBy={sortBy}
+      <Table records={currentItems} columns={["Teacher Name", "Email", "Specialization", "Rate", "No of Courses"]} noOfCourses={"Courses"} pageName="Teachers Records" sortBy={sortBy}
         sortKey="fullName" onSortChange={setSortBy} />
+      <Pagination page={page} totalPages={totalPages} onPageChange={goTo} />
     </div>
   )
 }
