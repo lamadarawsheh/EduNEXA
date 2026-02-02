@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import cProgramming from '../../assets/C-programming.jpg'
-import aspProgramming from '../../assets/asp.png'
 import { GoPerson } from "react-icons/go";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { CiCreditCard1 } from "react-icons/ci";
@@ -13,6 +11,8 @@ import { fetchEarnings } from "../../ReduxToolkit/Profile/ProfileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import { isWorkingUrl } from '../../services/courseService';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const chartData = [70, 90, 40, 95, 50, 78, 30, 60, 55];
 const overallRating = {
@@ -41,15 +41,6 @@ const data = [
     { name: '15', uv: 61 },
 ];
 
-const courseImages = [
-    cProgramming,
-    cProgramming,
-    cProgramming,
-    cProgramming,
-    cProgramming,
-    aspProgramming,
-]
-
 const CourseAnalytics = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -57,7 +48,6 @@ const CourseAnalytics = () => {
     const location = useLocation();
 
     const [course, setCourse] = useState(location.state?.course || null);
-    const [imageIndex, setImageIndex] = useState(location.state?.imageIndex || 0);
     const [loading, setLoading] = useState(!location.state?.course);
 
     const earnings = useSelector(
@@ -113,17 +103,32 @@ const CourseAnalytics = () => {
     }
 
     const formattedBarData = chartData.map((val) => ({ value: val }));
+
+    // Animation variants
+    const fadeInUp = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.6, ease: "easeOut" }
+    };
+
     return (
-        <div className="w-full bg-white p-4 md:p-10">
+        <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="w-full bg-white p-4 md:p-10">
 
             {/* Header Section */}
-            <div className="bg-[#F2F2F2] overflow-hidden border border-gray-200">
+            <motion.div 
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="bg-[#F2F2F2] overflow-hidden border border-gray-200">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-6">
 
                     {/* Image Section */}
                     <div className="lg:col-span-1 h-56 bg-gray-100 overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            <img src={courseImages[imageIndex]} alt="" className="max-w-full h-auto" />
+                            <img  src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `http://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"} 
+                            alt="" className="w-full h-auto" />
                         </div>
                     </div>
 
@@ -202,10 +207,10 @@ const CourseAnalytics = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div >
 
             {/* Middle Section: Stats & Bar Chart */}
-            <div className="flex flex-col lg:flex-row justify-between mt-10 mb-10 gap-10">
+            <motion.div {...fadeInUp} className="flex flex-col lg:flex-row justify-between mt-10 mb-10 gap-10">
                 {/* LEFT STATS GRID */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 w-full lg:w-1/2 gap-6">
                     <div className="flex items-center gap-3">
@@ -297,10 +302,10 @@ const CourseAnalytics = () => {
                         <p className="text-xs text-gray-400">USD Dollar you earned.</p>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Bottom Section: Overall Rating & Progress Bars */}
-            <div className="flex flex-col lg:flex-row gap-10 mb-10 justify-between items-center mt-20">
+            <motion.div {...fadeInUp} className="flex flex-col lg:flex-row gap-10 mb-10 justify-between items-center mt-20">
                 {/* AREA CHART SECTION */}
                 <div className="flex flex-col w-full lg:w-1/2">
                     <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
@@ -384,9 +389,9 @@ const CourseAnalytics = () => {
                         })}
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
-        </div>
+        </motion.div>
     );
 };
 
