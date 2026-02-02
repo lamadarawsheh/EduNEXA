@@ -25,47 +25,7 @@ const AdminLayout = () => {
     const [open, setOpen] = useState(false);
     const closeMenu = () => setOpen(false);
 
-    <aside className="order-1 bg-transparent w-full lg:hidden p-4 my-6 ">
-                 <button
-          className="md:hidden flex flex-col gap-1 bg-gray-400"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-        >
-          <span
-            className={`w-6 h-0.5 bg-[#176D69] transition-transform duration-200 ${
-              open ? "rotate-45 translate-y-2" : ""
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-[#176D69] transition-opacity duration-200 ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-[#176D69] transition-transform duration-200 ${
-              open ? "-rotate-45 -translate-y-2" : ""
-            }`}
-          />
-        </button>
-
-                {/* <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 lg:hidden font-semibold text-lg text-red-600 hover:text-[#8A8A8A] my-4"
-                >
-                    <PiSignOutBold /> <span>sign out</span>
-                </button> */}
-
-                <nav className="flex justify-evenly border-r border-white/5 bg-white rounded-2xl shadow-md py-3">
-                    {open && 
-                    navItems.map((item) => (
-                        <NavItem key={item.to} label={item.label} to={item.to}  onClick={closeMenu}/>
-              ))
-}
-
-                </nav>
-            </aside>
-           return (
+        return (
         <div className="flex flex-col lg:flex-row min-h-screen text-black">
             <aside className="w-64 xl:flex lg:flex-col justify-between items-between border-r border-white/5 bg-white p-6 py-8 hidden">
                 <div>
