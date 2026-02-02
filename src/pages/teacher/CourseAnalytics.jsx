@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import cProgramming from '../../assets/C-programming.jpg'
-import aspProgramming from '../../assets/asp.png'
+import React, { useEffect, useState } from "react";
 import { GoPerson } from "react-icons/go";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { CiCreditCard1 } from "react-icons/ci";
@@ -8,10 +6,14 @@ import { CiClock2 } from "react-icons/ci";
 import { LuChevronDown } from "react-icons/lu";
 import { AreaChart, Area, BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { PiChartBarHorizontal, PiPlayCircleDuotone, PiUsersDuotone, PiNotepad, PiTrophyDuotone } from "react-icons/pi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { fetchEarnings } from "../../ReduxToolkit/Profile/ProfileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import { isWorkingUrl } from '../../services/courseService';
+import { motion, AnimatePresence } from 'framer-motion';
+
 const chartData = [70, 90, 40, 95, 50, 78, 30, 60, 55];
 const overallRating = {
     fiveStar: 56,
@@ -39,18 +41,15 @@ const data = [
     { name: '15', uv: 61 },
 ];
 
-const courseImages= [
-        cProgramming,
-        cProgramming,
-        cProgramming,
-        cProgramming,
-        cProgramming,
-        aspProgramming,
-    ]
-
 const CourseAnalytics = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id: courseId } = useParams();
+    const location = useLocation();
+
+    const [course, setCourse] = useState(location.state?.course || null);
+    const [loading, setLoading] = useState(!location.state?.course);
+
     const earnings = useSelector(
         (state) => state.profile.earnings
     );
@@ -59,26 +58,77 @@ const CourseAnalytics = () => {
         dispatch(fetchEarnings());
     }, [dispatch]);
 
-    // console.log("Earnings Data:", earnings.totalRevenue);
+    // Fetch course data if not provided via location.state
+    useEffect(() => {
+        if (!course && courseId) {
+            setLoading(true);
+            api.get(`/courses/${courseId}`)
+                .then(res => {
+                    setCourse(res.data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.error("Error fetching course:", err);
+                    setLoading(false);
+                });
+        }
+    }, [courseId, course]);
 
-    const location = useLocation();
-    const { course, imageIndex } = location.state || {};
+    if (loading) {
+        return (
+            <div className="w-full bg-white p-10 flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E8A85] mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading course analytics...</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!course) {
-        return <p>No course data available</p>;
+        return (
+            <div className="w-full bg-white p-10 flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <p className="text-xl font-semibold text-gray-700 mb-2">No course data available</p>
+                    <p className="text-gray-500 mb-4">Unable to load course information.</p>
+                    <button
+                        onClick={() => navigate('/teacher/mycourses')}
+                        className="bg-[#1E8A85] text-white px-6 py-2 rounded-lg hover:bg-[#176D69] transition"
+                    >
+                        Back to My Courses
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     const formattedBarData = chartData.map((val) => ({ value: val }));
+
+    // Animation variants
+    const fadeInUp = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.6, ease: "easeOut" }
+    };
+
     return (
-        <div className="w-full bg-white p-4 md:p-10">
+        <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="w-full bg-white p-4 md:p-10">
 
             {/* Header Section */}
-            <div className="bg-[#F2F2F2] overflow-hidden border border-gray-200">
+            <motion.div 
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="bg-[#F2F2F2] overflow-hidden border border-gray-200">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-6">
 
                     {/* Image Section */}
                     <div className="lg:col-span-1 h-56 bg-gray-100 overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            <img src={courseImages[imageIndex]} alt="" className="max-w-full h-auto" />
+                            <img  src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `http://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"} 
+                            alt="" className="w-full h-auto" />
                         </div>
                     </div>
 
@@ -110,13 +160,18 @@ const CourseAnalytics = () => {
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 mb-6 border-b border-gray-200 pb-4 gap-4">
                             <div className="flex items-center gap-2">
                                 <span className="text-white bg-[black] text-2xl p-1"><GoPerson /></span>
-                                <span className="font-medium text-[#1E8A85]">{course.studentCount}</span>
+                                <span className="font-medium text-[#1E8A85]">{course.studentCount || course.students || 0}</span>
                                 <span className="text-[#1E8A85]">students</span>
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <span className="flex items-center gap-1 font-medium text-[#1E8A85]"><FaStar className="text-orange-400" />{course.reviewCount.toFixed(1)}</span>
-                                <span className="text-[#1E8A85] text-xs sm:text-sm">({course.rating} Rating)</span>
+                                <div className="flex items-center gap-1 font-medium text-[#1E8A85]">
+                                    <FaStar className="text-orange-400" />
+                                    {typeof course.rating === 'number' ? course.rating.toFixed(1) : (parseFloat(course.rating) || 0).toFixed(1)}
+                                </div>
+                                <span className="text-[#1E8A85] text-xs sm:text-sm">
+                                    ({course.reviewCount || 0} Reviews)
+                                </span>
                             </div>
                         </div>
 
@@ -152,10 +207,10 @@ const CourseAnalytics = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div >
 
             {/* Middle Section: Stats & Bar Chart */}
-            <div className="flex flex-col lg:flex-row justify-between mt-10 mb-10 gap-10">
+            <motion.div {...fadeInUp} className="flex flex-col lg:flex-row justify-between mt-10 mb-10 gap-10">
                 {/* LEFT STATS GRID */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 w-full lg:w-1/2 gap-6">
                     <div className="flex items-center gap-3">
@@ -175,7 +230,7 @@ const CourseAnalytics = () => {
                     <div className="flex items-center gap-3">
                         <span className="bg-[#A6E5E3] p-2 text-2xl text-[#1E8A85] flex-shrink-0"><PiUsersDuotone /></span>
                         <div className="flex flex-col">
-                            <span className="text-black font-semibold">{course.studentCount}</span>
+                            <span className="text-black font-semibold">{course.studentCount || course.students || 0}</span>
                             <span className="text-[#176D69] text-sm">Students enrolled</span>
                         </div>
                     </div>
@@ -204,7 +259,9 @@ const CourseAnalytics = () => {
                     <div className="flex items-center gap-3">
                         <span className="bg-[#176D69] p-2 text-2xl text-white flex-shrink-0"><CiClock2 /></span>
                         <div className="flex flex-col">
-                            <span className="text-black font-semibold">{course.estimatedDuration.split(":")[0]}</span>
+                            <span className="text-black font-semibold">
+                                {course.estimatedDuration ? course.estimatedDuration.split(":")[0] : (course.duration || "0")}
+                            </span>
                             <span className="text-[#176D69] text-sm">Hours</span>
                         </div>
                     </div>
@@ -245,10 +302,10 @@ const CourseAnalytics = () => {
                         <p className="text-xs text-gray-400">USD Dollar you earned.</p>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Bottom Section: Overall Rating & Progress Bars */}
-            <div className="flex flex-col lg:flex-row gap-10 mb-10 justify-between items-center mt-20">
+            <motion.div {...fadeInUp} className="flex flex-col lg:flex-row gap-10 mb-10 justify-between items-center mt-20">
                 {/* AREA CHART SECTION */}
                 <div className="flex flex-col w-full lg:w-1/2">
                     <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
@@ -258,7 +315,9 @@ const CourseAnalytics = () => {
 
                     <div className="flex flex-col sm:flex-row gap-5 items-center">
                         <div className="flex flex-col items-center bg-[#FFF2E5] p-4 pt-5 flex-shrink-0">
-                            <p className="text-4xl font-bold text-black">{course.rating.toFixed(1)}</p>
+                            <p className="text-4xl font-bold text-black">
+                                {typeof course.rating === 'number' ? course.rating.toFixed(1) : (parseFloat(course.rating) || 0).toFixed(1)}
+                            </p>
                             <div className="text-[#FD8E1F] flex items-center text-xl my-2">
                                 {Array.from({ length: 4 }, (_, i) => (
                                     <FaStar key={i} />
@@ -330,9 +389,9 @@ const CourseAnalytics = () => {
                         })}
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
-        </div>
+        </motion.div>
     );
 };
 

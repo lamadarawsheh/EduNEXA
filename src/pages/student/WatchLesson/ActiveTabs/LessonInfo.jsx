@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import DynamicReviewSection from "../../WriteReviewModal"; 
+import WriteReviewModal from "../../WriteReviewModal"; 
 import { Star, X } from "lucide-react";
 
-export default function LessonInfo({ title, commentCount, rating, onNewReview, hasRated }) {
+export default function LessonInfo({ 
+  title, 
+  commentCount, 
+  rating, 
+  hasRated, 
+  courseId,    
+  studentId   
+}) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const imgs = [
@@ -34,6 +41,7 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
               <strong className="text-slate-800">512</strong> Students watching
             </span>
           </div>
+
           <button 
             onClick={() => setIsReviewOpen(true)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-orange-50 transition-colors group"
@@ -68,21 +76,13 @@ export default function LessonInfo({ title, commentCount, rating, onNewReview, h
 
       {isReviewOpen && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl animate-scale-in">
-            <button 
-              onClick={() => setIsReviewOpen(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-gray-50 rounded-full text-gray-400 hover:text-red-500 transition-colors"
-            >
-              <X size={20} />
-            </button>
-            
-            <DynamicReviewSection 
-               onSubmitReview={onNewReview} 
-               hasRated={hasRated}
-               onClose={() => setIsReviewOpen(false)}
+            <WriteReviewModal
+                courseId={courseId}
+                studentId={studentId}
+                hasRated={hasRated}
+                onClose={() => setIsReviewOpen(false)}
             />
           </div>
-        </div>
       )}
     </div>
   );

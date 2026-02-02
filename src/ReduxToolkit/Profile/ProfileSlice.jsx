@@ -9,9 +9,6 @@ export const getAuthHeader = () => ({
   },
 });
 
-/* ======================
-   Default (Fallback Data)
-====================== */
 const defaultProfile = {
   name: "Ali Ahmed",
   title: "Ui Ux Designer & Web Designer",
@@ -25,19 +22,6 @@ const defaultProfile = {
     whatsapp: "",
   },
 };
-
-const initialState = {
-  earnings: {
-    totalRevenue: 0,
-    todayRevenue: 0,
-    totalWithdrawals: 0,
-    balance: 0,
-    withdrawals: [],
-  },
-  loading: false,
-  error: null,
-};
-
 /* ======================
    Thunks
 ====================== */
@@ -76,10 +60,10 @@ export const fetchApprovedCourses = createAsyncThunk(
 // Reviews
 export const fetchReviews = createAsyncThunk(
   "profile/fetchReviews",
-  async (_, { rejectWithValue }) => {
+  async (instructorId, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `${BaseURL}/InstructorReview/GetInstructorReviews/DE2E2F10-9E91-4391-5938-08DE4AEF4B97`,
+        `${BaseURL}/InstructorReview/GetInstructorReviews/${instructorId}`,
         getAuthHeader()
       );
       return res.data;
@@ -112,10 +96,16 @@ const profileSlice = createSlice({
   initialState: {
     data: defaultProfile,
     courses: [],
+    reviews: [],
     loadingProfile: false,
     loadingCourses: false,
+    loadingReviews: false,
+    loadingEarnings: false,
     errorProfile: null,
     errorCourses: null,
+    errorReviews: null,
+    errorEarnings: null,
+    earnings: [],
   },
 
   reducers: {},
@@ -132,19 +122,20 @@ const profileSlice = createSlice({
         const socials = apiData?.socialMedias?.[0] || {};
 
         state.data = {
-          name: apiData?.fullName || defaultProfile.name,
-          title: apiData?.specialization || defaultProfile.title,
-          image: apiData?.imageUrl || defaultProfile.image,
-          courses: apiData?.courses,
+          id: apiData?.id || apiData?.Id,
+          name: apiData?.fullName || apiData?.FullName || defaultProfile.name,
+          title: apiData?.specialization || apiData?.Specialization || defaultProfile.title,
+          image: apiData?.imageUrl || apiData?.ImageUrl || apiData?.imagePath || apiData?.ImagePath || apiData?.image || apiData?.Image || defaultProfile.image,
+          courses: apiData?.courses || apiData?.Courses,
           website:
-            socials.personalWebsiteUrl || defaultProfile.website,
+            socials.personalWebsiteUrl || socials.PersonalWebsiteUrl || defaultProfile.website,
 
           socials: {
-            facebook: socials.facebookUrl || "",
-            twitter: socials.twitterUrl || "",
-            instagram: socials.instagramUrl || "",
-            youtube: socials.youTubeUrl || "",
-            whatsapp: socials.whatsAppUrl || "",
+            facebook: socials.facebookUrl || socials.FacebookUrl || "",
+            twitter: socials.twitterUrl || socials.TwitterUrl || "",
+            instagram: socials.instagramUrl || socials.InstagramUrl || "",
+            youtube: socials.youTubeUrl || socials.YouTubeUrl || "",
+            whatsapp: socials.whatsAppUrl || socials.WhatsAppUrl || "",
           },
         };
 
@@ -179,7 +170,19 @@ const profileSlice = createSlice({
       })
 
       .addCase(fetchReviews.fulfilled, (state, action) => {
-        state.reviews = action.payload || [];
+        // Handle $values wrapper if present, or just use the array
+        const rawReviews = Array.isArray(action.payload)
+          ? action.payload
+          : (action.payload?.$values || []);
+
+        state.reviews = rawReviews.map(rev => ({
+          id: rev.id || rev.Id || Math.random(), // Fallback ID
+          name: rev.studentName || rev.Name || "Anonymous Student",
+          avatar: rev.studentImageUrl || rev.avatar || "https://ui-avatars.com/api/?name=" + (rev.studentName || "A"),
+          rating: rev.rating || rev.Rating || 5,
+          comment: rev.comment || rev.Comment || rev.text || "",
+          createdAt: rev.createdAt || rev.CreatedAt || rev.date || new Date().toISOString()
+        }));
         state.loadingReviews = false;
       })
 

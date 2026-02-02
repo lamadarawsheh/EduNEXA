@@ -79,15 +79,8 @@ const DashboardNavbar = ({ role = 'student' }) => {
                             onClick={() => setShowProfile(!showProfile)}
                             className="flex items-center gap-2 group focus:outline-none"
                         >
-                            <div className="w-9 h-9 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center">
-                                <img
-                                    src={role === 'teacher'
-                                        ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=60"
-                                        : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60"
-                                    }
-                                    alt="Profile"
-                                    className="w-full h-full object-cover"
-                                />
+                            <div className="w-10 h-10 rounded-full border-2 border-teal-100 overflow-hidden bg-teal-50 flex items-center justify-center text-[#0F4C4A] transition-all group-hover:bg-[#0F4C4A] group-hover:text-white group-hover:border-[#0F4C4A]">
+                                <User size={20} />
                             </div>
                             <ChevronDown size={14} className={`text-[#45556C] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
                         </button>

@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/walletSlice";
-import { CheckCircle2, ChevronDown, Copy, PlusCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { CheckCircle2, ChevronDown, Copy, ArrowRight, ArrowLeft } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function EarningPayments() {
   const dispatch = useDispatch();
-
-  const walletState = useSelector((state) => state.wallet);
-  const { balance = 0, status = "idle" } = walletState || {};
+  
+  const { balance = 0, status = "idle" } = useSelector((state) => state.wallet);
+  const user = useSelector((state) => state.auth?.user); 
+  const userName = user?.firstName ? `${user.firstName} ${user.lastName}` : (user?.name || "Guest User");
 
   useEffect(() => {
     if (status === "idle") {
@@ -16,33 +17,90 @@ export default function EarningPayments() {
     }
   }, [dispatch, status]);
 
-  const handleWithdrawClick = () => {
-    if (Number(balance) > 0) {
-      dispatch(withdrawMoney(balance))
+  const handleWithdrawClick = async () => {
+    if (Number(balance) <= 0) {
+      return Swal.fire({
+        title: "Empty Balance",
+        text: "You don't have enough funds to withdraw.",
+        icon: "warning",
+        confirmButtonColor: "#1B5E5E",
+        customClass: {
+          popup: 'rounded-[24px]', 
+        }
+      });
+    }
+
+    const { value: amount } = await Swal.fire({
+      title: "Withdraw Funds",
+      html: `
+        <div class="text-center mb-2">
+          <p class="text-gray-500 text-sm">Available balance: <span class="text-[#1B5E5E] font-bold">$${balance}</span></p>
+        </div>
+      `,
+      input: "number",
+      inputPlaceholder: "Enter amount",
+      showCancelButton: true,
+      confirmButtonText: "Confirm Withdrawal",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#1B5E5E",
+      cancelButtonColor: "#f3f4f6",
+      
+    
+      customClass: {
+        popup: 'rounded-[28px] border-none p-8 shadow-2xl', 
+        title: 'text-[#093332] font-bold text-2xl mb-4',
+        input: 'rounded-[14px] border border-gray-200 focus:border-[#1B5E5E] focus:ring-2 focus:ring-[#1B5E5E]/20 text-center py-4 text-lg mx-auto w-[80%]',
+        confirmButton: 'rounded-[12px] px-10 py-3 text-sm font-semibold transition-all hover:opacity-90',
+        cancelButton: 'rounded-[12px] px-10 py-3 text-sm font-semibold text-gray-500 hover:bg-gray-200 transition-all',
+        actions: 'gap-4 mt-6', 
+      },
+      
+      buttonsStyling: true,
+
+      inputAttributes: {
+        min: 1,
+        max: balance,
+        step: 1
+      },
+
+      inputValidator: (value) => {
+        if (!value || value <= 0) {
+          return "Please enter a valid amount!";
+        }
+        if (Number(value) > balance) {
+          return "Amount exceeds your current balance!";
+        }
+      }
+    });
+
+    if (amount) {
+      Swal.fire({
+        title: 'Processing...',
+        didOpen: () => { Swal.showLoading(); },
+        allowOutsideClick: false,
+        customClass: { popup: 'rounded-[24px]' }
+      });
+
+      dispatch(withdrawMoney(amount))
         .unwrap()
         .then(() => {
           Swal.fire({
-            title: "تم الإرسال!",
-            text: "تم إرسال طلب السحب بنجاح!",
+            title: "Success!",
+            text: "Your withdrawal request has been sent.",
             icon: "success",
             confirmButtonColor: "#1B5E5E",
+            customClass: { popup: 'rounded-[24px]' }
           });
         })
         .catch((err) => {
           Swal.fire({
-            title: "فشلت العملية",
-            text: "فشلت العملية: " + err,
+            title: "Failed",
+            text: err || "Insufficient balance or server error",
             icon: "error",
             confirmButtonColor: "#1B5E5E",
+            customClass: { popup: 'rounded-[24px]' }
           });
         });
-    } else {
-      Swal.fire({
-        title: "تنبيه",
-        text: "عذراً، رصيدك الحالي هو 0، لا يمكن إجراء عملية سحب.",
-        icon: "warning",
-        confirmButtonColor: "#1B5E5E",
-      });
     }
   };
 
@@ -81,7 +139,7 @@ export default function EarningPayments() {
               </div>
               <div className="text-right">
                 <p className="text-[10px] text-white/60 uppercase">Card Name</p>
-                <p className="text-sm font-medium">Ali Ahmed</p>
+                <p className="text-sm font-medium">{userName.toUpperCase()}</p>
               </div>
             </div>
           </div>
@@ -119,7 +177,7 @@ export default function EarningPayments() {
               <span className="text-xs font-bold text-[#0E4F4F] w-10">VISA</span>
               <span className="text-sm text-gray-600 font-medium">4855 **** **** ****</span>
               <span className="text-sm text-gray-600">04/24</span>
-              <span className="text-sm text-gray-600">Ali Ahmed</span>
+              <span className="text-sm text-gray-600">{userName.toUpperCase()}</span>
             </div>
             <CheckCircle2 size={20} className="text-[#2D6A6A] fill-[#2D6A6A] text-white shrink-0 self-end sm:self-auto" />
           </div>
@@ -132,7 +190,7 @@ export default function EarningPayments() {
                </div>
               <span className="text-sm text-gray-600">2855 **** **** ****</span>
               <span className="text-sm text-gray-600">04/24</span>
-              <span className="text-sm text-gray-600">Ali Ahmed</span>
+              <span className="text-sm text-gray-600">{userName.toUpperCase()}</span>
             </div>
           </div>
 

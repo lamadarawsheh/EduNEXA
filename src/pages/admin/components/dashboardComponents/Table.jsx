@@ -1,22 +1,23 @@
 import React, { useState } from 'react'
 import Record from './Record'
 import { FiEdit, FiFilter, FiPrinter, FiTrash, FiArrowUp, FiArrowDown } from 'react-icons/fi'
+import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
 
-export default function Table({ records, columns, noOfCourses,pageName , sortBy, onSortChange, filters, onFiltersChange,}) {
+export default function Table({ records, columns, noOfCourses,pageName , sortBy, onSortChange, filters, onFiltersChange, isFilter, sortKey}) {
         const [showFilters, setShowFilters] = useState(false);
         const handleSortByName = () => {
             if (!onSortChange) return;
             onSortChange((prev) => {
-            if (!prev || prev.key !== "userName") return { key: "userName", direction: "asc" };
-            return { key: "userName", direction: prev.direction === "asc" ? "desc" : "asc" };
+            if (!prev || prev.key !== sortKey) return { key: sortKey, direction: "asc" };
+            return { key: sortKey, direction: prev.direction === "asc" ? "desc" : "asc" };
             });
             };
-        
+        const [openPopup, setOpenPopup] = useState(false); 
     return (
         <>
             <div className="my-6 flex justify-between">
                 <div className='flex gap-2'>
-                    <button className="flex items-center gap-1 bg-white text-black px-4 py-1 text-xs rounded-xl hover:bg-[#145A58] transition-colors"
+                    <button className={`flex items-center gap-1 bg-white text-black px-4 py-1 text-xs rounded-xl hover:bg-[#145A58] transition-colors ${isFilter}`}
                         onClick={() => setShowFilters((p) => !p)}
                     >
                         <FiFilter /> Filter
@@ -31,10 +32,14 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
                     <button className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-gray-200">
                         <FiPrinter />
                     </button>
-                    <button className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-red-100">
+                    <button 
+                    onClick={() => setOpenPopup(true)}
+                    className=" rounded-xl  py-1 px-1 text-sm bg-gray-100 hover:bg-red-100">
                         <FiTrash />
                     </button>
-                    <button className=" rounded-xl  py-1 px-1 text-sm  hover:bg-gray-200">
+                    <button
+                    onClick={() => setOpenPopup(true)}
+                    className=" rounded-xl  py-1 px-1 text-sm  hover:bg-gray-200">
                         <FiEdit /> 
                     </button>
                 </div>
@@ -68,10 +73,22 @@ export default function Table({ records, columns, noOfCourses,pageName , sortBy,
                         <tbody className="divide-y divide-gray-200">
                             {records.map((record) => (
                                 <Record key={record.id} record={record} pageName={pageName} />))}
+
+                            {records.length === 0 && (
+                                <tr>
+                                <td colSpan="100%" className="text-center py-4 text-gray-500">
+                                No Records To Display
+                                </td>
+                                </tr>
+                                )}                        
                         </tbody>
                     </table>
                 </div>
             </div>
+        <UnderDevelopmentPopup
+        isOpen={openPopup}
+        onClose={() => setOpenPopup(false)}
+        />
         </>
     )
 }

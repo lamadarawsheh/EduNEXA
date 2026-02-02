@@ -3,6 +3,7 @@ import PageHeader from './components/dashboardComponents/PageHeader'
 import Settings from './components/settings/Settings'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminProfile } from "../../ReduxToolkit/slices/AdminProfile";
+import { SpinnerCustom } from '../../utils/Spinner';
 
 export default function AdminSettings() {
       const dispatch = useDispatch();
@@ -12,8 +13,8 @@ export default function AdminSettings() {
     useEffect(() => {
     dispatch(fetchAdminProfile());
     }, [dispatch]);
-      if ( profileLoading) return <h2>Loading...</h2>;
-      if ( profileError) return <h2>Error: {profileError || "Failed"}</h2>;
+      if (profileLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
+      if (profileError) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof profileError === "string" ? profileError : "Failed"}</p></div>;
     return (
     <>
       <div className="p-2 md:p-8 flex-col">

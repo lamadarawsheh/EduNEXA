@@ -20,11 +20,18 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
     // 2. Check if roles are specified and if the user has the required role
     if (allowedRoles && allowedRoles.length > 0) {
-        // Extract role from the roles array (backend usually returns a roles array)
-        // Adjusting logic based on the response format seen in Login.jsx
-        const userRoles = user.roles || [];
+        // Extract role from the roles array or singular role field
+        let userRoles = [];
+        if (Array.isArray(user.roles)) {
+            userRoles = user.roles;
+        } else if (typeof user.roles === 'string') {
+            userRoles = [user.roles];
+        } else if (user.role) {
+            userRoles = [user.role];
+        }
+
         const hasRequiredRole = allowedRoles.some(role =>
-            userRoles.some(userRole => userRole.toLowerCase() === role.toLowerCase())
+            userRoles.some(userRole => userRole && userRole.toLowerCase() === role.toLowerCase())
         );
 
         if (!hasRequiredRole) {
