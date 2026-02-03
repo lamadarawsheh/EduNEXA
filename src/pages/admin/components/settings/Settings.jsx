@@ -3,8 +3,8 @@ import { FaArrowRightLong } from 'react-icons/fa6'
 import Avatar from '../Avatar'
 import Toggle from './Toggle';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAdminProfile } from '../../../../ReduxToolkit/slices/AdminProfile';
-import { putUpdateProfile, resetUpdateProfileState } from './../../../../ReduxToolkit/slices/AdminUpdateProfile';
+import { fetchAdminProfile } from '../../../../ReduxToolkit/Slices/AdminProfile';
+import { putUpdateProfile, resetUpdateProfileState } from './../../../../ReduxToolkit/Slices/AdminUpdateProfile';
 import Popup from './../../../../components/common/Popup';
 import UnderDevelopmentPopup from '../../../../components/common/UnderDevelopmentPopup';
 
