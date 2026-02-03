@@ -1,4 +1,4 @@
-# <img src="public/favicon-removebg-preview.png" width="200" alt="EduNEXA Logo" />
+# <img src="public/favicon-removebg-preview.png" width="200" alt="EduNEXA Logo" /> EduNEXA
 
 **EduNEXA** is a state-of-the-art, premium Learning Management System (LMS) designed to bridge the gap between world-class instructors and ambitious learners. Built with a focus on seamless user experience, responsive design, and robust architectural principles, EduNEXA provides an all-in-one ecosystem for digital education.
 
