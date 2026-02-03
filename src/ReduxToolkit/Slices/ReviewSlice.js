@@ -34,7 +34,7 @@ export const removeReview = createAsyncThunk(
     async (reviewId, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
-            await axios.delete(`https://edunexa.runasp.net/api/Review/DeleteReview/${reviewId}`, {
+            await axios.delete(`/proxy/api/Review/DeleteReview/${reviewId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return reviewId; // نرجع الـ ID عشان نشيله من الـ state

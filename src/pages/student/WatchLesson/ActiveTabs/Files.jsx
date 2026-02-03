@@ -25,7 +25,7 @@ export default function Files({ files }) {
                 </div>
               </div>
               <a
-                href={file.fileUrl ? (file.fileUrl.startsWith('http') ? file.fileUrl : `https://edunexa.runasp.net${file.fileUrl}`) : "#"}
+                href={file.fileUrl ? (file.fileUrl.startsWith('http') ? file.fileUrl : `/proxy${file.fileUrl}`) : "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1b5e54] text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-[#14453d] transition-colors shadow-sm active:scale-95"

@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 
 export default function AccountSettings() {
 
-  const apiRoot = 'https://edunexa.runasp.net';
+  const apiRoot = '/proxy';
 
   const {
     register,

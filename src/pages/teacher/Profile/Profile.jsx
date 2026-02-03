@@ -93,7 +93,7 @@ function Profile() {
                 <div className='flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto text-center md:text-left'>
                     <div className="relative shrink-0">
                         <img
-                            src={data.image ? (data.image.startsWith('http') ? data.image : `https://edunexa.runasp.net/${data.image.replace(/^\//, '')}`) : profileImage}
+                            src={data.image ? (data.image.startsWith('http') ? data.image : `/proxy/${data.image.replace(/^\//, '')}`) : profileImage}
                             alt={data.name}
                             className='w-32 h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full object-cover border-4 border-white shadow-xl transition-transform duration-500 hover:scale-105'
                             onError={(e) => { e.target.src = profileImage; }}
@@ -205,7 +205,7 @@ function Profile() {
 
                                         <div className="relative h-48 overflow-hidden">
                                             <img
-                                                src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `https://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                                                src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `/proxy/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
                                                 className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                                                 onError={(e) => { e.target.src = "/course_placeholder.png"; }}
                                             />

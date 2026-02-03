@@ -74,7 +74,7 @@ const CourseAnalytics = () => {
 
         return imagePath.startsWith("http")
             ? imagePath
-            : `https://edunexa.runasp.net/${imagePath.replace(/^\//, "")}`;
+            : `/proxy/${imagePath.replace(/^\//, "")}`;
     };
 
     // Fetch course data if not provided via location.state

@@ -1,6 +1,6 @@
 import api from './api';
 
-export const BaseURL = "https://edunexa.runasp.net/api";
+export const BaseURL = "/proxy/api";
 
 export const isWorkingUrl = (url) => {
     return url && typeof url === 'string' && url.trim() !== '' && url !== 'string' && url !== 'null';

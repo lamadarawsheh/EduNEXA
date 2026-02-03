@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://edunexa.runasp.net/api';
+const BASE_URL = '/proxy/api';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
