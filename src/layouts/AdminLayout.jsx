@@ -29,7 +29,18 @@ const AdminLayout = () => {
         <div className="flex flex-col lg:flex-row min-h-screen text-black">
             <aside className="w-64 xl:flex lg:flex-col justify-between items-between border-r border-white/5 bg-white p-6 py-8 hidden">
                 <div>
-                    <img src="/favicon-removebg-preview.png" alt="Admin NEXA" className="mb-8 mt-8 w-40" />
+                    <div className="flex items-center space-x-2 mb-8 mt-4">
+                        <div className="h-10 w-10 overflow-hidden flex items-center justify-center">
+                            <img
+                                src="/favicon-removebg-preview.png"
+                                alt="EduNEXA Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <span className="text-2xl text-[#0F172B] font-bold tracking-tighter uppercase">
+                            EDUNEXA
+                        </span>
+                    </div>
                     <nav className="space-y-4 mt-8 pt-8">
                         {navItems.map((item) => (
                             <NavItem key={item.to} label={item.label} to={item.to} Icon={item.icon} />

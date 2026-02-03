@@ -163,7 +163,21 @@ const TeacherDashboard = () => {
         ? (reviewsData.reduce((acc, r) => acc + (r.rating || 0), 0) / reviewsData.length).toFixed(1)
         : "0.0";
 
-    const fullImageUrl = imageUrl ? `/proxy${imageUrl}` : "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
+    const resolveImageUrl = (value) => {
+        if (!value || typeof value !== 'string') return "";
+        const trimmed = value.trim();
+        if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return "";
+        if (trimmed.startsWith('blob:')) return trimmed;
+        if (trimmed.includes('edunexa.runasp.net')) {
+            return trimmed.replace(/https?:\/\/edunexa\.runasp\.net/, '/proxy');
+        }
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+            return trimmed;
+        }
+        return `/proxy/${trimmed.replace(/^\//, "")}`;
+    };
+
+    const fullImageUrl = resolveImageUrl(imageUrl) || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
 
     return (
         <div className="bg-[#FFFFFF] min-h-screen p-4 md:p-8 text-[#0F172B]">
