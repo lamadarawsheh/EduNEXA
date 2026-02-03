@@ -13,12 +13,12 @@ export default function AdminSettings() {
     useEffect(() => {
     dispatch(fetchAdminProfile());
     }, [dispatch]);
-     if (profileLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
-     if (profileError) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'> {typeof error === "string" ? error : "Failed"}</p></div>;
+      if (profileLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
+      if (profileError) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof profileError === "string" ? profileError : "Failed"}</p></div>;
     return (
     <>
       <div className="p-2 md:p-8 flex-col">
-        <PageHeader pageName="Settings" admin={profileData} />
+        <PageHeader pageName="Settings" admin={profileData} isSearch={"hidden"} />
         <div className="rounded-xl border border-gray-200 bg-white my-6 p-4 w-[100%] ">
           <Settings admin={profileData}/>
         </div>

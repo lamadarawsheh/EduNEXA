@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminDashboard } from "../../ReduxToolkit/slices/AdminDashboard"
 import { fetchAdminProfile } from "../../ReduxToolkit/slices/AdminProfile";
 import { SpinnerCustom } from '../../utils/Spinner';
+import { fetchAcceptedCourses } from '../../ReduxToolkit/slices/AdminAcceptedCourses';
+import { fetchPendingCourses } from '../../ReduxToolkit/slices/AdminPendingCourses';
 
 
 
@@ -17,9 +19,17 @@ const AdminDashboard = () => {
     const {profileData, isLoading: profileLoading, error: profileError} = useSelector(
         (state)=> state.adminProfile
     )
+    const {acceptedCoursesData, isLoading:acceptedLoading, error: acceptedError} = useSelector(
+        (state)=> state.acceptedCoursesData ??{acceptedCoursesData:[], isLoading:false, error:null}
+    )
+    const {pendingCoursesData, isLoading, error} = useSelector(
+        (state)=> state.pendingCoursesData ??{pendingCoursesData:[], isLoading:false, error:null}
+    )
     useEffect(() => {
     dispatch(fetchAdminDashboard());
     dispatch(fetchAdminProfile());
+    dispatch(fetchAcceptedCourses())
+    dispatch(fetchPendingCourses())
     }, [dispatch]);
 
         if (dashboardLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
@@ -28,8 +38,8 @@ const AdminDashboard = () => {
         <div className="p-0 lg:p-8 flex-col">
         <Header header={dashboardData} admin={profileData}/>
         <div className="px-4 lg:px-0">
-        <Performance/>
-        <CourseOverview/>
+        <Performance courses ={acceptedCoursesData}/>
+        <CourseOverview  acceptedCourses ={acceptedCoursesData} pendingCourses={pendingCoursesData}/>
         </div>
         </div>
     );

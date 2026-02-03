@@ -127,7 +127,7 @@ const TeacherLanding = () => {
                         <div className="relative animate-in fade-in slide-in-from-right duration-700 delay-300">
                             <div className="relative z-10">
                                 <img
-                                    src="/image/bg-teacher.png"
+                                    src="/image/spotlight-297727_1920.png"
                                     alt="Teacher Hero"
                                     className="w-full max-w-md mx-auto drop-shadow-2xl animate-float"
                                 />
@@ -156,7 +156,7 @@ const TeacherLanding = () => {
                         {/* Image */}
                         <div className="order-2 lg:order-1 animate-in fade-in slide-in-from-left duration-700">
                             <img
-                                src="/images/teaching.png"
+                                src="/image/premium_photo-1681487729805-91f220c7da25.jpeg"
                                 alt="Teaching"
                                 className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
                             />
@@ -285,7 +285,7 @@ const TeacherLanding = () => {
                         {/* Image */}
                         <div className="relative animate-in fade-in slide-in-from-right duration-700 delay-300">
                             <img
-                                src="/images/start-teaching.png"
+                                src="/image/icon-4017417_1920.png"
                                 alt="Start Teaching"
                                 className="w-full max-w-md mx-auto drop-shadow-2xl"
                             />

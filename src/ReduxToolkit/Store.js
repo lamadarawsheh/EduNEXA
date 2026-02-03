@@ -17,6 +17,7 @@ import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
 import pendingCoursesSlice from "./slices/AdminPendingCourses";
 import reviewCourseReducer from "./slices/AdminCourseReview";
 import courseActionReducer from "./slices/AdminCoursesActions";
+import updateProfileReducer from "./slices/AdminUpdateProfile";
 
 const noopReducer = (state = {}) => state;
 
@@ -25,16 +26,17 @@ export const Store = configureStore({
     teacherSetting: teacherSettingReducer,
     Course: CourseReducer,
     subCategory: subCategoryReducer,
-    category:categoryReducer,
-    section:sectionReucer,
-    lecture:lectureReducer,
-        app: noopReducer,
-        checkout: checkoutReducer,
-        reviews: reviewReducer,
- 
+    category: categoryReducer,
+    section: sectionReucer,
+    lecture: lectureReducer,
+    app: noopReducer,
+    checkout: checkoutReducer,
+    reviews: reviewReducer,
+
 
     app: noopReducer,
     checkout: checkoutReducer,
+    profile: profileReducer,
     adminDashboard: adminDashboardSlice,
     adminStudents: adminStudentSlice,
     adminProfile: adminProfileSlice,
@@ -44,5 +46,6 @@ export const Store = configureStore({
     pendingCoursesData: pendingCoursesSlice,
     courseReview: reviewCourseReducer,
     courseAction: courseActionReducer,
+    updateProfile: updateProfileReducer,
   },
 });

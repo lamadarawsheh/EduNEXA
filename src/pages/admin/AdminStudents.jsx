@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminStudents } from "../../ReduxToolkit/slices/AdminStudents"
 import { fetchAdminProfile } from '../../ReduxToolkit/slices/AdminProfile';
 import { SpinnerCustom } from '../../utils/Spinner';
+import UsePagination from './components/dashboardComponents/UsePagination';
+import Pagination from './components/dashboardComponents/Pagination';
 
 export default function AdminStudents() {
   const [records, setRecords] = useState([]);
@@ -47,8 +49,6 @@ export default function AdminStudents() {
           phone.includes(q)
         );
       });
-
-
     const { key, direction } = sortBy || {};
     const dir = direction === "desc" ? -1 : 1;
 
@@ -69,7 +69,12 @@ export default function AdminStudents() {
     setRecords(processedRecords);
   }, [processedRecords]);
 
+const { page, totalPages, currentItems, goTo, reset } = UsePagination(processedRecords, 12);
+useEffect(() => {
+  reset(); 
+}, [search, sortBy]); 
 
+console.log(processedRecords)
     if (isLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
     if (error) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof error === "string" ? error : "Failed"}</p></div>;
 
@@ -78,8 +83,9 @@ export default function AdminStudents() {
       <PageHeader pageName="Students Records" input={search} 
         onChange={setSearch} admin={profileData}
         placeholder="Search by Name, Email or Number" />
-      <Table records={processedRecords} columns={["Student Name", "Email", "Phone", "Date of Birth"]} isFilter={"hidden"} sortBy={sortBy}
+      <Table records={currentItems} columns={["Student Name", "Email", "Phone", "Date of Birth"]} sortBy={sortBy}
         onSortChange={setSortBy} sortKey="userName" pageName="Students Records" />
+      <Pagination page={page} totalPages={totalPages} onPageChange={goTo} />
     </div>
   )
 }
