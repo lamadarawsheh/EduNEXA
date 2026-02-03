@@ -10,8 +10,8 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { FiBookOpen } from "react-icons/fi";
 import Popup from './../../../../components/common/Popup';
 import { useDispatch, useSelector } from 'react-redux';
-import { putApproveCourse, putRejectCourse } from '../../../../ReduxToolkit/slices/AdminCoursesActions';
-import { fetchCourseReview } from '../../../../ReduxToolkit/slices/AdminCourseReview';
+import { putApproveCourse, putRejectCourse } from '../../../../ReduxToolkit/Slices/AdminCoursesActions';
+import { fetchCourseReview } from '../../../../ReduxToolkit/Slices/AdminCourseReview';
 
 
 
@@ -22,66 +22,69 @@ export default function ReviewCourse() {
   const course = state?.course;
   const courseId = course?.id
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
-  const { courseData, isLoading, error } = useSelector( 
-  (state) => state.courseReview ?? { courseData: {}, isLoading: false, error: null } ) 
-  useEffect(() => { if (courseId)
-  dispatch(fetchCourseReview(courseId)); }
-  , [courseId, dispatch]); 
-  const [notes, setNotes] = useState(""); 
-  const { approve, reject } = useSelector( 
-    (state) => state.courseAction ?? { approve: 
-    { loading: false, error: null, data: null }, 
-    reject: { loading: false, error: null, data: null }, 
-  } );
+  const dispatch = useDispatch();
+  const { courseData, isLoading, error } = useSelector(
+    (state) => state.courseReview ?? { courseData: {}, isLoading: false, error: null })
+  useEffect(() => {
+    if (courseId)
+      dispatch(fetchCourseReview(courseId));
+  }
+    , [courseId, dispatch]);
+  const [notes, setNotes] = useState("");
+  const { approve, reject } = useSelector(
+    (state) => state.courseAction ?? {
+      approve:
+        { loading: false, error: null, data: null },
+      reject: { loading: false, error: null, data: null },
+    });
   const [popupOpen, setPopupOpen] = useState(false);
-const [popupType, setPopupType] = useState("success"); 
-const [popupTitle, setPopupTitle] = useState("");
-const [popupMessage, setPopupMessage] = useState("");
+  const [popupType, setPopupType] = useState("success");
+  const [popupTitle, setPopupTitle] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
 
   const handleApprove = async () => {
-  if (!courseId) return;
+    if (!courseId) return;
 
-  const res = await dispatch(
-    putApproveCourse({ id: courseId, approvalReason: notes })
-  );
+    const res = await dispatch(
+      putApproveCourse({ id: courseId, approvalReason: notes })
+    );
 
-  if (putApproveCourse.fulfilled.match(res)) {
-    setPopupType("success");
-    setPopupTitle("Approved");
-    setPopupMessage("Course approved successfully");
-    setPopupOpen(true);
-  } else {
-    setPopupType("error");
-    setPopupTitle("Error");
-    setPopupMessage("Failed to approve course");
-    setPopupOpen(true);
-  }
-};
+    if (putApproveCourse.fulfilled.match(res)) {
+      setPopupType("success");
+      setPopupTitle("Approved");
+      setPopupMessage("Course approved successfully");
+      setPopupOpen(true);
+    } else {
+      setPopupType("error");
+      setPopupTitle("Error");
+      setPopupMessage("Failed to approve course");
+      setPopupOpen(true);
+    }
+  };
 
   const handleReject = async () => {
-  if (!courseId) return;
+    if (!courseId) return;
 
-  const res = await dispatch(
-    putRejectCourse({ id: courseId, rejectionReason: notes })
-  );
+    const res = await dispatch(
+      putRejectCourse({ id: courseId, rejectionReason: notes })
+    );
 
-  if (putRejectCourse.fulfilled.match(res)) {
-    setPopupType("success");
-    setPopupTitle("Rejected");
-    setPopupMessage("Course rejected successfully");
-    setPopupOpen(true);
-  } else {
-    setPopupType("error");
-    setPopupTitle("Error");
-    setPopupMessage("Failed to reject course");
-    setPopupOpen(true);
-  }
-};
+    if (putRejectCourse.fulfilled.match(res)) {
+      setPopupType("success");
+      setPopupTitle("Rejected");
+      setPopupMessage("Course rejected successfully");
+      setPopupOpen(true);
+    } else {
+      setPopupType("error");
+      setPopupTitle("Error");
+      setPopupMessage("Failed to reject course");
+      setPopupOpen(true);
+    }
+  };
   const actionLoading = approve.loading || reject.loading;
 
   if (!course) return <p>No course data</p>;
-  
+
   return (
     <>
       <div className="p-2 md:p-8 flex-col">
@@ -98,11 +101,11 @@ const [popupMessage, setPopupMessage] = useState("");
           </div>
 
         </div>
-        
-        <div className="mt-4 flex ">  
+
+        <div className="mt-4 flex ">
           <p className='flex items-center'> Courses <FaArrowRightLong className="text-sm ms-1" /></p>
-        <p className='flex items-center ms-2'>Pending Courses <FaArrowRightLong className="text-sm ms-1" /></p>
-        <p className='flex items-center ms-2'>Review Courses</p>
+          <p className='flex items-center ms-2'>Pending Courses <FaArrowRightLong className="text-sm ms-1" /></p>
+          <p className='flex items-center ms-2'>Review Courses</p>
         </div>
         <div className="mt-4 flex flex-col gap-4 shadow-md mb-4 pt-4 pb-2 px-4 bg-white rounded-lg border border-gray-200 w-[100%]">
           <div className="flex justify-between items-start gap-4">
@@ -181,24 +184,24 @@ const [popupMessage, setPopupMessage] = useState("");
         </div>
 
         <div className="flex justify-end gap-4 mb-4">
-           <button
-    onClick={handleApprove}
-    disabled={actionLoading}
-    className={`w-[50%] rounded-md py-2 font-semibold text-white transition
+          <button
+            onClick={handleApprove}
+            disabled={actionLoading}
+            className={`w-[50%] rounded-md py-2 font-semibold text-white transition
       ${actionLoading ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
-  >
-    {approve.loading ? "Approving..." : "Approve Course"}
-  </button>
+          >
+            {approve.loading ? "Approving..." : "Approve Course"}
+          </button>
 
-  <button
-    onClick={handleReject}
-    disabled={actionLoading}
-    className={`w-[50%] rounded-md py-2 font-semibold text-white transition
+          <button
+            onClick={handleReject}
+            disabled={actionLoading}
+            className={`w-[50%] rounded-md py-2 font-semibold text-white transition
       ${actionLoading ? "bg-red-300 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}`}
-  >
-    {reject.loading ? "Rejecting..." : "Reject Course"}
-  </button>
-      </div>
+          >
+            {reject.loading ? "Rejecting..." : "Reject Course"}
+          </button>
+        </div>
       </div>
 
       <Popup
@@ -208,10 +211,10 @@ const [popupMessage, setPopupMessage] = useState("");
         message={popupMessage}
         actionLabel="OK"
         onClose={() => {
-        setPopupOpen(false);
-        navigate("/admin/courses");
-      }}
-/>
+          setPopupOpen(false);
+          navigate("/admin/courses");
+        }}
+      />
     </>
   )
 }

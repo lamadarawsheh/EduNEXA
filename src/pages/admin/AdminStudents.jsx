@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import PageHeader from './components/dashboardComponents/PageHeader';
 import Table from './components/dashboardComponents/Table';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAdminStudents } from "../../ReduxToolkit/slices/AdminStudents"
-import { fetchAdminProfile } from '../../ReduxToolkit/slices/AdminProfile';
+import { fetchAdminStudents } from "../../ReduxToolkit/Slices/AdminStudents"
+import { fetchAdminProfile } from '../../ReduxToolkit/Slices/AdminProfile';
 import { SpinnerCustom } from '../../utils/Spinner';
 import UsePagination from './components/dashboardComponents/UsePagination';
 import Pagination from './components/dashboardComponents/Pagination';
@@ -69,18 +69,18 @@ export default function AdminStudents() {
     setRecords(processedRecords);
   }, [processedRecords]);
 
-const { page, totalPages, currentItems, goTo, reset } = UsePagination(processedRecords, 12);
-useEffect(() => {
-  reset(); 
-}, [search, sortBy]); 
+  const { page, totalPages, currentItems, goTo, reset } = UsePagination(processedRecords, 12);
+  useEffect(() => {
+    reset();
+  }, [search, sortBy]);
 
-console.log(processedRecords)
-    if (isLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div> ;
-    if (error) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof error === "string" ? error : "Failed"}</p></div>;
+  console.log(processedRecords)
+  if (isLoading) return <div className='flex min-h-screen  justify-center items-center gap-4'><SpinnerCustom className={"text-[#176D69]"} /><p className='text-3xl text-[#176D69] animate-bounce'> Loading... </p></div>;
+  if (error) return <div className='flex min-h-screen  justify-center items-center gap-4'><p className={"text-[#176D69]"} /><p className='text-4xl text-[#176D69] animate-bounce'>{typeof error === "string" ? error : "Failed"}</p></div>;
 
   return (
     <div className="p-2 md:p-8 flex-col">
-      <PageHeader pageName="Students Records" input={search} 
+      <PageHeader pageName="Students Records" input={search}
         onChange={setSearch} admin={profileData}
         placeholder="Search by Name, Email or Number" />
       <Table records={currentItems} columns={["Student Name", "Email", "Phone", "Date of Birth"]} sortBy={sortBy}
