@@ -104,11 +104,13 @@ const DashboardNavbar = ({ role = 'student' }) => {
             {/* Logo (Left Section) */}
             <div className="flex-shrink-0">
                 <Link to={role === 'teacher' ? '/teacher' : '/student'} className="flex items-center space-x-2">
-                    <img
-                        src="/image/logo-landing.png"
-                        alt="EduNEXA Logo"
-                        className="h-8 w-auto"
-                    />
+                    <div className="h-10 w-10 overflow-hidden flex items-center justify-center -translate-y-1">
+                        <img
+                            src="/favicon-removebg-preview.png"
+                            alt="EduNEXA Logo"
+                            className="w-full h-full object-contain"
+                        />
+                    </div>
                     <span className="text-2xl text-[#0F172B] font-bold tracking-tighter uppercase">
                         EDUNEXA
                     </span>

@@ -79,7 +79,7 @@ export default function Header({ header, admin }) {
           </div>
         </div>
         <div className="flex justify-center w-full ">
-          <img src="/Heading1.png" alt="Admin NEXA" className="mb-4 w-40" />
+          <img src="/favicon-removebg-preview.png" alt="Admin NEXA" className="mb-4 w-40" />
         </div>
         <div className="relative w-full px-4">
           <div className="absolute inset-y-0 left-7 flex items-center pointer-events-none text-gray-400">
