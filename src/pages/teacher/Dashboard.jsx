@@ -163,7 +163,7 @@ const TeacherDashboard = () => {
         ? (reviewsData.reduce((acc, r) => acc + (r.rating || 0), 0) / reviewsData.length).toFixed(1)
         : "0.0";
 
-    const fullImageUrl = imageUrl ? `http://edunexa.runasp.net${imageUrl}` : "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
+    const fullImageUrl = imageUrl ? `https://edunexa.runasp.net${imageUrl}` : "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
 
     return (
         <div className="bg-[#FFFFFF] min-h-screen p-4 md:p-8 text-[#0F172B]">

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const BaseURL = "http://edunexa.runasp.net/api";
+export const BaseURL = "https://edunexa.runasp.net/api";
 
 export const getAuthHeader = () => ({
   headers: {

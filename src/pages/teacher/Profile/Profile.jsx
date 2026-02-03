@@ -30,7 +30,7 @@ function Profile() {
 
     const handleLoadMore = () => {
         setIsLoadingMore(true);
-       // Simulate loading delay
+        // Simulate loading delay
         setTimeout(() => {
             setVisibleReviews((prev) => prev + 3);
             setIsLoadingMore(false);
@@ -79,13 +79,13 @@ function Profile() {
     };
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className='bg-white w-full'
         >
             {/* Header section */}
-            <motion.div 
+            <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className='bg-[#F2F2F2] flex justify-between items-center lg:flex-row flex-col p-6 mb-10 shadow-sm'
@@ -93,7 +93,7 @@ function Profile() {
                 <div className='flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto text-center md:text-left'>
                     <div className="relative shrink-0">
                         <img
-                            src={data.image ? (data.image.startsWith('http') ? data.image : `http://edunexa.runasp.net/${data.image.replace(/^\//, '')}`) : profileImage}
+                            src={data.image ? (data.image.startsWith('http') ? data.image : `https://edunexa.runasp.net/${data.image.replace(/^\//, '')}`) : profileImage}
                             alt={data.name}
                             className='w-32 h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full object-cover border-4 border-white shadow-xl transition-transform duration-500 hover:scale-105'
                             onError={(e) => { e.target.src = profileImage; }}
@@ -108,7 +108,7 @@ function Profile() {
                             </span>
                         </div>
                         <span className='block mb-3 opacity-80'>{data.title}</span>
-                        
+
                         <div className='flex flex-wrap justify-center md:justify-start gap-4 mt-4'>
                             <div className="flex items-center gap-2 bg-white/50 px-3 py-1 rounded-lg">
                                 <FaStar className='text-[#FD8E1F]' />
@@ -141,10 +141,10 @@ function Profile() {
                             { icon: <FaYoutube />, link: data.socials?.youtube },
                             { icon: <FaWhatsapp />, link: data.socials?.whatsapp, isWa: true },
                         ].map((social, i) => social.link && (
-                            <motion.a 
+                            <motion.a
                                 whileHover={{ y: -3 }}
-                                key={i} 
-                                href={social.isWa ? `https://wa.me/${social.link}` : social.link} 
+                                key={i}
+                                href={social.isWa ? `https://wa.me/${social.link}` : social.link}
                                 className='p-3 bg-white text-[#176D69] rounded-lg shadow-sm hover:bg-[#176D69] hover:text-white transition-colors'
                             >
                                 {social.icon}
@@ -184,7 +184,7 @@ function Profile() {
                 {/* Content */}
                 <AnimatePresence mode="wait">
                     {activeTab === 'courses' ? (
-                        <motion.div 
+                        <motion.div
                             key="courses"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -194,18 +194,18 @@ function Profile() {
                             <h2 className="text-xl font-medium mb-6 text-black">Approved Courses <span className="text-gray-400">({approvedCourses.length})</span></h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {approvedCourses.map((course, index) => (
-                                    <motion.div 
+                                    <motion.div
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
-                                        onClick={() => handleCourseClick(course, course.id, index)} 
-                                        key={course.id} 
+                                        onClick={() => handleCourseClick(course, course.id, index)}
+                                        key={course.id}
                                         className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer flex flex-col h-full border border-gray-50"
                                     >
-                                        
+
                                         <div className="relative h-48 overflow-hidden">
                                             <img
-                                                src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `http://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
+                                                src={(course.thumbnailUrl && isWorkingUrl(course.thumbnailUrl)) ? (course.thumbnailUrl.startsWith('http') ? course.thumbnailUrl : `https://edunexa.runasp.net/${course.thumbnailUrl.replace(/^\//, '')}`) : "/course_placeholder.png"}
                                                 className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                                                 onError={(e) => { e.target.src = "/course_placeholder.png"; }}
                                             />
@@ -231,7 +231,7 @@ function Profile() {
                             </div>
                         </motion.div>
                     ) : (
-                        <motion.div 
+                        <motion.div
                             key="reviews"
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -248,7 +248,7 @@ function Profile() {
                             <div className="space-y-8 relative">
                                 <AnimatePresence>
                                     {reviews.slice(0, visibleReviews).map((review, idx) => (
-                                        <motion.div 
+                                        <motion.div
                                             key={review.id}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://edunexa.runasp.net/api",
+  baseURL: "https://edunexa.runasp.net/api",
 });
 
 api.interceptors.request.use((config) => {
