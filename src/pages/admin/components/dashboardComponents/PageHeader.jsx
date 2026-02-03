@@ -16,7 +16,7 @@ export default function PageHeader({ pageName, input, onChange, placeholder, adm
                 onClose={() => setOpenPopup(false)}
             />
             <div className="flex items-center justify-between md:hidden p-4">
-                <img src="/Heading1.png" alt="Admin NEXA" className="w-28" />
+                <img src="/favicon-removebg-preview.png" alt="Admin NEXA" className="w-32" />
                 <div className="flex items-center gap-3 relative">
                     <button
                         className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200"
