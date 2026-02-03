@@ -4,7 +4,7 @@ import api from "./api";
 // =====================
 // Base URL
 // =====================
-export const BaseURL = "http://edunexa.runasp.net";
+export const BaseURL = "/proxy";
 
 // =====================
 // Helpers

@@ -80,7 +80,7 @@ export default function WatchLesson() {
     if (!url || typeof url !== 'string') return null;
     if (url.startsWith('http')) return url;
     // Prepend backend URL if it's a relative path like "/videos/..."
-    return `http://edunexa.runasp.net${url.startsWith('/') ? '' : '/'}${url}`;
+    return `/proxy${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
   const handleLessonSwitch = (lesson) => {

@@ -10,13 +10,18 @@ import {
 import { logout } from '../../services/authService';
 import api from '../../services/api';
 
+import {
+    resolveImageUrl,
+    extractProfileData,
+    getStoredProfileImage
+} from '../../utils/profileUtils';
+
 const DashboardNavbar = ({ role = 'student' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
-    const [profileImage, setProfileImage] = useState('');
+    const [profileImage, setProfileImage] = useState(() => getStoredProfileImage());
     const location = useLocation();
     const navigate = useNavigate();
-    const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, '') || '';
 
     const handleLogout = () => {
         logout();
@@ -40,44 +45,33 @@ const DashboardNavbar = ({ role = 'student' }) => {
 
     const links = role === 'teacher' ? teacherLinks : studentLinks;
 
-    const resolveImageUrl = (value) => {
-        if (!value || typeof value !== 'string') return '';
-        const trimmed = value.trim();
-        if (!trimmed) return '';
-        if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('blob:')) {
-            return trimmed;
-        }
-        if (!apiRoot) return trimmed;
-        return `${apiRoot}/${trimmed.replace(/^\//, '')}`;
-    };
-
-    const getStoredProfileImage = () => {
-        const stored = localStorage.getItem('profileImageUrl');
-        if (stored) return stored;
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        return (
-            user.imageUrl ||
-            user.imageURL ||
-            user.avatarUrl ||
-            user.profileImage ||
-            user.profileImageUrl ||
-            user.image ||
-            user.user?.imageUrl ||
-            user.user?.imageURL ||
-            user.user?.avatarUrl ||
-            user.user?.profileImage ||
-            user.user?.profileImageUrl ||
-            ''
-        );
-    };
-
     useEffect(() => {
-        const updateImage = (value) => {
-            const resolved = resolveImageUrl(value || getStoredProfileImage());
-            setProfileImage(resolved);
+        const fetchProfile = async () => {
+            try {
+                const endpoint = role === 'teacher' ? '/Instructor' : '/PersonalInformation';
+                const response = await api.get(endpoint);
+                const profile = extractProfileData(response?.data);
+
+                if (profile) {
+                    const rawImageUrl = profile.imageUrl || profile.imageURL || profile.avatarUrl || profile.profileImage || profile.profileImageUrl || profile.avatar || '';
+                    if (rawImageUrl) {
+                        const resolved = resolveImageUrl(rawImageUrl);
+                        setProfileImage(resolved);
+                        localStorage.setItem('profileImageUrl', resolved);
+                    }
+                }
+            } catch (error) {
+                console.error(`Navbar: Failed to fetch ${role} profile:`, error);
+            }
         };
 
-        updateImage();
+        const updateImage = (value) => {
+            const current = value || getStoredProfileImage();
+            setProfileImage(current);
+        };
+
+        // If we don't have an image yet, try to fetch it
+        fetchProfile();
 
         const handleStorage = (event) => {
             if (event.key === 'profileImageUrl' || event.key === 'user') {
@@ -87,7 +81,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
 
         const handleProfileUpdate = (event) => {
             if (event?.detail?.url) {
-                updateImage(event.detail.url);
+                setProfileImage(resolveImageUrl(event.detail.url));
             }
         };
 
@@ -97,7 +91,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
             window.removeEventListener('storage', handleStorage);
             window.removeEventListener('profile-image-updated', handleProfileUpdate);
         };
-    }, [apiRoot]);
+    }, [role]);
 
     return (
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between">
@@ -149,7 +143,6 @@ const DashboardNavbar = ({ role = 'student' }) => {
                                         src={profileImage}
                                         alt="Profile"
                                         className="h-full w-full object-cover"
-                                        onError={() => setProfileImage('')}
                                     />
                                 ) : (
                                     <User size={20} />

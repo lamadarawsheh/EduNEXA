@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/proxy/:path*",
+            "destination": "http://edunexa.runasp.net/:path*"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

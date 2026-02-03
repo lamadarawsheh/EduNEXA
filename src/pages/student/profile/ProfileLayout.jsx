@@ -8,74 +8,53 @@ const navItems = [
     { to: "settings", label: "Settings", icon: Settings },
 ];
 
+import {
+    resolveImageUrl,
+    extractProfileData,
+    getStoredProfileImage,
+    getStoredDisplayName
+} from "../../../utils/profileUtils";
+
 const StudentProfileLayout = () => {
-    const [profileImage, setProfileImage] = useState("");
-    const [displayName, setDisplayName] = useState("Student Name");
-    const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, "") || "";
-
-    const resolveImageUrl = (value) => {
-        if (!value || typeof value !== "string") return "";
-        const trimmed = value.trim();
-        if (!trimmed) return "";
-        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("blob:")) {
-            return trimmed;
-        }
-        if (!apiRoot) return trimmed;
-        return `${apiRoot}/${trimmed.replace(/^\//, "")}`;
-    };
-
-    const getStoredProfileImage = () => {
-        const stored = localStorage.getItem("profileImageUrl");
-        if (stored) return stored;
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        return (
-            user.imageUrl ||
-            user.imageURL ||
-            user.avatarUrl ||
-            user.profileImage ||
-            user.profileImageUrl ||
-            user.image ||
-            user.user?.imageUrl ||
-            user.user?.imageURL ||
-            user.user?.avatarUrl ||
-            user.user?.profileImage ||
-            user.user?.profileImageUrl ||
-            ""
-        );
-    };
-
-    const getDisplayName = () => {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        return (
-            user.fullName ||
-            user.name ||
-            user.userName ||
-            user.username ||
-            user.user?.fullName ||
-            user.user?.name ||
-            user.user?.userName ||
-            user.user?.username ||
-            "Student Name"
-        );
-    };
+    const [profileImage, setProfileImage] = useState(() => getStoredProfileImage());
+    const [displayName, setDisplayName] = useState(() => getStoredDisplayName());
 
     useEffect(() => {
-        const updateProfile = (imageValue) => {
-            setProfileImage(resolveImageUrl(imageValue || getStoredProfileImage()));
-            setDisplayName(getDisplayName());
+        const fetchProfile = async () => {
+            try {
+                const response = await api.get('/PersonalInformation');
+                const profile = extractProfileData(response?.data);
+
+                if (profile) {
+                    const rawImageUrl = profile.imageUrl || profile.imageURL || profile.avatarUrl || profile.profileImage || profile.profileImageUrl || profile.avatar || '';
+                    if (rawImageUrl) {
+                        const resolved = resolveImageUrl(rawImageUrl);
+                        setProfileImage(resolved);
+                        localStorage.setItem('profileImageUrl', resolved);
+                    }
+                    setDisplayName(getStoredDisplayName(profile));
+                }
+            } catch (error) {
+                console.error('ProfileLayout: Failed to fetch profile:', error);
+            }
         };
 
-        updateProfile();
+        const updateState = () => {
+            setProfileImage(getStoredProfileImage());
+            setDisplayName(getStoredDisplayName());
+        };
+
+        fetchProfile();
 
         const handleStorage = (event) => {
             if (event.key === "profileImageUrl" || event.key === "user") {
-                updateProfile();
+                updateState();
             }
         };
 
         const handleProfileUpdate = (event) => {
             if (event?.detail?.url) {
-                updateProfile(event.detail.url);
+                setProfileImage(resolveImageUrl(event.detail.url));
             }
         };
 
@@ -85,7 +64,7 @@ const StudentProfileLayout = () => {
             window.removeEventListener("storage", handleStorage);
             window.removeEventListener("profile-image-updated", handleProfileUpdate);
         };
-    }, [apiRoot]);
+    }, []);
 
     return (
         <div className="flex min-h-[calc(100vh-64px)] w-full items-center justify-center bg-linear-to-br from-teal-700 via-teal-600 to-emerald-500 p-4 md:p-6">
@@ -101,7 +80,6 @@ const StudentProfileLayout = () => {
                                     src={profileImage}
                                     alt="Student profile"
                                     className="h-full w-full object-cover"
-                                    onError={() => setProfileImage("")}
                                 />
                             ) : (
                                 <UserRound size={40} />

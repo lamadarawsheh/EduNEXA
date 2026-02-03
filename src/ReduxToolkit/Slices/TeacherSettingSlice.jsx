@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BaseURL = "http://edunexa.runasp.net";
+const BaseURL = "/proxy";
 
 const getAuthHeader = () => ({
   headers: {

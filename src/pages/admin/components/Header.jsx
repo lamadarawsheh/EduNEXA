@@ -78,8 +78,19 @@ export default function Header({ header, admin }) {
             <MobileAdminMenu />
           </div>
         </div>
-        <div className="flex justify-center w-full ">
-          <img src="/favicon-removebg-preview.png" alt="Admin NEXA" className="mb-4 w-40" />
+        <div className="flex justify-center w-full mb-6">
+          <div className="flex items-center space-x-2">
+            <div className="h-10 w-10 overflow-hidden flex items-center justify-center bg-white rounded-lg p-1">
+              <img
+                src="/favicon-removebg-preview.png"
+                alt="EduNEXA Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-2xl text-white font-bold tracking-tighter uppercase">
+              EDUNEXA
+            </span>
+          </div>
         </div>
         <div className="relative w-full px-4">
           <div className="absolute inset-y-0 left-7 flex items-center pointer-events-none text-gray-400">

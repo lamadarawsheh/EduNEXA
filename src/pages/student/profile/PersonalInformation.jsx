@@ -4,26 +4,36 @@ import api from "../../../services/api";
 import { getStudentProfile, updateStudentProfile } from "../../../services/personalInformationService";
 import { getStudentIdFromStorage } from "../../../utils/auth";
 import "./Profile.css";
+import {
+  resolveImageUrl,
+  extractProfileData,
+  getStoredProfileImage
+} from "../../../utils/profileUtils";
 
 const PersonalInformation = () => {
-  const apiRoot = api?.defaults?.baseURL?.replace(/\/api\/?$/, "") || "";
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    imageUrl: "",
-    userName: "",
-    email: "",
-    phoneNumber: "",
-    birthDate: "",
+  const [formData, setFormData] = useState(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const data = user.user || user;
+    return {
+      firstName: data.firstName || data.first_name || data.firstname || "",
+      lastName: data.lastName || data.last_name || data.lastname || "",
+      imageUrl: data.imageUrl || data.imageURL || data.avatarUrl || data.profileImage || data.profileImageUrl || "",
+      userName: data.userName || data.user_name || data.username || "",
+      email: data.email || "",
+      phoneNumber: data.phoneNumber || data.phone || "",
+      birthDate: data.birthDate ? data.birthDate.split('T')[0] : "",
+    };
   });
+
+  const [imagePreview, setImagePreview] = useState(() => getStoredProfileImage());
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
-  const [serverImageUrl, setServerImageUrl] = useState("");
-  const [localPreviewUrl, setLocalPreviewUrl] = useState("");
-  const [profileId, setProfileId] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState("");
+  const [serverImageUrl, setServerImageUrl] = useState("");
+  const [profileId, setProfileId] = useState("");
 
   useEffect(() => {
     return () => {
@@ -32,23 +42,6 @@ const PersonalInformation = () => {
       }
     };
   }, [localPreviewUrl]);
-
-  const resolveImageUrl = (value) => {
-    if (!value || typeof value !== "string") {
-      return "";
-    }
-    const trimmed = value.trim();
-    if (!trimmed) {
-      return "";
-    }
-    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-      return trimmed;
-    }
-    if (!apiRoot) {
-      return trimmed;
-    }
-    return `${apiRoot}/${trimmed.replace(/^\//, "")}`;
-  };
 
   useEffect(() => {
     let isActive = true;
@@ -69,31 +62,6 @@ const PersonalInformation = () => {
       return "";
     };
 
-    const pickProfileData = (raw) => {
-      if (!raw) {
-        return null;
-      }
-      if (Array.isArray(raw)) {
-        return raw[0] || null;
-      }
-      if (raw.$values && Array.isArray(raw.$values)) {
-        return raw.$values[0] || null;
-      }
-      if (Array.isArray(raw.data)) {
-        return raw.data[0] || null;
-      }
-      if (raw.data && raw.data.$values && Array.isArray(raw.data.$values)) {
-        return raw.data.$values[0] || null;
-      }
-      if (raw.result && typeof raw.result === "object") {
-        return raw.result;
-      }
-      if (raw.data && typeof raw.data === "object") {
-        return raw.data;
-      }
-      return raw;
-    };
-
     const extractProfileId = (profile) => {
       if (!profile || typeof profile !== "object") {
         return "";
@@ -107,10 +75,6 @@ const PersonalInformation = () => {
         profile.personalInfoID ||
         profile.profileId ||
         profile.profileID ||
-        profile.id ||
-        profile.personalInformation?.id ||
-        profile.personalInformation?.personalInformationId ||
-        profile.personalInformation?.personalInformationID ||
         profile.personalInfo?.id ||
         profile.applicationUserId ||
         profile.studentId ||
@@ -132,7 +96,7 @@ const PersonalInformation = () => {
           return;
         }
 
-        const data = pickProfileData(response?.data);
+        const data = extractProfileData(response?.data);
         if (!data || typeof data !== "object") {
           setIsLoading(false);
           return;
@@ -146,7 +110,7 @@ const PersonalInformation = () => {
         }
 
         const rawImageUrl =
-          data.imageUrl ?? data.imageURL ?? data.avatarUrl ?? data.profileImage ?? "";
+          data.imageUrl || data.imageURL || data.avatarUrl || data.profileImage || data.profileImageUrl || data.avatar || "";
         const resolvedImage = resolveImageUrl(rawImageUrl);
 
         setFormData((prev) => ({
@@ -332,9 +296,8 @@ const PersonalInformation = () => {
             </div>
             <div className="flex flex-col gap-2">
               <label
-                className={`inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-teal-600 hover:text-teal-700 ${
-                  isUploadingImage ? "cursor-not-allowed opacity-60" : ""
-                }`}
+                className={`inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-teal-600 hover:text-teal-700 ${isUploadingImage ? "cursor-not-allowed opacity-60" : ""
+                  }`}
               >
                 <input
                   type="file"
