@@ -163,15 +163,29 @@ const TeacherDashboard = () => {
         ? (reviewsData.reduce((acc, r) => acc + (r.rating || 0), 0) / reviewsData.length).toFixed(1)
         : "0.0";
 
-    const fullImageUrl = imageUrl ? `http://edunexa.runasp.net${imageUrl}` : "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
+    const resolveImageUrl = (value) => {
+        if (!value || typeof value !== 'string') return "";
+        const trimmed = value.trim();
+        if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return "";
+        if (trimmed.startsWith('blob:')) return trimmed;
+        if (trimmed.includes('edunexa.runasp.net')) {
+            return trimmed.replace(/https?:\/\/edunexa\.runasp\.net/, '/proxy');
+        }
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+            return trimmed;
+        }
+        return `/proxy/${trimmed.replace(/^\//, "")}`;
+    };
+
+    const fullImageUrl = resolveImageUrl(imageUrl) || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
 
     return (
-        <div className="bg-[#FFFFFF] min-h-screen p-8 text-[#0F172B]">
+        <div className="bg-[#FFFFFF] min-h-screen p-4 md:p-8 text-[#0F172B]">
             <header className="mb-10">
                 <h1 className="text-base font-bold text-[#45556C]">{getGreeting()} {firstName}</h1>
             </header>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12 mb-16 px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-12 gap-y-8 lg:gap-y-12 mb-10 md:mb-16 px-2">
                 {stats.map((stat, idx) => (
                     <div key={idx} className="flex items-center gap-6">
                         <div className={`w-14 h-14 ${stat.bg} rounded-none flex items-center justify-center`}>
@@ -185,7 +199,7 @@ const TeacherDashboard = () => {
                 ))}
             </div>
 
-            <div className="bg-[#1E6B65] rounded-none mb-16 flex flex-col md:flex-row items-center justify-between p-8 text-white">
+            <div className="bg-[#1E6B65] rounded-none mb-10 md:mb-16 flex flex-col md:flex-row items-center justify-between p-6 md:p-8 text-white gap-8 md:gap-0">
                 <div className="flex items-center gap-5">
                     <img
                         src={fullImageUrl}
@@ -199,16 +213,16 @@ const TeacherDashboard = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center md:items-center gap-3 mt-6 md:mt-0 lg:flex-row lg:gap-10">
+                <div className="flex flex-col items-center md:items-start lg:flex-row lg:items-center gap-3 w-full md:w-auto">
                     <span className="text-xs font-medium opacity-60">1/4 Steps</span>
-                    <div className="flex items-center gap-4">
-                        <div className="w-56 h-3 bg-[#ffffff20] rounded-none">
+                    <div className="flex items-center gap-4 w-full lg:w-auto">
+                        <div className="flex-1 lg:w-56 h-3 bg-[#ffffff20] rounded-none">
                             <div
                                 className="h-full bg-[#11312E]"
                                 style={{ width: `${profileCompletionPercentage}%` }}
                             ></div>
                         </div>
-                        <span className="text-xs font-bold text-white">{profileCompletionPercentage}% Completed</span>
+                        <span className="text-xs font-bold text-white shrink-0">{profileCompletionPercentage}% Completed</span>
                     </div>
                 </div>
 
@@ -222,7 +236,7 @@ const TeacherDashboard = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 mb-10 md:mb-16">
                 <div>
                     <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                         <h3 className="text-sm font-bold text-[#0F172B]">Recent Activity</h3>
@@ -269,7 +283,7 @@ const TeacherDashboard = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20">
                 <div>
                     <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                         <h3 className="text-sm font-bold text-[#0F172B]">Overall Course Rating</h3>
@@ -277,7 +291,7 @@ const TeacherDashboard = () => {
                             This week <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
                         </button>
                     </div>
-                    <div className="flex items-end gap-12 pt-4">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 sm:gap-12 pt-4">
                         <div className="shrink-0 text-center">
                             <p className="text-[64px] font-black text-[#0F172B] leading-none mb-4">{averageRating}</p>
                             <div className="flex justify-center gap-1 mb-2 text-[#1E6B65]">
@@ -302,19 +316,19 @@ const TeacherDashboard = () => {
                     </div>
                 </div>
 
-                <div className="space-y-10 pt-4">
+                <div className="space-y-6 md:space-y-10 pt-4">
                     {ratingDistribution.map((r, i) => (
-                        <div key={i} className="flex items-center gap-8">
-                            <div className="flex gap-0.5 shrink-0 w-24 text-[#1E6B65]">
+                        <div key={i} className="flex items-center gap-4 md:gap-8">
+                            <div className="flex gap-0.5 shrink-0 w-16 md:w-24 text-[#1E6B65]">
                                 {[...Array(5)].map((_, idx) => (
-                                    <Star key={idx} size={14} fill={idx < r.stars ? "currentColor" : "none"} className={idx < r.stars ? "" : "text-gray-100"} />
+                                    <Star key={idx} size={12} fill={idx < r.stars ? "currentColor" : "none"} className={idx < r.stars ? "" : "text-gray-100"} />
                                 ))}
                             </div>
-                            <span className="text-[10px] font-bold text-[#45556C] w-12">{r.label}</span>
+                            <span className="text-[10px] font-bold text-[#45556C] w-10 md:w-12 whitespace-nowrap">{r.label}</span>
                             <div className="flex-1 h-2 bg-[#EBF5F4] overflow-hidden">
                                 <div className="h-full bg-[#1E6B65]" style={{ width: `${r.percentage === '<1' ? 1 : r.percentage}%` }}></div>
                             </div>
-                            <span className="text-xs font-bold text-[#45556C] w-10 text-right">{r.percentage}%</span>
+                            <span className="text-xs font-bold text-[#45556C] w-8 md:w-10 text-right">{r.percentage}%</span>
                         </div>
                     ))}
                 </div>

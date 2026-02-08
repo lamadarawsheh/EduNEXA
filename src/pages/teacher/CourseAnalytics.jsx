@@ -58,24 +58,24 @@ const CourseAnalytics = () => {
     useEffect(() => {
         dispatch(fetchEarnings());
     }, [dispatch]);
-    
+
     const getCourseImage = (course) => {
-  if (!course) return "/course_placeholder.png";
+        if (!course) return "/course_placeholder.png";
 
-  const imagePath =
-    course.image ||
-    course.thumbnailUrl ||
-    course.imagePath ||
-    course.ThumbnailUrl;
+        const imagePath =
+            course.image ||
+            course.thumbnailUrl ||
+            course.imagePath ||
+            course.ThumbnailUrl;
 
-  if (!imagePath || !isWorkingUrl(imagePath)) {
-    return "/course_placeholder.png";
-  }
+        if (!imagePath || !isWorkingUrl(imagePath)) {
+            return "/course_placeholder.png";
+        }
 
-  return imagePath.startsWith("http")
-    ? imagePath
-    : `http://edunexa.runasp.net/${imagePath.replace(/^\//, "")}`;
-};
+        return imagePath.startsWith("http")
+            ? imagePath
+            : `/proxy/${imagePath.replace(/^\//, "")}`;
+    };
 
     // Fetch course data if not provided via location.state
     useEffect(() => {
@@ -131,13 +131,13 @@ const CourseAnalytics = () => {
     };
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="w-full bg-white p-4 md:p-10">
 
             {/* Header Section */}
-            <motion.div 
+            <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className="bg-[#F2F2F2] overflow-hidden border border-gray-200">
@@ -146,8 +146,8 @@ const CourseAnalytics = () => {
                     {/* Image Section */}
                     <div className="lg:col-span-1 h-56 bg-gray-100 overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            <img  src={getCourseImage(course)} 
-                            alt={course.title} className="w-full h-auto" />
+                            <img src={getCourseImage(course)}
+                                alt={course.title} className="w-full h-auto" />
                         </div>
                     </div>
 

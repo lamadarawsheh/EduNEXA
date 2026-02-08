@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import StepNavbar from "./StepNavbar";
+import StepNavbar from "./stepNavbar";
 import BasicInfo from "./basicInfo";
 import AdvanceInfo from "./advancedInfo/advancedInfo";
 import Curriculum from "./curriculum/curriculum";

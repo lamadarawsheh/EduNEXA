@@ -223,19 +223,38 @@ const Landing = () => {
 
         {/* ===== Grid for courses: 4 per row ===== */}
         <div className="flex justify-center flex-wrap gap-6 px-4">
-          {[1, 2, 3].map((_, idx) => (
+          {[
+            {
+              name: "Ahmed Mohammed",
+              role: "Web Developer",
+              text: "The content is very professional and the instructors are experts in their field. I've learned so much in just a few weeks.",
+              rating: 5
+            },
+            {
+              name: "Sara Al-Otaibi",
+              role: "Graphic Designer",
+              text: "EduNEXA truly changed my career path. The UI/UX course was incredibly detailed and filled with practical industry tips.",
+              rating: 5
+            },
+            {
+              name: "Omar Khalid",
+              role: "Data Scientist",
+              text: "The flexibility of learning at my own pace combined with high-quality content is what makes this platform stand out for professionals.",
+              rating: 5
+            }
+          ].map((review, idx) => (
             <div key={idx} className="bg-white flex flex-col border border-transparent shadow-lg gap-2 rounded-lg p-6 w-full max-w-[280px]">
               <div className="flex mb-2 space-x-1 justify-center">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(review.rating)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
               <p className="text-[#45556C] text-sm text-center mb-4 leading-relaxed italic">
-                "The content is very professional and the instructors are experts in their field"
+                "{review.text}"
               </p>
               <div className="flex flex-col items-center">
-                <span className="text-[#0F172B] font-semibold text-lg">Ahmed Mohammed</span>
-                <span className="text-[#0F172B] text-xs">Web Developer</span>
+                <span className="text-[#0F172B] font-semibold text-lg">{review.name}</span>
+                <span className="text-[#0F172B] text-xs">{review.role}</span>
               </div>
             </div>
           ))}

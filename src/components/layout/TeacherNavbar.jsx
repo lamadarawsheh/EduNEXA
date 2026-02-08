@@ -8,11 +8,13 @@ const TeacherNavbar = () => {
         <nav className="sticky top-0 z-50 bg-white/50 backdrop-blur-md border-b border-white/5 px-4 py-4 flex items-center justify-between">
             {/* Logo */}
             <Link to="/teacher-landing" className="flex items-center space-x-2 ps-2">
-                <img
-                    src="/image/logo-landing.png"
-                    alt="EduNEXA Logo"
-                    className="h-8 w-auto"
-                />
+                <div className="h-10 w-10 overflow-hidden flex items-center justify-center -translate-y-1">
+                    <img
+                        src="/favicon-removebg-preview.png"
+                        alt="EduNEXA Logo"
+                        className="w-full h-full object-contain"
+                    />
+                </div>
                 <span className="text-2xl text-[#0F172B] font-bold tracking-tighter">
                     EDUNEXA
                 </span>

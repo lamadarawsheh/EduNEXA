@@ -6,18 +6,18 @@ import categoryReducer from './Slices/CreateNewCourses/CategorySlice'
 import sectionReucer from './Slices/CreateNewCourses/SectionSlice'
 import lectureReducer from './Slices/CreateNewCourses/LectureSlice'
 import checkoutReducer from './Slices/Checkout/CheckoutSlice'
-import adminDashboardSlice from "./slices/AdminDashboard"
-import adminStudentSlice from "./slices/AdminStudents"
-import adminProfileSlice from "./slices/AdminProfile";
+import adminDashboardSlice from "./Slices/AdminDashboard"
+import adminStudentSlice from "./Slices/AdminStudents"
+import adminProfileSlice from "./Slices/AdminProfile";
 import profileReducer from "../ReduxToolkit/Profile/ProfileSlice";
 import walletReducer from './walletSlice'
 import reviewReducer from './Slices/ReviewSlice'
-import adminTeachersSlice from "./slices/AdminTeachers";
-import acceptedCoursesSlice from "./slices/AdminAcceptedCourses";
-import pendingCoursesSlice from "./slices/AdminPendingCourses";
-import reviewCourseReducer from "./slices/AdminCourseReview";
-import courseActionReducer from "./slices/AdminCoursesActions";
-import updateProfileReducer from "./slices/AdminUpdateProfile";
+import adminTeachersSlice from "./Slices/AdminTeachers";
+import acceptedCoursesSlice from "./Slices/AdminAcceptedCourses";
+import pendingCoursesSlice from "./Slices/AdminPendingCourses";
+import reviewCourseReducer from "./Slices/AdminCourseReview";
+import courseActionReducer from "./Slices/AdminCoursesActions";
+import updateProfileReducer from "./Slices/AdminUpdateProfile";
 
 const noopReducer = (state = {}) => state;
 

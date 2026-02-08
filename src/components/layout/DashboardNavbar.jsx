@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Bell,
@@ -8,10 +8,18 @@ import {
     LogOut
 } from 'lucide-react';
 import { logout } from '../../services/authService';
+import api from '../../services/api';
+
+import {
+    resolveImageUrl,
+    extractProfileData,
+    getStoredProfileImage
+} from '../../utils/profileUtils';
 
 const DashboardNavbar = ({ role = 'student' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
+    const [profileImage, setProfileImage] = useState(() => getStoredProfileImage());
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -37,16 +45,66 @@ const DashboardNavbar = ({ role = 'student' }) => {
 
     const links = role === 'teacher' ? teacherLinks : studentLinks;
 
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const endpoint = role === 'teacher' ? '/Instructor' : '/PersonalInformation';
+                const response = await api.get(endpoint);
+                const profile = extractProfileData(response?.data);
+
+                if (profile) {
+                    const rawImageUrl = profile.imageUrl || profile.imageURL || profile.avatarUrl || profile.profileImage || profile.profileImageUrl || profile.avatar || '';
+                    if (rawImageUrl) {
+                        const resolved = resolveImageUrl(rawImageUrl);
+                        setProfileImage(resolved);
+                        localStorage.setItem('profileImageUrl', resolved);
+                    }
+                }
+            } catch (error) {
+                console.error(`Navbar: Failed to fetch ${role} profile:`, error);
+            }
+        };
+
+        const updateImage = (value) => {
+            const current = value || getStoredProfileImage();
+            setProfileImage(current);
+        };
+
+        // If we don't have an image yet, try to fetch it
+        fetchProfile();
+
+        const handleStorage = (event) => {
+            if (event.key === 'profileImageUrl' || event.key === 'user') {
+                updateImage();
+            }
+        };
+
+        const handleProfileUpdate = (event) => {
+            if (event?.detail?.url) {
+                setProfileImage(resolveImageUrl(event.detail.url));
+            }
+        };
+
+        window.addEventListener('storage', handleStorage);
+        window.addEventListener('profile-image-updated', handleProfileUpdate);
+        return () => {
+            window.removeEventListener('storage', handleStorage);
+            window.removeEventListener('profile-image-updated', handleProfileUpdate);
+        };
+    }, [role]);
+
     return (
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between">
             {/* Logo (Left Section) */}
             <div className="flex-shrink-0">
                 <Link to={role === 'teacher' ? '/teacher' : '/student'} className="flex items-center space-x-2">
-                    <img
-                        src="/image/logo-landing.png"
-                        alt="EduNEXA Logo"
-                        className="h-8 w-auto"
-                    />
+                    <div className="h-10 w-10 overflow-hidden flex items-center justify-center -translate-y-1">
+                        <img
+                            src="/favicon-removebg-preview.png"
+                            alt="EduNEXA Logo"
+                            className="w-full h-full object-contain"
+                        />
+                    </div>
                     <span className="text-2xl text-[#0F172B] font-bold tracking-tighter uppercase">
                         EDUNEXA
                     </span>
@@ -80,7 +138,15 @@ const DashboardNavbar = ({ role = 'student' }) => {
                             className="flex items-center gap-2 group focus:outline-none"
                         >
                             <div className="w-10 h-10 rounded-full border-2 border-teal-100 overflow-hidden bg-teal-50 flex items-center justify-center text-[#0F4C4A] transition-all group-hover:bg-[#0F4C4A] group-hover:text-white group-hover:border-[#0F4C4A]">
-                                <User size={20} />
+                                {profileImage ? (
+                                    <img
+                                        src={profileImage}
+                                        alt="Profile"
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <User size={20} />
+                                )}
                             </div>
                             <ChevronDown size={14} className={`text-[#45556C] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
                         </button>

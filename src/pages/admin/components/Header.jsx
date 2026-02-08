@@ -4,7 +4,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { FaUserGraduate } from "react-icons/fa";
 import { GiTeacher } from "react-icons/gi";
 import { BsBookFill } from "react-icons/bs";
-import { FaArrowTrendUp } from "react-icons/fa6";
+import { MdOutlinePendingActions } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdArrowOutward } from "react-icons/md";
 import Avatar from './Avatar';
@@ -14,39 +14,23 @@ const items = [
   { title: "Students", field: "studentsCount", bgColor: "#D8DDE9", icon: FaUserGraduate },
   { title: "Teachers", field: "instructorsCount", bgColor: "#D1DFCC", icon: GiTeacher },
   { title: "Courses", field: "totalCourses", bgColor: "#EFF3A2", icon: BsBookFill },
-  { title: "Growth", field: "pendingCourses", bgColor: "#DBEAFE", icon: FaArrowTrendUp },
+  { title: "Pending Courses", field: "pendingCourses", bgColor: "#DBEAFE", icon: MdOutlinePendingActions },
 ]
 
 export default function Header({ header, admin }) {
   const [search, setSearch] = useState("");
-  const [openPopup, setOpenPopup] = useState(false); 
+  const [openPopup, setOpenPopup] = useState(false);
 
   return (
     <>
-       <UnderDevelopmentPopup
+      <UnderDevelopmentPopup
         isOpen={openPopup}
         onClose={() => setOpenPopup(false)}
-        />
+      />
       <div className="p-6 bg-white rounded-2xl shadow-md  min-h-[200px] hidden lg:flex flex-col items-between bg-[url('/adminDashboardbgjpeg.jpeg')] bg-cover bg-center bg-no-repeat mb-8">
         <div className="flex justify-end w-full mb-8 ">
-          <div className="relative w-[50%] mx-auto">
-            {!search && (
-              <div className="pointer-events-none absolute w-full left-3 top-1/2 flex -translate-y-1/2 items-center gap-2 text-gray-400">
-                <FiSearch size={18} />
-                <span className="text-sm">Search Courses,Teachers,Students...</span>
-              </div>
-            )}
-            <input
-              type="search"
-              dir="rtl"
-              value={search}
-              onChange={(e) => setValue(e.target.value)}
-              className="w-full rounded-3xl border border-gray-300 bg-white py-3 pr-10 pl-4 text-sm
-                  focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"/>
-          </div>
-          <div className="flex justify-end mt-4"></div>
           <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)}/>
+            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" onClick={() => setOpenPopup(true)} />
           </button>
           <Avatar
             src={admin?.imageUrl}
@@ -87,53 +71,64 @@ export default function Header({ header, admin }) {
             src={admin?.imageUrl}
             name={admin?.fullName}
             size={45} />
-            <div className='flex items-center'>
-          <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
-            <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]"  onClick={() => setOpenPopup(true)}/>
-          </button>
-          <MobileAdminMenu /> 
+          <div className='flex items-center relative'>
+            <button className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 me-2">
+              <IoNotificationsOutline size={30} className="text-gray-600 text-[#176D69]" onClick={() => setOpenPopup(true)} />
+            </button>
+            <MobileAdminMenu />
           </div>
         </div>
-        <div className="flex justify-center w-full ">
-          <img src="/Heading1.png" alt="Admin NEXA" className="mb-4 w-40" />
-        </div>
-        <div className="relative w-[90%] mx-auto">
-          {!search && (
-            <div className="pointer-events-none absolute w-full left-3 top-1/2 flex -translate-y-1/2 items-center gap-2 text-gray-400">
-              <FiSearch size={18} />
-              <span className="text-sm">Search Courses,Teachers,Students...</span>
+        <div className="flex justify-center w-full mb-6">
+          <div className="flex items-center space-x-2">
+            <div className="h-10 w-10 overflow-hidden flex items-center justify-center bg-white rounded-lg p-1">
+              <img
+                src="/favicon-removebg-preview.png"
+                alt="EduNEXA Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-          )}
+            <span className="text-2xl text-white font-bold tracking-tighter uppercase">
+              EDUNEXA
+            </span>
+          </div>
+        </div>
+        <div className="relative w-full px-4">
+          <div className="absolute inset-y-0 left-7 flex items-center pointer-events-none text-gray-400">
+            <FiSearch size={18} />
+          </div>
           <input
             type="search"
-            dir="rtl"
             value={search}
-            onChange={(e) => setValue(e.target.value)}
-            className="w-full rounded-3xl border border-gray-300 bg-white py-3 pr-10 pl-4 text-sm
-                  focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"/>
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search Courses, Teachers, Students..."
+            className="w-full rounded-full border-none bg-white/90 backdrop-blur-sm py-3 pl-12 pr-4 text-sm shadow-inner
+                  focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C4A]/20 transition-all placeholder:text-gray-400"/>
         </div>
       </div>
-      <div className="my-4 flex flex-wrap gap-2 justify-between lg:hidden px-4">
+      <div className="my-4 flex flex-wrap gap-4 lg:hidden px-4">
         {items.map((item, index) => {
           const Icon = item.icon;
           const value = header?.[item.field] ?? 0;
           return (
             <div
               key={index}
-              className="w-[49%] rounded-2xl p-4 flex flex-col justify-between min-h-[150px]"
+              className="w-full sm:w-[47%] md:w-[48%] rounded-2xl p-5 flex flex-col justify-between min-h-[140px] shadow-sm hover:shadow-md transition-shadow duration-300"
               style={{ backgroundColor: item.bgColor }}>
-              <div className="flex justify-between items-center mb-6">
-                <h4 className="flex gap-2 items-center">
-                  <Icon />
-                  <span className="font-bold">{item.title}</span>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="flex gap-2 items-center text-gray-800">
+                  <Icon className="text-lg opacity-80" />
+                  <span className="font-bold text-sm">{item.title}</span>
                 </h4>
-                <BsThreeDotsVertical className="text-gray-600" />
+                <BsThreeDotsVertical className="text-gray-500 opacity-50" />
               </div>
-              <div className="flex justify-between items-center">
-                <p className="text-3xl font-bold">{Number(value)}</p>
-                <p className="text-green-500 bg-[#F2F2F2] p-4 rounded-full">
-                  <MdArrowOutward />
-                </p>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-3xl font-black text-gray-900 tracking-tight">{Number(value)}</p>
+                  <p className="text-[10px] font-bold text-gray-500 uppercase mt-1">Total {item.title}</p>
+                </div>
+                <div className="bg-white/50 p-2.5 rounded-xl text-green-600 shadow-sm border border-white/20">
+                  <MdArrowOutward size={18} />
+                </div>
               </div>
             </div>
           );

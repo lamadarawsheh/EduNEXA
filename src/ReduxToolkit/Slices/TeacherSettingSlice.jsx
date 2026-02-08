@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BaseURL = "http://edunexa.runasp.net";
+const BaseURL = "/proxy";
 
 const getAuthHeader = () => ({
   headers: {
@@ -142,8 +142,17 @@ const teacherSettingSlice = createSlice({
           state.firstName = action.payload.fullName || state.firstName;
           state.lastName = action.payload.lastName || state.lastName;
           state.bio = action.payload.biography || state.bio;
+          state.profileImage = action.payload.imageUrl || state.profileImage;
           state.message =
             action.payload.message || "Profile updated successfully";
+
+          // Update localStorage to reflect changes in navbar/dashboard
+          if (action.payload.imageUrl) {
+            localStorage.setItem('profileImageUrl', action.payload.imageUrl);
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.imageUrl = action.payload.imageUrl;
+            localStorage.setItem('user', JSON.stringify(user));
+          }
         }
       })
 
@@ -183,6 +192,15 @@ const teacherSettingSlice = createSlice({
           state.bio = action.payload.biography || state.bio;
           state.profileImage = action.payload.imageUrl || state.profileImage;
           state.gender = action.payload.gender || state.gender;
+
+          // Update localStorage to sync with navbar/dashboard
+          if (action.payload.imageUrl) {
+            localStorage.setItem('profileImageUrl', action.payload.imageUrl);
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.imageUrl = action.payload.imageUrl;
+            localStorage.setItem('user', JSON.stringify(user));
+          }
+
           // Update social media fields if they're in the response
           if (action.payload.socialMedias) {
             const socialMedia = action.payload.socialMedias?.[0];

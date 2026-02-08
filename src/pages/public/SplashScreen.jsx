@@ -63,6 +63,8 @@ const SplashScreen = () => {
 
             {/* Main content */}
             <div className="relative z-10 text-center px-4">
+
+
                 {/* Brand name with letter animation */}
                 <h1 className="text-6xl md:text-8xl lg:text-9xl font-light tracking-tight mb-6 [perspective:1000px]">
                     {brandName.split("").map((letter, index) => (
