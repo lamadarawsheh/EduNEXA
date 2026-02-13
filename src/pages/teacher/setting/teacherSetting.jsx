@@ -24,7 +24,7 @@ export default function TeacherSettings() {
       fullName: "",
       username: "",
       phone: "",
-      title: "",
+      specialization: "",
       bio: "",
       website: "",
       facebook: "",
@@ -42,27 +42,41 @@ export default function TeacherSettings() {
   useEffect(() => {
     dispatch(fetchInstuctorProfile()).then((res) => {
       if (res.meta.requestStatus === "fulfilled" && res.payload) {
-        const socialMedia = res.payload.socialMedias?.[0] || {};
-        const appUser =
-          res.payload.socialMedias?.[0]?.instructor?.applicationUser || {};
+        const p = res.payload;
+        // Ensure socialMedias is an array and has elements, otherwise default to an empty object
+        const socialMedia = (p.socialMedias && p.socialMedias.length > 0) ? p.socialMedias[0] : {};
+        // Prioritize instructor from socialMedia if available, otherwise use p
+        const instructor = socialMedia.instructor || p;
+        // Prioritize applicationUser from instructor if available, otherwise use an empty object
+        const appUser = instructor.applicationUser || {};
+
+        const getVal = (obj, ...keys) => {
+          for (const key of keys) {
+            if (obj && obj[key] !== undefined && obj[key] !== null) return obj[key];
+          }
+          return "";
+        };
 
         const formData = {
-          firstName: appUser.firstName || "",
-          lastName: appUser.lastName || "",
-          username: appUser.userName || "",
-          fullName: appUser.fullName || "",
-          phone: appUser.phoneNumber || "",
-          title: res.payload.specialization || "",
-          bio: res.payload.biography || "",
-          website: socialMedia.personalWebsiteUrl || "",
-          profileImage: res.payload.imageUrl || "",
+          firstName: getVal(appUser, 'firstName', 'FirstName'),
+          lastName: getVal(appUser, 'lastName', 'LastName'),
+          username: getVal(appUser, 'userName', 'UserName', 'username'),
+          fullName: getVal(appUser, 'fullName', 'FullName'),
+          phone: getVal(appUser, 'phoneNumber', 'PhoneNumber', 'phone'),
+          specialization: getVal(p, 'specialization', 'Specialization', 'Spetialization', 'title') || getVal(instructor, 'specialization', 'Specialization', 'Spetialization'),
+          bio: getVal(p, 'biography', 'Biography', 'bio'),
+          website: getVal(socialMedia, 'personalWebsiteUrl', 'website'),
+          profileImage: getVal(p, 'imageUrl', 'ImageUrl', 'image'),
+          birthdate: (getVal(p, 'birthdate', 'Birthdate', 'birthDate', 'BirthDate') || "").split('T')[0],
+          gender: getVal(p, 'gender', 'Gender'),
           //social
-          facebook: socialMedia.facebookUrl || "",
-          instagram: socialMedia.instagramUrl || "",
-          linkedin: socialMedia.linkedInUrl || "",
-          twitter: socialMedia.twitterUrl || "",
-          whatsapp: socialMedia.whatsAppUrl || "",
-          youtube: socialMedia.youTubeUrl || "",
+          facebook: getVal(socialMedia, 'facebookUrl', 'facebook'),
+          instagram: getVal(socialMedia, 'instagramUrl', 'instagram'),
+          linkedin: getVal(socialMedia, 'linkedInUrl', 'linkedin'),
+          twitter: getVal(socialMedia, 'twitterUrl', 'twitter'),
+          whatsapp: getVal(socialMedia, 'whatsAppUrl', 'whatsapp'),
+          youtube: getVal(socialMedia, 'youTubeUrl', 'youtube'),
+          github: getVal(socialMedia, 'gitHubUrl', 'github'),
         };
         reset(formData);
       }
@@ -71,45 +85,44 @@ export default function TeacherSettings() {
 
   const onSubmit = async (data) => {
     try {
-      const profileData = {
-        firstName: data.fullName,
-        lastName: data.fullName,
-        userName: data.username,
-        phone: data.phone,
-        title: data.title,
-        biography: data.bio,
-        website: data.website,
-        profileImage: data.profileImage
+      // 1. Prepare FormData for Instructor Profile Update
+      const profileFormData = new FormData();
+      profileFormData.append("firstName", data.firstName);
+      profileFormData.append("lastName", data.lastName);
+      profileFormData.append("specialization", data.specialization);
+      profileFormData.append("Specialization", data.specialization);
+      profileFormData.append("biography", data.bio);
+      profileFormData.append("birthdate", data.birthdate);
+      profileFormData.append("gender", data.gender);
 
-      };
-      // console.log(data.firstName)
-      const socialMediaData = {
-        facebook: data.facebook,
-        instagram: data.instagram,
-        linkedin: data.linkedin,
-        twitter: data.twitter,
-        whatsapp: data.whatsapp,
-        youtube: data.youTubeUrl,
-      };
-
-      // await dispatch(fetchInstuctorProfile(profileData)).unwrap();
-      await dispatch(AddSocialMedia(socialMediaData)).unwrap();
-
-      // pop up
-      // const profileRes = await dispatch(AddSocialMedia(socialMediaData)).unwrap();
-      const profileRes = await dispatch(
-        UpdateInstructorProfile(profileData),
-      ).unwrap();
-
-      if (profileRes?.message) {
-        setPopupMessage("Profile saved successfully!");
-        setShowPopup(true);
-
-        setTimeout(() => setShowPopup(false), 2500);
+      // Only append image if it's a new file (not a string URL)
+      if (data.profileImage instanceof File) {
+        profileFormData.append("image", data.profileImage);
       }
+
+      // 2. Prepare JSON for Social Media Update
+      const socialMediaData = {
+        facebookUrl: data.facebook,
+        instagramUrl: data.instagram,
+        linkedInUrl: data.linkedin,
+        twitterUrl: data.twitter,
+        whatsAppUrl: data.whatsapp,
+        youTubeUrl: data.youtube,
+        gitHubUrl: data.github,
+        personalWebsiteUrl: data.website,
+      };
+
+      // Execute both updates
+      await dispatch(AddSocialMedia(socialMediaData)).unwrap();
+      const profileRes = await dispatch(UpdateInstructorProfile(profileFormData)).unwrap();
+
+      setPopupMessage("Profile and social media updated successfully!");
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 2500);
+
     } catch (error) {
       console.error("Failed to update profile:", error);
-      setPopupMessage("Failed to save profile.");
+      setPopupMessage(error?.message || "Failed to save profile.");
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 2500);
     }

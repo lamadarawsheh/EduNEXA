@@ -30,6 +30,8 @@ const TeacherDashboard = () => {
     const [reviewsData, setReviewsData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [imageError, setImageError] = useState(false);
+    const [liveImageUrl, setLiveImageUrl] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,6 +61,16 @@ const TeacherDashboard = () => {
         };
 
         fetchData();
+
+        const handleProfileUpdate = (event) => {
+            if (event?.detail?.url) {
+                setLiveImageUrl(event.detail.url);
+                setImageError(false);
+            }
+        };
+
+        window.addEventListener('profile-image-updated', handleProfileUpdate);
+        return () => window.removeEventListener('profile-image-updated', handleProfileUpdate);
     }, []);
 
     if (isLoading) {
@@ -164,9 +176,9 @@ const TeacherDashboard = () => {
         : "0.0";
 
     const resolveImageUrl = (value) => {
-        if (!value || typeof value !== 'string') return "";
+        if (!value || typeof value !== 'string') return null;
         const trimmed = value.trim();
-        if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return "";
+        if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return null;
         if (trimmed.startsWith('blob:')) return trimmed;
         if (trimmed.includes('edunexa.runasp.net')) {
             return trimmed.replace(/https?:\/\/edunexa\.runasp\.net/, '/proxy');
@@ -177,7 +189,8 @@ const TeacherDashboard = () => {
         return `/proxy/${trimmed.replace(/^\//, "")}`;
     };
 
-    const fullImageUrl = resolveImageUrl(imageUrl) || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop";
+    const userFromStorage = JSON.parse(localStorage.getItem('user') || '{}');
+    const finalDisplayUrl = resolveImageUrl(liveImageUrl || imageUrl || userFromStorage.imageUrl || localStorage.getItem('profileImageUrl'));
 
     return (
         <div className="bg-[#FFFFFF] min-h-screen p-4 md:p-8 text-[#0F172B]">
@@ -185,10 +198,10 @@ const TeacherDashboard = () => {
                 <h1 className="text-base font-bold text-[#45556C]">{getGreeting()} {firstName}</h1>
             </header>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-12 gap-y-8 lg:gap-y-12 mb-10 md:mb-16 px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10 md:mb-16">
                 {stats.map((stat, idx) => (
-                    <div key={idx} className="flex items-center gap-6">
-                        <div className={`w-14 h-14 ${stat.bg} rounded-none flex items-center justify-center`}>
+                    <div key={idx} className="bg-white border border-[#E9ECEF] p-4 md:p-6 rounded-none flex items-center gap-4 transition-all hover:shadow-md">
+                        <div className={`w-12 h-12 ${stat.bg} rounded-full flex items-center justify-center shrink-0`}>
                             {stat.icon}
                         </div>
                         <div>
@@ -201,12 +214,18 @@ const TeacherDashboard = () => {
 
             <div className="bg-[#1E6B65] rounded-none mb-10 md:mb-16 flex flex-col md:flex-row items-center justify-between p-6 md:p-8 text-white gap-8 md:gap-0">
                 <div className="flex items-center gap-5">
-                    <img
-                        src={fullImageUrl}
-                        alt="Profile"
-                        className="w-16 h-16 rounded-full object-cover border-2 border-white/20"
-                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop"; }}
-                    />
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 bg-white/10 flex items-center justify-center shrink-0 relative">
+                        {finalDisplayUrl && !imageError ? (
+                            <img
+                                src={finalDisplayUrl}
+                                alt="Profile"
+                                className="w-full h-full object-cover relative z-10 bg-[#1E6B65]"
+                                onError={() => setImageError(true)}
+                            />
+                        ) : (
+                            <User className="text-white/80" size={32} strokeWidth={1.5} />
+                        )}
+                    </div>
                     <div>
                         <h2 className="text-xl font-bold">{fullName}</h2>
                         <p className="opacity-60 text-xs">{email}</p>

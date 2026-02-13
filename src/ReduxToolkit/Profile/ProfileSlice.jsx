@@ -11,7 +11,7 @@ export const getAuthHeader = () => ({
 
 const defaultProfile = {
   name: "Ali Ahmed",
-  title: "Ui Ux Designer & Web Designer",
+  specialization: "Ui Ux Designer & Web Designer",
   image: null,
   website: "",
   socials: {
@@ -124,7 +124,7 @@ const profileSlice = createSlice({
         state.data = {
           id: apiData?.id || apiData?.Id,
           name: apiData?.fullName || apiData?.FullName || defaultProfile.name,
-          title: apiData?.specialization || apiData?.Specialization || defaultProfile.title,
+          specialization: apiData?.specialization || apiData?.Specialization || apiData?.Spetialization || apiData?.title || defaultProfile.specialization,
           image: apiData?.imageUrl || apiData?.ImageUrl || apiData?.imagePath || apiData?.ImagePath || apiData?.image || apiData?.Image || defaultProfile.image,
           courses: apiData?.courses || apiData?.Courses,
           website:
