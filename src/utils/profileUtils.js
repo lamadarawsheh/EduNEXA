@@ -3,9 +3,9 @@
  */
 
 export const resolveImageUrl = (value) => {
-    if (!value || typeof value !== 'string') return '';
+    if (!value || typeof value !== 'string') return null;
     const trimmed = value.trim();
-    if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return '';
+    if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return null;
 
     // Handling blob URLs (typically for local previews)
     if (trimmed.startsWith('blob:')) return trimmed;
@@ -61,7 +61,7 @@ export const getStoredProfileImage = () => {
         );
         return resolveImageUrl(raw);
     } catch (e) {
-        return '';
+        return null;
     }
 };
 

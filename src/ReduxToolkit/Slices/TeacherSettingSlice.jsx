@@ -34,8 +34,12 @@ export const AddSocialMedia = createAsyncThunk(
       const response = await axios.post(
         `${BaseURL}/api/SocialMedia`,
         socialMediaData,
-        getAuthHeader(),
-        { "Content-Type": "application/json" },
+        {
+          headers: {
+            ...getAuthHeader().headers,
+            "Content-Type": "application/json",
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -68,7 +72,7 @@ const teacherSettingSlice = createSlice({
     lastName: "",
     userName: "",
     phone: "",
-    title: "",
+    specialization: "",
     bio: "",
     website: "",
     facebook: "",
@@ -79,6 +83,7 @@ const teacherSettingSlice = createSlice({
     youtube: "",
     profileImage: "",
     gender: "",
+    birthDate: "",
     error: null,
     loading: false,
   },
@@ -95,8 +100,8 @@ const teacherSettingSlice = createSlice({
     setPhone: (state, action) => {
       state.phone = action.payload;
     },
-    setTitle: (state, action) => {
-      state.title = action.payload;
+    setSpecialization: (state, action) => {
+      state.specialization = action.payload;
     },
     setBio: (state, action) => {
       state.bio = action.payload;
@@ -138,20 +143,53 @@ const teacherSettingSlice = createSlice({
       })
       .addCase(UpdateInstructorProfile.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         if (action.payload) {
-          state.firstName = action.payload.fullName || state.firstName;
-          state.lastName = action.payload.lastName || state.lastName;
-          state.bio = action.payload.biography || state.bio;
-          state.profileImage = action.payload.imageUrl || state.profileImage;
-          state.message =
-            action.payload.message || "Profile updated successfully";
+          const getVal = (obj, ...keys) => {
+            if (!obj) return null;
+            for (const key of keys) {
+              if (obj[key] !== undefined && obj[key] !== null) return obj[key];
+            }
+            return null;
+          };
 
-          // Update localStorage to reflect changes in navbar/dashboard
-          if (action.payload.imageUrl) {
-            localStorage.setItem('profileImageUrl', action.payload.imageUrl);
+          const p = action.payload;
+          state.firstName = getVal(p, 'firstName', 'FirstName') || state.firstName;
+          state.lastName = getVal(p, 'lastName', 'LastName') || state.lastName;
+          state.bio = getVal(p, 'biography', 'Biography', 'bio') || state.bio;
+          state.profileImage = getVal(p, 'imageUrl', 'ImageUrl', 'image') || state.profileImage;
+          state.gender = getVal(p, 'gender', 'Gender') || state.gender;
+          state.birthDate = getVal(p, 'birthdate', 'Birthdate', 'birthDate', 'BirthDate') || state.birthDate;
+          state.specialization = getVal(p, 'specialization', 'Specialization', 'Spetialization', 'title') ||
+            getVal(p.instructor, 'specialization', 'Specialization', 'Spetialization') ||
+            state.specialization;
+
+          state.message = "Profile updated successfully";
+
+          // Update localStorage and notify components (like Navbar)
+          if (state.profileImage) {
+            localStorage.setItem('profileImageUrl', state.profileImage);
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            user.imageUrl = action.payload.imageUrl;
+            user.imageUrl = state.profileImage;
             localStorage.setItem('user', JSON.stringify(user));
+
+            // Dispatch event to update Navbar and other listeners
+            window.dispatchEvent(new CustomEvent('profile-image-updated', {
+              detail: { url: state.profileImage }
+            }));
+          }
+
+          // Update social media fields if they're in the response
+          if (p.socialMedias && p.socialMedias.length > 0) {
+            const socialMedia = p.socialMedias[0];
+            state.facebook = socialMedia.facebookUrl || state.facebook;
+            state.instagram = socialMedia.instagramUrl || state.instagram;
+            state.linkedin = socialMedia.linkedInUrl || state.linkedin;
+            state.twitter = socialMedia.twitterUrl || state.twitter;
+            state.whatsapp = socialMedia.whatsAppUrl || state.whatsapp;
+            state.youtube = socialMedia.youTubeUrl || state.youtube;
+            state.website = socialMedia.personalWebsiteUrl || state.website;
+            state.github = socialMedia.gitHubUrl || state.github;
           }
         }
       })
@@ -180,42 +218,64 @@ const teacherSettingSlice = createSlice({
       })
       .addCase(fetchInstuctorProfile.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         if (action.payload) {
-          const appUser =
-            action.payload.socialMedias?.[0]?.instructor?.applicationUser || {};
-          state.firstName = appUser.firstName || state.firstName;
-          state.lastName = appUser.lastName || state.lastName;
-          state.userName = appUser.userName || state.userName;
-          state.fullName = appUser.fullName || state.fullName;
-          state.phone = appUser.phoneNumber || state.phone;
-          state.title = action.payload.specialization || state.title;
-          state.bio = action.payload.biography || state.bio;
-          state.profileImage = action.payload.imageUrl || state.profileImage;
-          state.gender = action.payload.gender || state.gender;
+          // Robust extraction for both PascalCase and camelCase
+          const getVal = (obj, ...keys) => {
+            if (!obj) return null;
+            for (const key of keys) {
+              if (obj[key] !== undefined && obj[key] !== null) return obj[key];
+            }
+            return null;
+          };
 
-          // Update localStorage to sync with navbar/dashboard
-          if (action.payload.imageUrl) {
-            localStorage.setItem('profileImageUrl', action.payload.imageUrl);
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            user.imageUrl = action.payload.imageUrl;
-            localStorage.setItem('user', JSON.stringify(user));
+          const p = action.payload;
+          const socialMedia = (p.socialMedias && p.socialMedias.length > 0) ? p.socialMedias[0] : {};
+          const instructor = socialMedia.instructor || p;
+          const appUser = instructor.applicationUser || {};
+
+          state.firstName = getVal(appUser, 'firstName', 'FirstName') || state.firstName;
+          state.lastName = getVal(appUser, 'lastName', 'LastName') || state.lastName;
+          state.userName = getVal(appUser, 'userName', 'UserName', 'username') || state.userName;
+          state.fullName = getVal(appUser, 'fullName', 'FullName') || state.fullName;
+          state.phone = getVal(appUser, 'phoneNumber', 'PhoneNumber', 'phone') || state.phone;
+
+          state.specialization = getVal(p, 'specialization', 'Specialization', 'Spetialization', 'title') ||
+            getVal(instructor, 'specialization', 'Specialization', 'Spetialization') ||
+            state.specialization;
+          state.bio = getVal(p, 'biography', 'Biography', 'bio') || state.bio;
+          state.profileImage = getVal(p, 'imageUrl', 'ImageUrl', 'image') || state.profileImage;
+          state.gender = getVal(p, 'gender', 'Gender') || state.gender;
+          state.birthDate = getVal(p, 'birthdate', 'Birthdate', 'birthDate', 'BirthDate') || state.birthDate;
+
+          if (socialMedia && Object.keys(socialMedia).length > 0) {
+            state.facebook = socialMedia.facebookUrl || "";
+            state.instagram = socialMedia.instagramUrl || "";
+            state.linkedin = socialMedia.linkedInUrl || "";
+            state.twitter = socialMedia.twitterUrl || "";
+            state.whatsapp = socialMedia.whatsAppUrl || "";
+            state.youtube = socialMedia.youTubeUrl || "";
+            state.website = socialMedia.personalWebsiteUrl || "";
+            state.github = socialMedia.gitHubUrl || "";
           }
 
-          // Update social media fields if they're in the response
-          if (action.payload.socialMedias) {
-            const socialMedia = action.payload.socialMedias?.[0];
-            state.facebook = socialMedia.facebookUrl || state.facebook;
-            state.instagram = socialMedia.instagramUrl || state.instagram;
-            state.linkedin = socialMedia.linkedInUrl || state.linkedin;
-            state.twitter = socialMedia.twitterUrl || state.twitter;
-            state.whatsapp = socialMedia.whatsAppUrl || state.whatsapp;
-            state.youtube = socialMedia.youTubeUrl || state.youtube;
-            state.website = socialMedia.personalWebsiteUrl || state.website;
+          // Sync localStorage and notify listeners
+          if (state.profileImage) {
+            localStorage.setItem('profileImageUrl', state.profileImage);
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.imageUrl = state.profileImage;
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Dispatch event to update Navbar and other listeners
+            window.dispatchEvent(new CustomEvent('profile-image-updated', {
+              detail: { url: state.profileImage }
+            }));
           }
         }
       })
       .addCase(fetchInstuctorProfile.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        state.loading = false;
+        state.error = action.payload;
       }),
 });
 

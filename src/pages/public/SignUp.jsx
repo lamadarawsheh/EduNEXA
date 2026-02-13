@@ -111,7 +111,7 @@ const SignUp = () => {
                 email: formData.email,
                 phoneNumber: formData.phoneNumber,
                 password: formData.password,
-                roles: [role]
+                role: role
             };
 
             try {
@@ -185,6 +185,7 @@ const SignUp = () => {
                 {/* Role Tabs */}
                 <div className="flex border-t border-b border-gray-100">
                     <button
+                        type="button"
                         onClick={() => setRole('Student')}
                         className={`flex-1 py-4 text-center font-medium text-sm transition-all duration-300 relative
                             ${role === 'Student' ? 'bg-[#E0F2F1] text-[#0F4C4A]' : 'text-gray-500 hover:bg-gray-50'}
@@ -194,6 +195,7 @@ const SignUp = () => {
                         {role === 'Student' && <div className="absolute bottom-0 left-0 w-full h-1 bg-[#0F4C4A] rounded-t-full" />}
                     </button>
                     <button
+                        type="button"
                         onClick={() => setRole('Instructor')}
                         className={`flex-1 py-4 text-center font-medium text-sm transition-all duration-300 relative
                             ${role === 'Instructor' ? 'bg-[#E0F2F1] text-[#0F4C4A]' : 'text-gray-500 hover:bg-gray-50'}
@@ -337,11 +339,11 @@ const SignUp = () => {
 
                     {/* Social Buttons */}
                     <div className="space-y-3">
-                        <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
+                        <button type="button" className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />
                             Sign Up With Google
                         </button>
-                        <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
+                        <button type="button" className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
                             <Facebook className="h-5 w-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform" />
                             Sign Up With Facebook
                         </button>
