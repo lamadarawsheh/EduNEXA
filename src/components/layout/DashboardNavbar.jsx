@@ -20,6 +20,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [profileImage, setProfileImage] = useState(() => getStoredProfileImage());
+    const [imageError, setImageError] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -82,6 +83,7 @@ const DashboardNavbar = ({ role = 'student' }) => {
         const handleProfileUpdate = (event) => {
             if (event?.detail?.url) {
                 setProfileImage(resolveImageUrl(event.detail.url));
+                setImageError(false); // Reset error state for new image
             }
         };
 
@@ -137,15 +139,16 @@ const DashboardNavbar = ({ role = 'student' }) => {
                             onClick={() => setShowProfile(!showProfile)}
                             className="flex items-center gap-2 group focus:outline-none"
                         >
-                            <div className="w-10 h-10 rounded-full border-2 border-teal-100 overflow-hidden bg-teal-50 flex items-center justify-center text-[#0F4C4A] transition-all group-hover:bg-[#0F4C4A] group-hover:text-white group-hover:border-[#0F4C4A]">
-                                {profileImage ? (
+                            <div className="w-10 h-10 rounded-full border-2 border-teal-100 overflow-hidden bg-teal-50 flex items-center justify-center text-[#0F4C4A] transition-all group-hover:bg-[#0F4C4A] group-hover:text-white group-hover:border-[#0F4C4A] relative">
+                                {profileImage && !imageError ? (
                                     <img
                                         src={profileImage}
                                         alt="Profile"
-                                        className="h-full w-full object-cover"
+                                        className="h-full w-full object-cover relative z-10"
+                                        onError={() => setImageError(true)}
                                     />
                                 ) : (
-                                    <User size={20} />
+                                    <User size={20} strokeWidth={1.5} />
                                 )}
                             </div>
                             <ChevronDown size={14} className={`text-[#45556C] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
