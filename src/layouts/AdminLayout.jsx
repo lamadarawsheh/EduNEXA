@@ -13,7 +13,7 @@ const navItems = [
     { label: "Students", to: "/admin/students", icon: PiStudentLight },
     { label: "Teachers", to: "/admin/teachers", icon: LiaChalkboardTeacherSolid },
     { label: "Courses", to: "/admin/courses", icon: IoBookOutline },
-    { label: "Settings", to: "/admin/settings", icon: IoSettingsOutline  },
+    { label: "Settings", to: "/admin/settings", icon: IoSettingsOutline },
 ];
 const AdminLayout = () => {
     const navigate = useNavigate();
@@ -25,24 +25,35 @@ const AdminLayout = () => {
     const [open, setOpen] = useState(false);
     const closeMenu = () => setOpen(false);
 
-        return (
+    return (
         <div className="flex flex-col lg:flex-row min-h-screen text-black">
             <aside className="w-64 xl:flex lg:flex-col justify-between items-between border-r border-white/5 bg-white p-6 py-8 hidden">
                 <div>
-                    <img src="/Heading1.png" alt="Admin NEXA" className="mb-8 mt-8 w-32" />
+                    <div className="flex items-center space-x-2 mb-8 mt-4">
+                        <div className="h-10 w-10 overflow-hidden flex items-center justify-center">
+                            <img
+                                src="/favicon-removebg-preview.png"
+                                alt="EduNEXA Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <span className="text-2xl text-[#0F172B] font-bold tracking-tighter uppercase">
+                            EDUNEXA
+                        </span>
+                    </div>
                     <nav className="space-y-4 mt-8 pt-8">
                         {navItems.map((item) => (
                             <NavItem key={item.to} label={item.label} to={item.to} Icon={item.icon} />
                         ))}
                         <button
-                        onClick={handleLogout}
-                        className="flex items-center mt-6 gap-2 font-semibold text-lg text-red-600 hover:text-[#8A8A8A] mb-8"
-                    >
-                        <PiSignOutBold /> <span>sign out</span>
+                            onClick={handleLogout}
+                            className="flex items-center mt-6 gap-2 font-semibold text-lg text-red-600 hover:text-[#8A8A8A] mb-8"
+                        >
+                            <PiSignOutBold /> <span>sign out</span>
                         </button>
                     </nav>
                 </div>
-                
+
             </aside>
             <main className="order-2 lg:order-2 flex-1 overflow-y-auto bg-[#F2F2F2]">
                 <div className="max-w-6xl mx-auto">
@@ -52,9 +63,9 @@ const AdminLayout = () => {
         </div>
     );
 };
-const NavItem = ({ label, to, badge, Icon, onClick}) => (
+const NavItem = ({ label, to, badge, Icon, onClick }) => (
     <NavLink
-    onClick={onClick}
+        onClick={onClick}
         to={to}
         end={to === "/admin"}
         className={({ isActive }) =>

@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://edunexa.runasp.net/api';
+const BASE_URL = '/proxy/api';
 
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     return {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -26,11 +26,11 @@ export async function deleteReview(reviewId) {
 }
 
 export async function getCourseReviews(courseId) {
-    const token = localStorage.getItem('token'); 
-    
+    const token = localStorage.getItem('token');
+
     const response = await axios.get(`${BASE_URL}/Review/GetReviewsByCourse/${courseId}`, {
         headers: {
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${token}`
         }
     });
     return response.data;

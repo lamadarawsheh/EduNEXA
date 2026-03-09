@@ -111,7 +111,7 @@ const SignUp = () => {
                 email: formData.email,
                 phoneNumber: formData.phoneNumber,
                 password: formData.password,
-                roles: [role]
+                role: role
             };
 
             try {
@@ -171,12 +171,12 @@ const SignUp = () => {
 
                 {/* Header */}
                 <div className="pt-8 pb-4 text-center px-8">
-                    <Link to="/choose" className="flex justify-center items-center gap-2 mb-2 hover:opacity-80 transition-opacity inline-flex">
-                        <div className="w-10 h-10 bg-[#4AA59B] rounded-full flex items-center justify-center text-white shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                        </div>
+                    <Link to="/choose" className="flex items-center justify-center hover:opacity-80 transition-opacity inline-flex">
+                        <img
+                            src="/favicon-removebg-preview.png"
+                            alt="EduNEXA Logo"
+                            className="w-14 h-14 object-contain drop-shadow-md -translate-y-1"
+                        />
                         <h1 className="text-2xl font-bold tracking-tighter text-[#0F172B]">EDUNEXA</h1>
                     </Link>
                     <p className="text-gray-500 text-sm">Join Us As A ...</p>
@@ -185,6 +185,7 @@ const SignUp = () => {
                 {/* Role Tabs */}
                 <div className="flex border-t border-b border-gray-100">
                     <button
+                        type="button"
                         onClick={() => setRole('Student')}
                         className={`flex-1 py-4 text-center font-medium text-sm transition-all duration-300 relative
                             ${role === 'Student' ? 'bg-[#E0F2F1] text-[#0F4C4A]' : 'text-gray-500 hover:bg-gray-50'}
@@ -194,6 +195,7 @@ const SignUp = () => {
                         {role === 'Student' && <div className="absolute bottom-0 left-0 w-full h-1 bg-[#0F4C4A] rounded-t-full" />}
                     </button>
                     <button
+                        type="button"
                         onClick={() => setRole('Instructor')}
                         className={`flex-1 py-4 text-center font-medium text-sm transition-all duration-300 relative
                             ${role === 'Instructor' ? 'bg-[#E0F2F1] text-[#0F4C4A]' : 'text-gray-500 hover:bg-gray-50'}
@@ -337,11 +339,11 @@ const SignUp = () => {
 
                     {/* Social Buttons */}
                     <div className="space-y-3">
-                        <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
+                        <button type="button" className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />
                             Sign Up With Google
                         </button>
-                        <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
+                        <button type="button" className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium text-sm group">
                             <Facebook className="h-5 w-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform" />
                             Sign Up With Facebook
                         </button>

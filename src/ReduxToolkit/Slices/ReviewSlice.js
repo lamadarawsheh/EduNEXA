@@ -30,18 +30,18 @@ export const submitNewReview = createAsyncThunk(
 
 // تأكدي من وجود الـ export هنا
 export const removeReview = createAsyncThunk(
-  "review/removeReview",
-  async (reviewId, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token"); 
-      await axios.delete(`http://edunexa.runasp.net/api/Review/DeleteReview/${reviewId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return reviewId; // نرجع الـ ID عشان نشيله من الـ state
-    } catch (error) {
-      return rejectWithValue(error.response.data);
+    "review/removeReview",
+    async (reviewId, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem("token");
+            await axios.delete(`/proxy/api/Review/DeleteReview/${reviewId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return reviewId; // نرجع الـ ID عشان نشيله من الـ state
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
-  }
 );
 
 // داخل الـ extraReducers تأكدي من إضافة الحالة ليتحدث الـ UI فوراً
@@ -67,17 +67,17 @@ const reviewSlice = createSlice({
                 state.items = action.payload; // البيانات القادمة من الـ API
             })
             .addCase(submitNewReview.fulfilled, (state, action) => {
-    state.isLoading = false;
-    // action.meta.arg يحتوي على البيانات التي أرسلتها أنت (courseId, reviewText, etc.)
-    // سنضيفها يدوياً في بداية المصفوفة ليراها المستخدم فوراً
-    const newReview = {
-        ...action.meta.arg,
-        id: Date.now(), // معرف مؤقت
-        studentName: "You", // أو جلب الاسم من الـ Auth state
-        createdAt: new Date().toISOString()
-    };
-    state.items = [newReview, ...state.items]; 
-})
+                state.isLoading = false;
+                // action.meta.arg يحتوي على البيانات التي أرسلتها أنت (courseId, reviewText, etc.)
+                // سنضيفها يدوياً في بداية المصفوفة ليراها المستخدم فوراً
+                const newReview = {
+                    ...action.meta.arg,
+                    id: Date.now(), // معرف مؤقت
+                    studentName: "You", // أو جلب الاسم من الـ Auth state
+                    createdAt: new Date().toISOString()
+                };
+                state.items = [newReview, ...state.items];
+            })
             .addCase(fetchCourseReviews.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;

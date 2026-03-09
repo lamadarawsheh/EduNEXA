@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, ChevronRight, Globe, Lock, LogOut } from "lucide-react";
 import { getStudentSettings, updateNotifications } from "../../../services/settingService";
+import { getStudentIdFromStorage } from "../../../utils/auth";
 import "./Profile.css";
 
 const Settings = () => {
   const navigate = useNavigate();
-  const studentId = localStorage.getItem("studentId");
+  const studentId = getStudentIdFromStorage();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false);
 

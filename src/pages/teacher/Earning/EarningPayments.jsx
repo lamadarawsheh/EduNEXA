@@ -1,20 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/walletSlice";
+import { withdrawMoney, fetchWalletData } from "../../../ReduxToolkit/Slices/walletSlice/walletSlice";
 import { CheckCircle2, ChevronDown, Copy, ArrowRight, ArrowLeft } from "lucide-react";
+import { getInstructorDashboard } from "../../../services/teacherDashboardService";
 import Swal from "sweetalert2";
 
 export default function EarningPayments() {
   const dispatch = useDispatch();
-  
+  const [teacherName, setTeacherName] = useState("");
+
   const { balance = 0, status = "idle" } = useSelector((state) => state.wallet);
-  const user = useSelector((state) => state.auth?.user); 
-  const userName = user?.firstName ? `${user.firstName} ${user.lastName}` : (user?.name || "Guest User");
+  const user = useSelector((state) => state.auth?.user);
+  const userName = teacherName || (user?.firstName ? `${user.firstName} ${user.lastName}` : (user?.name || "Instructor"));
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchWalletData());
     }
+
+    const loadTeacherName = async () => {
+      try {
+        const data = await getInstructorDashboard();
+        if (data?.fullName) {
+          setTeacherName(data.fullName);
+        }
+      } catch (error) {
+        console.error("Failed to fetch teacher name for card", error);
+      }
+    };
+    loadTeacherName();
   }, [dispatch, status]);
 
   const handleWithdrawClick = async () => {
@@ -25,7 +39,7 @@ export default function EarningPayments() {
         icon: "warning",
         confirmButtonColor: "#1B5E5E",
         customClass: {
-          popup: 'rounded-[24px]', 
+          popup: 'rounded-[24px]',
         }
       });
     }
@@ -44,17 +58,17 @@ export default function EarningPayments() {
       cancelButtonText: "Cancel",
       confirmButtonColor: "#1B5E5E",
       cancelButtonColor: "#f3f4f6",
-      
-    
+
+
       customClass: {
-        popup: 'rounded-[28px] border-none p-8 shadow-2xl', 
+        popup: 'rounded-[28px] border-none p-8 shadow-2xl',
         title: 'text-[#093332] font-bold text-2xl mb-4',
         input: 'rounded-[14px] border border-gray-200 focus:border-[#1B5E5E] focus:ring-2 focus:ring-[#1B5E5E]/20 text-center py-4 text-lg mx-auto w-[80%]',
         confirmButton: 'rounded-[12px] px-10 py-3 text-sm font-semibold transition-all hover:opacity-90',
         cancelButton: 'rounded-[12px] px-10 py-3 text-sm font-semibold text-gray-500 hover:bg-gray-200 transition-all',
-        actions: 'gap-4 mt-6', 
+        actions: 'gap-4 mt-6',
       },
-      
+
       buttonsStyling: true,
 
       inputAttributes: {
@@ -104,9 +118,9 @@ export default function EarningPayments() {
     }
   };
 
-  return ( 
+  return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 p-4 sm:p-6 bg-white overflow-hidden">
-      
+
       <div className="space-y-6 w-full max-w-full">
         <div className="flex justify-between items-center">
           <h3 className="text-sm font-semibold text-[#093332]">Cards</h3>
@@ -115,7 +129,7 @@ export default function EarningPayments() {
           </div>
         </div>
         <hr className="border-t border-gray-100" />
-        
+
         <div className="relative group w-full max-w-[521px] mx-auto lg:mx-0">
           <div className="bg-gradient-to-br from-[#3E38BA] to-[#6058EF] p-6 sm:p-8 rounded-2xl text-white shadow-xl h-52 flex flex-col justify-between overflow-hidden">
             <div className="flex justify-between items-start">
@@ -125,7 +139,7 @@ export default function EarningPayments() {
                 <div className="w-1 h-1 bg-white/50 rounded-full"></div>
                 <div className="w-1 h-1 bg-white/50 rounded-full"></div>
               </div>
-            </div>         
+            </div>
             <div className="flex items-center gap-4">
               <p className="text-lg sm:text-xl tracking-[0.15em] sm:tracking-[0.2em] font-medium truncate">
                 4855 **** **** ****
@@ -158,20 +172,20 @@ export default function EarningPayments() {
 
         <button className="w-full max-w-[521px] h-[96px] border-2 border-dashed border-gray-200 rounded-xl flex flex-row items-center justify-center gap-2 text-gray-500 hover:bg-gray-50 transition-all cursor-pointer">
           <span className="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full text-lg font-light">
-              +
+            +
           </span>
           <h4 className="text-sm font-medium text-gray-600">
-              Add new card
+            Add new card
           </h4>
         </button>
       </div>
 
       <div className="space-y-6 w-full">
         <h3 className="text-sm font-semibold text-gray-700">Withdraw your money</h3>
-         <hr className="border-t border-gray-100" />
+        <hr className="border-t border-gray-100" />
         <div className="space-y-3">
           <p className="text-[11px] text-[#093332] text-sm font-medium uppercase">Payment method:</p>
-          
+
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-[#2D6A6A] rounded-lg bg-white shadow-sm gap-4">
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 flex-1">
               <span className="text-xs font-bold text-[#0E4F4F] w-10">VISA</span>
@@ -184,10 +198,10 @@ export default function EarningPayments() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-gray-100 rounded-lg bg-white opacity-60 gap-4">
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-               <div className="flex -space-x-2 w-10 shrink-0">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border border-white"></div>
-                  <div className="w-4 h-4 bg-orange-400 rounded-full border border-white"></div>
-               </div>
+              <div className="flex -space-x-2 w-10 shrink-0">
+                <div className="w-4 h-4 bg-red-500 rounded-full border border-white"></div>
+                <div className="w-4 h-4 bg-orange-400 rounded-full border border-white"></div>
+              </div>
               <span className="text-sm text-gray-600">2855 **** **** ****</span>
               <span className="text-sm text-gray-600">04/24</span>
               <span className="text-sm text-gray-600">{userName.toUpperCase()}</span>
@@ -205,15 +219,15 @@ export default function EarningPayments() {
             <p className="text-2xl font-bold text-gray-800">${Number(balance).toLocaleString()}</p>
             <p className="text-[11px] text-gray-400 font-medium">Current Balance</p>
           </div>
-          <button 
-            onClick={handleWithdrawClick} 
+          <button
+            onClick={handleWithdrawClick}
             className="w-full sm:w-auto bg-[#1B5E5E] text-white px-10 py-3 rounded-lg font-medium hover:bg-[#154646] transition-all active:scale-95"
           >
             Withdraw Money
           </button>
         </div>
       </div>
-      
+
     </div>
   )
 }

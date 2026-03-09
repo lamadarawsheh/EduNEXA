@@ -139,6 +139,8 @@
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
+  color: #111827;
+  background-color: #f9fafb;
   transition: all 0.3s;
 }
 
@@ -149,7 +151,7 @@
 }
 
 .form-group input::placeholder {
-  color: #aaa;
+  color: #9ca3af;
 }
 
 /* Settings List */
